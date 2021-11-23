@@ -1,12 +1,13 @@
-const VERSION = 3.23
+const VERSION = 3.24
 const COMPONENTS_DIR = '/_components/'
+
+
 const SCENE_HISTORY = true
 const CLEAR_STORE = false  //! Warning: erase all app data...
 const FONT_SIZE_DECIMALS = 1
 // only one decimal => makes total rem space vary a bit,
 // but we get more even layout spacing (Browsers are BAD at this…)
 
-const debug = {}
 
 
 //! Bare imports: this is intended to be bundled w/ rollup (from node_modules)
@@ -31,8 +32,10 @@ import log from '../public/z-console.js'
 log('info','Vision Stage • version:', VERSION)
 import { q, qAll, el, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass  } from './utils-core.js'
 
-// Share with others for easy imports from a single source
+/// Share with other components
 export { log, q, qAll, html, svg, unsafeHTML, ifDefined, repeat, live, guard, nextFrame, sleep, ctor, range, loadScriptAsync, loadScriptsAsync, cache, tempClass }
+
+const debug = {}
 
 /**
  * Defines a custom element (window.customElements.define) and return whenDefined promise
