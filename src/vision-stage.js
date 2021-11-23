@@ -27,7 +27,7 @@ import { cache }
 
 // blackbox this file in chrome to get real line numbers
 // keep out of bundle (rollup externals)
-import log from '../z-console.js'
+import log from './z-console.js'
 log('info','Vision Stage • version:', VERSION)
 import { q, qAll, el, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass  } from './utils-core.js'
 
