@@ -4,7 +4,7 @@
 		"module":"esnext",
 		"checkJs": false,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./public",
+		"baseUrl": "./docs",
 		"paths": {
       "/*": [
         "*"

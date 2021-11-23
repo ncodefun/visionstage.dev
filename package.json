@@ -2,7 +2,7 @@
   "name": "themysticvision.com",
   "author": "José Roux",
   "scripts": {
-    "start": "browser-sync start --server 'public/' --port 5000 --files 'public/**/*.html,public/**/*.js,public/**/*.css' --no-open --no-ghost-mode --inject-changes=false",
+    "start": "browser-sync start --server 'docs/' --port 5000 --files 'docs/**/*.html,docs/**/*.js,docs/**/*.css' --no-open --no-ghost-mode --inject-changes=false",
     "build": "rollup -c -w"
   },
   "devDependencies": {
