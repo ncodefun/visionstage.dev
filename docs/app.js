@@ -9,7 +9,7 @@
  */
 
 
-import { STR as _STR, Component, VisionStage, html, define, log, sleep, q, nextFrame, tempClass, useSVG as ICON } from '../vision-stage.min.js'
+import { STR as _STR, Component, VisionStage, html, define, log, sleep, q, nextFrame, tempClass, useSVG as ICON } from './vision-stage.min.js'
 
 const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = true
 // if a .scene el is not here, the CSS generated will be incomplete and other scenes won't hide when that scene is selected (direct URL, link)…
