@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+    "target": "esnext",
+		"module":"esnext",
+		"checkJs": false,
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": "./public",
+		"paths": {
+      "/*": [
+        "*"
+      ]
+		}
+  },
+	"exclude": [
+		"node_modules",
+		"**/docs/*"
+	],
+
+	"lib": ["dom", "esnext"]
+}

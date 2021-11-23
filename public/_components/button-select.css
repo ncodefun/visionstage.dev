@@ -1,0 +1,113 @@
+button-select {
+	/* gap: .25rem; */
+	gap: 1px;
+	position: relative;
+}
+
+button-select .menu {
+	gap: 1px;
+	top: 100%;
+
+}
+button-select.folded .menu {
+	/* no display:none so we keep width stable in folded state */
+		height: 0;
+		overflow: hidden;
+
+}
+
+button-select button {
+
+	overflow: hidden;
+	gap: .6rem;
+	padding: .1rem .42rem 0;
+	border-radius: 0;
+	height: 2rem;
+	/* border-color: #ddd; */
+	/* margin */
+}
+button-select[menu-dir='row'] .menu button:last-of-type:not(:first-of-type) {
+	border-radius: 0 .33rem .33rem 0;
+}
+button-select[menu-dir='row'] button.toggle,
+button-select[menu-dir='row'] button.top-button {
+	border-radius: .33rem 0 0 .33rem;
+}
+button-select[menu-dir='row'].folded button.toggle {
+	border-radius: .33rem .33rem 0 .33rem;
+}
+button-select[menu-dir='col'] .menu button:last-of-type:not(:first-of-type) {
+	border-radius: 0 0 .33rem .33rem;
+}
+
+button-select[menu-dir] .menu button:last-of-type:first-of-type {
+	border-radius: .33rem;
+}
+
+button-select[menu-dir='col'] button.toggle,
+button-select[menu-dir='col'] button.top-button {
+	border-radius: .33rem .33rem 0 0;
+}
+button-select[menu-dir] button:not(.selected) span.icon.led {
+	opacity: 0.25;
+}
+
+button-select button.selected {
+	background: palegreen;
+}
+
+button-select button span.icon {
+	color: #555;
+	flex: 0 0 auto;
+}
+button-select button span.text {
+	flex: 0 0 auto;
+	white-space: nowrap;
+}
+button-select[icon-position='right'] button span.icon {
+	order: 1;
+}
+
+button-select button span.icon.checkbox {
+	color: #000;
+}
+button-select button:not(.selected) span.icon.checkbox {
+	font-weight: bold;
+	/* color: orange; */
+}
+button-select[icon='none'] span.icon {
+	display: none
+}
+button-select[icon='led'] span.icon,
+button-select button.selected span.icon {
+	color: #000B;
+}
+button-select[icon='bar'] span.icon {
+
+}
+
+
+
+button-select button.folded {
+	opacity: .1;
+}
+button-select.folded button.selected {
+	border-radius: 0;
+}
+button-select button:not(.toggle) {
+	height: 1.76rem;
+}
+button-select.folds button span.icon {
+	display: none;
+}
+button-select.folds button  {
+	justify-content: center;
+}
+button-select button.toggle {
+	margin-bottom: 2px;
+	min-width: var(--min-width, 0);
+}
+button-select button:not(.selected) span.icon {
+	opacity: .33;
+
+}

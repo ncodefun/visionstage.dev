@@ -1,0 +1,22 @@
+{
+  "short_name": "themysticvision.com",
+  "name": "The Mystic Vision",
+  "icons": [
+    {
+      "src": "/_assets/images/app-icons/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "/_assets/images/app-icons/android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "hsl(266, 88%, 40%)",
+  "background_color": "hsl(258, 66%, 33%)",
+  "display": "fullscreen",
+  "orientation": "landscape"
+}
