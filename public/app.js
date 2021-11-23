@@ -52,7 +52,6 @@ class App extends VisionStage {
 	async onConnected(){
 		Component.load('button-select')
 		this.buildCSSForScenes() //! after updateForURL first call;
-		// this.updateForURL()
 	}
 
 	template(){
