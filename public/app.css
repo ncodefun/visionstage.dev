@@ -7,7 +7,7 @@ body {
 
 .app {
 	color: #FFFc;
-	font: 1rem/1.5 Josefin Sans, Jost, serif;
+	font: 1rem/1.5 Josefin Sans, serif;
 	--floor: 56%;
 	--black-trans: #00000012;
 	background-color:  hsl(266, 88%, 40%);

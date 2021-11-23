@@ -4,7 +4,7 @@
 		"module":"esnext",
 		"checkJs": false,
 		"allowSyntheticDefaultImports": true,
-		"baseUrl": "./docs",
+		"baseUrl": "./public",
 		"paths": {
       "/*": [
         "*"
@@ -13,7 +13,7 @@
   },
 	"exclude": [
 		"node_modules",
-		"**/docs/*"
+		"**/public/*"
 	],
 
 	"lib": ["dom", "esnext"]
