@@ -5,8 +5,10 @@
  * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
  * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
  *  -> component instances are directly accessed / queried and modified without any limitations.
- *
+ *	-> smart properties: comp. self-renders on change: stored:true (for stringifyable values), 
+ *	   watcher(val,prev){}, transformer(val,prev){return val}, class:'' (for bool - auto add/remove), attribute:'name' (mirrors value)
  * Old school: unscoped CSS & full reload (no hot module reloading…)
+ * 
  */
 
 
