@@ -1,11 +1,12 @@
-/// todo
-/// navicon always shows credits when nav is open
-/// to dismiss nav and go back to prev scene if available,
-/// put a big left arrow on bottom left (opposite to fs btn)
-
 /**
- * stage + resizing -> total control of presentation / art direction
- * native Web components -> no build step!
+ * Vision Stage Framework
+ * Stage to control aspect + rem scaling => total control of presentation / art direction
+ * Native Web components
+ * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
+ * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
+ *  -> component instances are directly accessed / queried and modified without any limitations.
+ *
+ * Old school: unscoped CSS & full reload (no hot module reloading…)
  */
 
 
@@ -416,22 +417,3 @@ App.strings = {
 App.sounds = []
 
 define( 'vision-stage', App, [])
-
-
-
-
-/// SIMPLE APPS | BEAUTIFUL APPS
-/// 1) START WITH MINIMAL COMPONENTS : simple custom elements with a lit-html template
-/// 2) ADD COMPLETE CONTROL OVER ART DIRECTION : FLEXIBLE STAGE (ie LIMITS) & RELATIVE SCALING (rem)
-/// 3)
-
-
-
-///		IMAGINE, NO BUILD REQUIREMENT!
-//		A MINIMAL COMPONENT FRAMEWORK, WITH A SINGLE EMBEDED DEPENDENCY (LIT-HTML)
-//		NO SYSTEMATIC RELATIONAL CHANNELS, NO CAST, TYPE OF
-//		JUST ELEMENTS, CUSTOM MADE, RENDERED
-//			WITH PROPS THAT CHANGE,
-//			WATCHED, TRANSFORMED OR REJECTED, AUTOMATICALLY STORED AND RECALLED, OR ERASED (BY EXPLICIT stored:false)
-///
-
