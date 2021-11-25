@@ -5,34 +5,19 @@
  * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
  * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
  *  -> component instances are directly accessed / queried and modified without any limitations.
- *	-> smart properties: comp. self-renders on change: stored:true (for stringifyable values), 
+ *	-> smart properties: comp. self-renders on change: stored:true (for stringifyable values),
  *	   watcher(val,prev){}, transformer(val,prev){return val}, class:'' (for bool - auto add/remove), attribute:'name' (mirrors value)
  * Old school: unscoped CSS & full reload (no hot module reloading…)
- * 
+ *
  */
 
 
-import { STR as _STR, Component, VisionStage, html, define, log, sleep, q, nextFrame, tempClass, useSVG as ICON } from './vision-stage.min.js'
+
+import { Component, VisionStage, html, define, log, sleep, q, nextFrame, tempClass, useSVG as ICON } from './vision-stage.min.js'
 
 const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = true
 // if a .scene el is not here, the CSS generated will be incomplete and other scenes won't hide when that scene is selected (direct URL, link)…
-const routes = [
-	{ path:'A', title:{fr:"Page A fr",en:"Page A en"} },
-	{ path:'B', title:{fr:"Page B fr",en:"Page B en"}, enabled:false },
-	{ path:'C', title:{fr:"Page C",en:"Page C"} },
-	{ path:'admin', title:"-- Admin --", access:'admin' },
 
-	// { path:'credits', title:{fr:"credits",en:"credits"}, visible: false },
-	{ path:'C', title:{fr:"Page C",en:"Page C"} },
-
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'Z', title:{fr:"Page Zfr",en:"Page Zen"} },
-
-	//! how to basic hide/protect by role without auth?
-]
 
 const my_selection_labels = ['AA','B','Ccccc aaas']
 
@@ -44,34 +29,33 @@ function stringOrLocale( o, _this){
 	return typeof o === 'string' ? o :
 		o[ _this.lang] || o[ _this.langs[0]]
 }
-let STR
-class App extends VisionStage {
 
-	constructor(){
-		super()
-		STR = _STR.bind( this)
-	}
+
+class App extends VisionStage {
 
 	async onConnected(){
 		Component.load('button-select')
 		this.buildCSSForScenes() //! after updateForURL first call;
+		this.setupSounds() // playSound( name), stopSound( name)
 	}
 
 	template(){
 		const port = this.is_portrait
 		// on first load, navicon is unavailable (we see both parts, no need to switch)
 		const unavailable = !this.scene&&!this.last_scene && !port
-		const show_quest_alt = !this.scene && !!this.last_scene && port//&& !this.hide_nav
+		const show_quest_alt = !this.scene && !!this.last_scene && port
 		const show_quest = !this.scene && !this.hide_nav && !this.last_scene && port
-		//&& !RETURN_TO_LAST_SCENE_ON_MENU_CLOSE
 		const show_back =
 			!this.scene && this.last_scene   // NAV IS OPEN, LAST SCENE EXISTS
 			&& !RETURN_TO_LAST_SCENE_ON_MENU_CLOSE
 
 		return html`
-			<section id='home' class='layer' show-for:scene='none'>
+			<section show-for:scene='none' id='home'
+				class='layer'>
 
-				<header id='home-header' flow='row full' @click=${ this.setLang }>
+				<header id='home-header'
+					flow='row full'
+					@click=${ this.setLang }>
 					<div id='lang-bar'>
 					${
 						this.langs.length === 1 ? '' :
@@ -90,11 +74,15 @@ class App extends VisionStage {
 					</buttin> -->
 				</header>
 
-				<h1 class='align-self-end'>VISION<div class=''>STAGE<div></h1>
+				<h1 id='home-title'
+					class='align-self-end'>
+					VISION<div class=''>STAGE<div>
+				</h1>
 
-				<!-- hide in portrait unless flag hide_nav=true (toggled by a portrait button i ) => portrait&&!hide_nav ? 'hide':''-->
-
-				<div id='home-welcome' class='rel' flow='col space-between'>
+				<div id='home-welcome'
+					class='rel'
+					flow='col space-between'
+					>
 
 					<!-- main: WELCOME -->
 					<article
@@ -152,14 +140,15 @@ class App extends VisionStage {
 
 			</section>
 
-			<!-- ALL SCENES ARE LAYERS -->
 			<main id='scenes' flow='col grow'>
 
-				<section flow='col top' class='layer scene partial' show-for:scene='A B C admin'>
-					<p>${STR('header')}</p>
+				<section show-for:scene='A B C admin'
+					flow='col top' class='layer scene partial'>
+					<p>${this.getString('header')}</p>
 				</section>
 
-				<section id='sceneA' flow='col top' class='layer scene' show-for:scene='A'>
+				<section show-for:scene='A'
+					id='sceneA' flow='col top' class='layer scene'>
 					<h2>Page A</h2>
 
 					<p><a href='#B'>Go to Page B</a></p>
@@ -182,25 +171,21 @@ class App extends VisionStage {
 					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, dolor iusto accusamus quae quis earum odio maxime dolores tempora commodi consectetur ipsum dolorum, voluptates rerum quia laboriosam! Officia, facilis alias?</p>
 				</section>
 
-				<section flow='col' class='layer scene' show-for:scene='B'>
+				<section show-for:scene='B'
+					flow='col' class='layer scene'>
 					<h2>Page B</h2>
 					<p><a href='#A'>Go to Page A, it's better.</a></p>
 				</section>
 
-				<section flow='col' class='layer scene' show-for:scene='admin'>
-					<action-button></action-button>
-					<toggle-button type='checkbox | radio'></toggle-button>
-					<state-button type='cycle | select'></toggle-button>
-				</section>
-
-				<section id='page-footer' flow='row bottom space-between' class='layer scene partial' show-for:scene='A B'>
+				<section show-for:scene='A B'
+					id='page-footer' flow='row bottom space-between' class='layer scene partial'>
 					<div>page</div>
 					<div>footer</div>
 				</section>
 
 			</main>
 
-			<!-- navicon btn + FS btn -->
+			<!-- navicon btn + FS btn ; not in a scene => always visible -->
 			<footer
 				id='app-footer'
 				class='stay-big-port'
@@ -375,6 +360,23 @@ class App extends VisionStage {
 	}
 }
 
+// could be just a const (only used here); set on App for consistancy
+const routes = [
+	{ path:'A', title:{fr:"Page A fr",en:"Page A en"} },
+	{ path:'B', title:{fr:"Page B fr",en:"Page B en"}, enabled:false },
+	{ path:'C', title:{fr:"Page C",en:"Page C"} },
+	{ path:'admin', title:"-- Admin --", access:'admin' },
+
+	// { path:'credits', title:{fr:"credits",en:"credits"}, visible: false },
+	{ path:'C', title:{fr:"Page C",en:"Page C"} },
+
+	// { path:'C', title:{fr:"Page C",en:"Page C"} },
+	// { path:'C', title:{fr:"Page C",en:"Page C"} },
+	// { path:'C', title:{fr:"Page C",en:"Page C"} },
+	// { path:'C', title:{fr:"Page C",en:"Page C"} },
+	// { path:'Z', title:{fr:"Page Zfr",en:"Page Zen"} },
+]
+
 App.aspect = {
 	'x-tall': 0.5 , tall: 0.6 , medium: 0.67 ,
 	wide: 3/2 ,'x-wide': 18/9 ,
@@ -416,6 +418,9 @@ App.strings = {
 		header: "Site header"
 	},
 }
-App.sounds = []
+
+App.sounds = [
+	// { name:'click', url:'sounds/click.mp3', options:{ volume:0.5 } },
+]
 
 define( 'vision-stage', App, [])

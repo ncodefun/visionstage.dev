@@ -28,7 +28,7 @@ import { cache }
 
 // blackbox this file in chrome to get real line numbers
 // keep out of bundle (rollup externals)
-import log from '../public/z-console.js'
+import log from '../z-console.js'
 log('info','Vision Stage • version:', VERSION)
 import { q, qAll, el, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass  } from './utils-core.js'
 
@@ -107,38 +107,6 @@ export function useSVG( id, clss='', ar, vb='0 0 32 32'){
 		<use href='${src}#${id}'/>
 	</svg>`
 }
-
-export const px2rem = (px, decimals=FONT_SIZE_DECIMALS) => {
-	return app && px/app.REM || 0 // ex: px=100, app.REM=16 = 100/16 = 6.25rem
-}
-
-
-
-//! should replace this.string, leave it for now
-export function STR( str_name, raw=false){
-		if( !str_name) return
-		let lang = this.lang
-		let strings_for_lang = this.strings[ lang]
-		let str = strings_for_lang && strings_for_lang[ str_name]
-
-		if( !str){ // try special prefix for scenes '$'
-			str = strings_for_lang && strings_for_lang[ '$'+str_name]
-		}
-		// try with default lang
-		if( !str){
-			strings_for_lang = this.strings[ app.langs[0]]
-			str = strings_for_lang && strings_for_lang[ str_name]
-		}
-		if( !str){
-			log('warn','NO STRING FOUND FOR:', str_name)//, 'for:', this)
-			return ''
-		}
-		return raw ? str :
-			containsHTML( str) ? unsafeHTML( str) :
-			str.startsWith('>') ? unsafeHTML( str.slice(1)) : // EXPLICITLY DECLARED AS HTML (! what cannot be detected still?)
-			str
-	}
-
 
 // so we don't load the same component Class multiple times
 const loaded_components = new Set()
@@ -600,22 +568,26 @@ export class VisionStage extends Component {
 
 	constructor(){
 		super()
+		// -> disable right-clicking
+		// this.addEventListener( 'contextmenu', e => e.preventDefault())
+		this.classList.add('app')
 		this.is_iOS = is_iOS
-		this.classList.add('app', 'waiting-scenes')
 		this.scrolls = this.classList.contains('scroll')
 		window.addEventListener('popstate', () => this.updateForURL( true))
 
+		// Save store on pagehide / unload
 		if( !CLEAR_STORE){
 			const termination_event = 'onpagehide' in self ? 'pagehide' : 'unload';
 			window.addEventListener( termination_event, e => saveStore())
 		}
 
-		// self filled by each component
+		// auto filled by each component
 		this.foldable_button_select_components = new Set()
 
 		document.body.addEventListener('mousedown', (e) => {
 
 			document.body.classList.add('using-mouse')
+
 			// means we click on a button-select component, leave it manage clicks
 			if( e.target.closest('button-select[fold]'))
 				return
@@ -634,7 +606,7 @@ export class VisionStage extends Component {
 	}
 
 	connectedCallback(){
-		log('ok', 'APP connected', this.localName)
+		//log('ok', 'APP connected', this.localName)
 
 		this.url_segments =
 			location.pathname.split('/').filter( item => item!=='').map( item => decodeURI( item))
@@ -650,6 +622,7 @@ export class VisionStage extends Component {
 				this.faded = false
 			}, 200)
 		}
+		else log('err','What???')
 	}
 
 	_onFirstRendered(){
@@ -673,9 +646,11 @@ export class VisionStage extends Component {
 	// onMainScroll(e){
 	// 	this.classList.toggle('scrolled', main.scrollTop > 10)
 	// }
+
 	afterResize( e){
 		app.resizing = false
 	}
+
 	resize(){
 		if( this.resize_locked)
 			return // mobile + menu auth open -> prevent resize by onscreen keyboard
@@ -803,7 +778,6 @@ export class VisionStage extends Component {
 			document.body.classList.add('has-scrollbar')
 	}
 
-
 	updateAspect( ratios){
 		if(!this.initial_ratios)
 			this.initial_ratios = ratios
@@ -835,8 +809,6 @@ export class VisionStage extends Component {
 
 	}
 
-
-
 	updateForURL( pop=false){
 
 		this.params = location.hash.slice(1).split('/')
@@ -862,29 +834,14 @@ export class VisionStage extends Component {
 		// log('info', 'updateForURL(); scene:', scene, 'pop?', pop)
 	}
 
-	/** on click veil */
-	closeOpenedMenu(){
-		//log('pink', 'close?', )
-		if( this.scene && this.menu_scenes && this.menu_scenes.open){
-			this.menu_scenes.open = false
-		}
-		else if( this.menu_options && this.menu_options.open){
-			this.menu_options.open = false
-		}
-		else if( this.menu_auth && this.menu_auth.open && this.menu_auth.user){
-			this.menu_auth.open = false
-		}
-	}
-
-	setLevel( e){
-		const lvl = e.currentTarget.level
-		if( lvl !== this.level || this.allow_level_reset) // allow RE-SET even if same
-			this.level = lvl
-	}
-
-	/** Basic audio playback, no lib :)  */
 
 	// must be called from the app after user event, or onConnected but then the first time it won't play on iOS
+	/**
+	 * Basic audio playback with Web Audio. No lib! ;)
+	 * the main limitation is that the volume, althought it can be adjusted by individual sounds, is global, so if two sounds with different volume option||default are overlapping, the volume will sharply change; the ideal is to have sounds prerendered at the right volume. This does not concern this.global_volume which is another layer (fract. multiplier) that the user can adjust.
+	 * Sounds are fetched and stored: this.sounds[ name] = { audio_buffer, options }
+	 * @return {Promise}
+	 */
 	setupSounds(){
 		const sounds_data = ctor( this).sounds
 		if( !sounds_data)
@@ -1248,27 +1205,41 @@ const throttled_saveStore = debounce( saveStore, 200)
 // screenfull.min.js
 !function(){"use strict";var e=window.document,n=function(){for(var n,r=[["requestFullscreen","exitFullscreen","fullscreenElement","fullscreenEnabled","fullscreenchange","fullscreenerror"],["webkitRequestFullscreen","webkitExitFullscreen","webkitFullscreenElement","webkitFullscreenEnabled","webkitfullscreenchange","webkitfullscreenerror"],["webkitRequestFullScreen","webkitCancelFullScreen","webkitCurrentFullScreenElement","webkitCancelFullScreen","webkitfullscreenchange","webkitfullscreenerror"],["mozRequestFullScreen","mozCancelFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozfullscreenchange","mozfullscreenerror"],["msRequestFullscreen","msExitFullscreen","msFullscreenElement","msFullscreenEnabled","MSFullscreenChange","MSFullscreenError"]],l=0,t=r.length,c={};l<t;l++)if((n=r[l])&&n[1]in e){for(l=0;l<n.length;l++)c[r[0][l]]=n[l];return c}return!1}(),r={change:n.fullscreenchange,error:n.fullscreenerror},l={request:function(r,l){return new Promise(function(t,c){var u=function(){this.off("change",u),t()}.bind(this);this.on("change",u);var s=(r=r||e.documentElement)[n.requestFullscreen](l);s instanceof Promise&&s.then(u).catch(c)}.bind(this))},exit:function(){return new Promise(function(r,l){if(this.isFullscreen){var t=function(){this.off("change",t),r()}.bind(this);this.on("change",t);var c=e[n.exitFullscreen]();c instanceof Promise&&c.then(t).catch(l)}else r()}.bind(this))},toggle:function(e,n){return this.isFullscreen?this.exit():this.request(e,n)},onchange:function(e){this.on("change",e)},onerror:function(e){this.on("error",e)},on:function(n,l){var t=r[n];t&&e.addEventListener(t,l,!1)},off:function(n,l){var t=r[n];t&&e.removeEventListener(t,l,!1)},raw:n};n?(Object.defineProperties(l,{isFullscreen:{get:function(){return Boolean(e[n.fullscreenElement])}},element:{enumerable:!0,get:function(){return e[n.fullscreenElement]}},isEnabled:{enumerable:!0,get:function(){return Boolean(e[n.fullscreenEnabled])}}}),window.screenfull=l):window.screenfull={isEnabled:!1}}();
 
+// if needed, should be a member of app
+// export const px2rem = (px, decimals=FONT_SIZE_DECIMALS) => {
+// 	return app && px/app.REM || 0 // ex: px=100, app.REM=16 = 100/16 = 6.25rem
+// }
+/*
+export function STR( str_name, raw=false){
+	if( !str_name) return
+	let lang = this.lang
+	let strings_for_lang = this.strings[ lang]
+	let str = strings_for_lang && strings_for_lang[ str_name]
 
+	if( !str){ // try special prefix for scenes '$'
+		str = strings_for_lang && strings_for_lang[ '$'+str_name]
+	}
+	// try with default lang
+	if( !str){
+		strings_for_lang = this.strings[ app.langs[0]]
+		str = strings_for_lang && strings_for_lang[ str_name]
+	}
+	if( !str){
+		log('warn','NO STRING FOUND FOR:', str_name)//, 'for:', this)
+		return ''
+	}
+	return raw ? str :
+		containsHTML( str) ? unsafeHTML( str) :
+		str.startsWith('>') ? unsafeHTML( str.slice(1)) : // EXPLICITLY DECLARED AS HTML (! what cannot be detected still?)
+		str
+}
+*/
 
 /*
 		CTOR:
 
 		// this.getActiveSW().then( SW => {
 		// 	active_sw = SW || null
-		// })
-
-		// -> disable right-clicking
-		// this.addEventListener( 'contextmenu', e => e.preventDefault())
-
-		// -> metacore-selector: auto close on mousedown
-		// We can open multiple selectors, but as soon as we click outside a selector they all close
-		// this.open_selectors = new Set()
-		// this.addEventListener('mousedown', e => {
-		// 	const btn = e.target.closest('metacore-selector')
-		// 	if( this.open_selectors.has( btn))
-		// 		return // clicked opened, will close itself
-		// 	for( let sel of this.open_selectors)
-		// 		sel.toggleOpen( false)
 		// })
 
 		// let icons_path = this.getAttribute('icons')
