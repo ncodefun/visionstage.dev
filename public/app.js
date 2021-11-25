@@ -7,7 +7,6 @@ const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = true
 const my_selection_labels = ['AA','B','Ccccc aaas']
 
 /// todo: floating chevrons as signifiers of choice, cycle buttons & options
-/// onChange callback for button-select
 
 /** return value of o (if string) || o[lang] */
 function stringOrLocale( o, _this){
@@ -20,8 +19,27 @@ class App extends VisionStage {
 
 	async onConnected(){
 		Component.load('button-select')
+		// Component.load('https://github.com/........button-select')
+
+
 		this.buildCSSForScenes() //! after updateForURL first call;
 		this.setupSounds() // playSound( name), stopSound( name)
+
+		// if ('serviceWorker' in navigator){
+		// 	window.addEventListener('load', () => {
+		// 		navigator
+		// 			.serviceWorker
+		// 			.register('sw.js', { scope: '/' })
+		// 			.then(
+		// 				registration => {
+		// 					console.log('ServiceWorker registration')
+		// 				},
+		// 				err => {
+		// 					console.error('ServiceWorker registration failed', err)
+		// 				}
+		// 			)
+		// 	})
+		// }
 	}
 
 	template(){
