@@ -1,18 +1,3 @@
-/**
- * Vision Stage Framework
- * Stage to control aspect + rem scaling => total control of presentation / art direction
- * Native Web components
- * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
- * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
- *  -> component instances are directly accessed / queried and modified without any limitations.
- *	-> smart properties: comp. self-renders on change: stored:true (for stringifyable values),
- *	   watcher(val,prev){}, transformer(val,prev){return val}, class:'' (for bool - auto add/remove), attribute:'name' (mirrors value)
- * Old school: unscoped CSS & full reload (no hot module reloading…)
- *
- */
-
-
-
 import { Component, VisionStage, html, define, log, sleep, q, nextFrame, tempClass, useSVG as ICON } from './vision-stage.min.js'
 
 const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = true

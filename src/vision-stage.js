@@ -1,6 +1,19 @@
 const VERSION = 3.24
 const COMPONENTS_DIR = '/_components/'
 
+/**
+ * Vision Stage Framework
+ * Stage to control aspect + rem scaling => total control of presentation / art direction
+ * Native Web components
+ * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
+ * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
+ *  -> component instances are directly accessed / queried and modified without any limitations.
+ *	-> smart properties: comp. self-renders on change: stored:true (for stringifyable values),
+ *	   watcher(val,prev){}, transformer(val,prev){return val}, class:'' (for bool - auto add/remove), attribute:'name' (mirrors value)
+ * Old school: unscoped CSS & full reload (no hot module reloading…)
+ *
+ */
+
 
 const SCENE_HISTORY = true
 const CLEAR_STORE = false  //! Warning: erase all app data...
@@ -26,8 +39,8 @@ import { guard }
 import { cache }
 	from 'lit-html/directives/cache.js'
 
-// blackbox this file in chrome to get real line numbers
-// keep out of bundle (rollup externals)
+// z-console is kept out of the bundle by rollup externals option;
+// we need to import it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
 import log from '../z-console.js'
 log('info','Vision Stage • version:', VERSION)
 import { q, qAll, el, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass  } from './utils-core.js'
