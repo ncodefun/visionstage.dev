@@ -48,7 +48,7 @@ class ButtonSelect extends Component {
 
 		// find the buttons' natural width as a min-width for all to use
 		// so the fold header keep the same width even when menu is folded
-		let btn_width = this.q('.menu').offsetWidth
+		let btn_width = this.q('.menu button').offsetWidth
 		this.style.setProperty('--min-width', btn_width+'px')
 	}
 

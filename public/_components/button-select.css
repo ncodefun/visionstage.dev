@@ -23,8 +23,7 @@ button-select button {
 	padding: .1rem .42rem 0;
 	border-radius: 0;
 	height: 2rem;
-	/* border-color: #ddd; */
-	/* margin */
+	min-width: var(--min-width, 0);
 }
 button-select[menu-dir='row'] .menu button:last-of-type:not(:first-of-type) {
 	border-radius: 0 .33rem .33rem 0;
@@ -105,7 +104,7 @@ button-select.folds button  {
 }
 button-select button.toggle {
 	margin-bottom: 2px;
-	min-width: var(--min-width, 0);
+
 }
 button-select button:not(.selected) span.icon {
 	opacity: .33;
