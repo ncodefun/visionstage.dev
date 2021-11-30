@@ -1,4 +1,4 @@
-const OFFLINE_VERSION = 2			/// change to erase old cache
+const OFFLINE_VERSION = 1			/// change to erase old cache
 const CACHE_NAME = "offline"
 const CACHED_URLS = [
   // '/',

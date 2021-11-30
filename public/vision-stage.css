@@ -48,6 +48,7 @@
 
 /*/  -- COLORS NEW --  /*/
 	html {
+		--html-theme: hsl(250, 100%, 58%);
 		--sea: hsl(150, 100%, 64%);
 		--sky: hsl(159, 100%, 83%);
 		--scrollbar-bg-color: #0001;
