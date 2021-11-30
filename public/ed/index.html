@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+	<title>Make-an-app</title>
+	<meta 	charset=		'UTF-8'>
+	<meta 	name=				'theme-color'
+					content=			'hsl(217, 100%, 52%)'>
+	<meta 	name=				'description'
+					content=			''>
+	<meta 	name=				'keywords'
+					content=			'web app'>
+	<meta 	name=				'web-author'
+					content=			'José Roux (joserouxx@gmail.com)'>
+	<meta 	name=				'author'
+					content=			'José Roux'>
+
+	<meta 	name=				'viewport'
+					content=			'width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no'>
+	<meta 	name=				'mobile-web-app-capable'
+					content=			'yes'>
+	<meta 	name=				'apple-mobile-web-app-capable'
+					content=			'yes'>
+	<meta 	name=				'apple-mobile-web-app-status-bar-style'
+					content=			'black-translucent'>
+
+	<!-- <link 	rel='author' href='./humans.txt'> -->
+	<!-- <link rel='preload' as='font' crossorigin	href='./_assets/fonts/GROBOLDX.woff'> #loading h1 -->
+	<link rel='preload' as='style' 	href='../vision-stage.css'>
+	<link rel='modulepreload' 			href='../vision-stage.min.js'>
+	<link rel='modulepreload' 			href='../z-console.js'>
+	<link rel='icon' type='image/png' sizes='192x192' href='../_assets/images/app-icons/android-chrome-192x192.png'>
+	<link rel='icon' type='image/png' sizes='32x32'		href='../_assets/images/app-icons/favicon-32x32.png'>
+	<link rel='icon' type='image/png' sizes='16x16'		href='../_assets/images/app-icons/favicon-16x16.png'>
+	<link rel='apple-touch-icon' 			sizes='60x60' 	href='../_assets/images/app-icons/apple-touch-icon.png'>
+	<link rel='manifest' 	 href='../manifest.json'>
+
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=block" rel="stylesheet">
+
+	<link rel='stylesheet' href	='../vision-stage.css'>
+	<link rel='stylesheet' href	='./app.css'>
+	<script type='module'  src	='./app.js'></script>
+</head>
+
+<body flow>
+	<vision-stage flow='col top stretch' langs='fr en' string:doc-title='fr:Allo,en:Hello'></vision-stage>
+
+	<div id='loading' class='layer' flow='col'>
+		<div class='loader'><div></div><div></div><div></div><div></div></div>
+	</div>
+</body>
+</html>

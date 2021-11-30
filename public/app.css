@@ -1,33 +1,5 @@
 /* @import url('inputs.css');
 @import url('transitions.css'); */
-/* josefin-sans-regular - latin */
-@font-face {
-  font-family: 'Josefin Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/_assets/fonts/josefin-sans-v20-latin-regular.woff2') format('woff2');
-}
-/* josefin-sans-600 - latin */
-@font-face {
-  font-family: 'Josefin Sans';
-  font-style: normal;
-  font-weight: 600;
-  src: url('/_assets/fonts/josefin-sans-v20-latin-600.woff2') format('woff2');
-}
-/* josefin-sans-italic - latin */
-@font-face {
-  font-family: 'Josefin Sans';
-  font-style: italic;
-  font-weight: 400;
-  src: url('/_assets/fonts/josefin-sans-v20-latin-italic.woff2') format('woff2');
-}
-/* josefin-sans-600italic - latin */
-@font-face {
-  font-family: 'Josefin Sans';
-  font-style: italic;
-  font-weight: 600;
-  src: url('/_assets/fonts/josefin-sans-v20-latin-600italic.woff2') format('woff2');
-}
 
 body {
 	--scrollbar-handle-color: hsl(247, 70%, 67%);
@@ -421,11 +393,12 @@ button.bare:hover {
 /*/ program delightful varying pulses! letters sequence,
 /*! SVG BITS OF RANDOM/PATTERNED ORGANIC SHAPES */
 #lang-bar {
-	background: #00000017;
+	background: #00000020;
 	border-radius: 2rem;
-	border: 1px solid #0007;
-	padding: 0 1.6rem;
+	border: 1px solid #0001;
+	padding: 0 1.7rem;
 	margin: 1rem 0;
+	height: .42rem;
 	/* max-width: 33rem; */
 	position: relative;
 }
@@ -433,20 +406,27 @@ button.bare:hover {
 	content: '';
 	border: .12rem dashed var(--sky);
 	--d: -.76rem;
-	position:absolute ; left:calc( -1 * var(--d) / 2) ; top:calc( -1 * var(--d) / 2) ;
-	width: calc(100% + var(--d));
-	height: calc(100% + var(--d) * .25);/* squash: 0.5 or < for more vertical "squash"  */
-	top: calc(var(--d) * -.125); /* negative half-squash: 0.25 or < */
+	position:absolute ;
+	/* left:calc( -1 * var(--d) / 2) ;
+	top:calc( -1 * var(--d) / 2) ; */
+	width: 90%;
+	/* calc(100% + var(--d)); */
+	height: 1rem;
+	/*calc(100% + var(--d) * .25);/* squash: 0.5 or < for more vertical "squash"  */
+	bottom: 50%;
+	/* top: auto; */
+	/* calc(var(--d) * -.125);  */
+	/* negative half-squash: 0.25 or < */
 	border-radius: 10rem;
-	opacity: .76;
-	opacity: .17;
+	/* opacity: .76; */
+	opacity: .12;
 }
 
 
 #lang-bar button {
 	/* font-family: Grobold, serif; letter-spacing: .09em; */
 	font-family: Jost, serif;
-	font-size: 1.25rem;
+	font-size: 1.18rem;
 	margin: 0 .5rem;
 	color: var(--sky);
 	opacity: .92;

@@ -1,5 +1,17 @@
+/**
+ *
+ * <button-select
+			menu-dir='col'
+			.onChange=${this.onChangeSelect}
+			.labels=${ my_selection_labels }
+			.selections=${ this.my_selections }
+			>
+		</button-select>
+ */
+/// todo: floating chevrons as signifiers of choice, cycle buttons & options
+
 /** select / tabs / checkbox  */
-import { q, qAll, log, Component, html, define, useSVG as SVG } from '../vision-stage.min.js'
+import { q, qAll, log, Component, html, define, useSVG as ICON } from '../vision-stage.min.js'
 
 const app = q('vision-stage')
 

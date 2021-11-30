@@ -5,7 +5,14 @@ import resolve from '@rollup/plugin-node-resolve'
 export default {
   input: "src/vision-stage.js",
   output: [
-    { file: "public/vision-stage.min.js", format: "esm", plugins: [terser({ output: { comments: false } })] },
+    {
+      file: "public/vision-stage.min.js",
+      format: "esm",
+      plugins: [
+        terser({ output: { comments: false } })
+      ],
+      //sourcemap: true
+    },
   ],
   plugins: [ resolve() ],
   external: id => /z\-console/.test( id)

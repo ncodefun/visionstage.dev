@@ -1,45 +1,22 @@
-import { Component, VisionStage, html, define, log, sleep, q, nextFrame, tempClass, useSVG as ICON } from './vision-stage.min.js'
+/// invert apparition of nav vs welcome so welcome is default on landing
+/// make nav & lang <button-select>s
+/// 404.html, re-routing spa for URL variarions support
+/// offline warning banner? or popup
+/// popup component
+/// num input, advanced input (for ed)
+
+import { Component, VisionStage, html, define, log, sleep, q, tempClass, useSVG as ICON, ctor }
+	from './vision-stage.min.js'
 
 const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = true
-// if a .scene el is not here, the CSS generated will be incomplete and other scenes won't hide when that scene is selected (direct URL, link)…
-
-
-const my_selection_labels = ['AA','B','Ccccc aaas']
-
-/// todo: floating chevrons as signifiers of choice, cycle buttons & options
-
-/** return value of o (if string) || o[lang] */
-function stringOrLocale( o, _this){
-	return typeof o === 'string' ? o :
-		o[ _this.lang] || o[ _this.langs[0]]
-}
-
 
 class App extends VisionStage {
 
-	async onConnected(){
+	routes = ctor( this).routes
+
+	onConnected(){
 		Component.load('button-select')
 		// Component.load('https://github.com/........button-select')
-
-
-		this.buildCSSForScenes() //! after updateForURL first call;
-		this.setupSounds() // playSound( name), stopSound( name)
-
-		// if ('serviceWorker' in navigator){
-		// 	window.addEventListener('load', () => {
-		// 		navigator
-		// 			.serviceWorker
-		// 			.register('sw.js', { scope: '/' })
-		// 			.then(
-		// 				registration => {
-		// 					console.log('ServiceWorker registration')
-		// 				},
-		// 				err => {
-		// 					console.error('ServiceWorker registration failed', err)
-		// 				}
-		// 			)
-		// 	})
-		// }
 	}
 
 	template(){
@@ -59,7 +36,7 @@ class App extends VisionStage {
 				<header id='home-header'
 					flow='row full'
 					@click=${ this.setLang }>
-					<div id='lang-bar'>
+					<div id='lang-bar' flow='row' class='stay-big x-tall-based-scaling'>
 					${
 						this.langs.length === 1 ? '' :
 						this.langs.map( lang => html`
@@ -131,8 +108,8 @@ class App extends VisionStage {
 							@click=${this.onClickNavItem}
 							>
 							${
-								routes.filter(r=>!(r.visible===false)).map( r => html`
-									<a class='button' href='#${r.path}'>${stringOrLocale(r.title, this)}</a>
+								this.routes.filter(r=>!(r.visible===false)).map( r => html`
+									<a class='button' href='#${r.path}'>${this.stringOrLocale( r.title)}</a>
 								`)
 							}
 						</nav>
@@ -222,32 +199,15 @@ class App extends VisionStage {
 		`
 	}
 
-	onResized( rem, AR){
-		// log('check', 'resized; AR:', AR )
-		// if( this.portrait)
-				//! compute diff between aspect-ratios tall and x-tall and set the progress in a 0-1 range
-
-		const range = AR.base - AR.min // ex: 0.1,  / 0.16 = 0.83333
-		let xtra = null
-		if( this.is_portrait){
-			xtra = (AR.base - AR.now) / range // .66 - .6 = .06 over .16
-			xtra = Math.max(0, Math.min(1, xtra))
-			log('check', 'xtra:', xtra)
-		}
-		this.style.setProperty('--extra', xtra===null?0:xtra) //[0,1]
-
-	}
-
 	onChangeSelect( selections){
 		log('check', 'onChangeSelect:', selections)
 		// single (checkbox): [] or [0]
 	}
 
-	onClickBack( e){
-		if( e.target.dataset.showBack === 'true')
-			this.scene = this.last_scene
-		else if( this.is_portrait) // toggle show welcome / nav
-			this.hide_nav = !this.hide_nav
+	// General methods
+
+	onResized( rem, AR){
+		// log('check', 'resized; AR:', AR )
 	}
 
 	setLang( e){
@@ -268,7 +228,12 @@ class App extends VisionStage {
 		}, 100)
 	}
 
-
+	onClickBack( e){
+		if( e.target.dataset.showBack === 'true')
+			this.scene = this.last_scene
+		else if( this.is_portrait) // toggle show welcome / nav
+			this.hide_nav = !this.hide_nav
+	}
 
 	async transit( a, b){ //! called from vision-stage, move this also later
 		return
@@ -304,45 +269,18 @@ class App extends VisionStage {
 	 *  pregenerated-CSS based automatic transitions for fade-in/out of #home/nav and scenes
 	 */
 
-	buildCSSForScenes(){
-		let str = []
-
-		// hide all other than show-for='none' when no scene
-		str.push(`.app[scene=''] [show-for\\:scene]:not([show-for\\:scene='none'])`)
-
-		for( let r of routes){
-
-			// hide all that do not match scene or is not 'all' or is not 'none'
-			str.push(`.app[scene='${r.path}'] [show-for\\:scene]:not([show-for\\:scene='all']):not([show-for\\:scene~='${r.path}']):not([show-for\\:scene='none'])`)
-
-		}
-		str = str.join(',\n') + '{ visibility: hidden ; opacity: 0 }'
-		const stylesheet = document.createElement('style')
-		stylesheet.classList.add('show-for-styles')
-		stylesheet.textContent = str
-		document.head.appendChild( stylesheet)
-
-		this.has_scenes = routes.length > 1
-	}
-
-	onSceneChanged( scene, prev){
-		if( !scene)
-			return
-
-		// immediate scenes fade-out transition (no delay) OF .no-dly… > section.scene
-		tempClass( this, 'no-delay-fade-out', .5)
-
-		this.hide_nav = false
-
-		// store it so we know after its erased so we can return to it
+	onSceneChanged( scene){
+		if( scene)
+			this.hide_nav = false // reset for next time
 	}
 
 	onClickNavItem( e){
-		e.preventDefault()
+		e.preventDefault() // <a> elements…
 		let scene = e.target.hash.slice(1)
 		// log('check', 'link hash / scene:', scene)
 		this.scene = scene
 	}
+
 	onClickNavicon( e){
 		if( !this.scene){
 			if( RETURN_TO_LAST_SCENE_ON_MENU_CLOSE && this.last_scene)
@@ -363,8 +301,8 @@ class App extends VisionStage {
 	}
 }
 
-// could be just a const (only used here); set on App for consistancy
-const routes = [
+
+App.routes = [
 	{ path:'A', title:{fr:"Page A fr",en:"Page A en"} },
 	{ path:'B', title:{fr:"Page B fr",en:"Page B en"}, enabled:false },
 	{ path:'C', title:{fr:"Page C",en:"Page C"} },
@@ -380,7 +318,7 @@ const routes = [
 	// { path:'Z', title:{fr:"Page Zfr",en:"Page Zen"} },
 ]
 
-App.aspect = {
+App.aspects = {
 	'x-tall': 0.5 , tall: 0.6 , medium: 0.67 ,
 	wide: 3/2 ,'x-wide': 18/9 ,
 	'cross-margin': '1.8%'
@@ -426,4 +364,22 @@ App.sounds = [
 	// { name:'click', url:'sounds/click.mp3', options:{ volume:0.5 } },
 ]
 
+const my_selection_labels = ['AA','B','Ccccc aaas']; // for <button-select> demo
+
 define( 'vision-stage', App, [])
+
+if ('serviceWorker' in navigator){
+	window.addEventListener('load', () => {
+		navigator
+			.serviceWorker
+			.register('sw.js', { scope: '/' })
+			.then(
+				registration => {
+					log('ok','ServiceWorker registration')
+				},
+				err => {
+					log('err', 'ServiceWorker registration failed', err)
+				}
+			)
+	})
+}

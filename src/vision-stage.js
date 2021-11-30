@@ -1,4 +1,4 @@
-const VERSION = 3.24
+const VERSION = 3.25
 const COMPONENTS_DIR = '/_components/'
 
 /**
@@ -43,66 +43,20 @@ import { cache }
 // we need to import it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
 import log from '../z-console.js'
 log('info','Vision Stage • version:', VERSION)
-import { q, qAll, el, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass  } from './utils-core.js'
 
-/// Share with other components
+import { q, qAll, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass, isScrollbarVisible, is_iOS, is_safari  } from './utils-core.js'
+
+// Share with other components
 export { log, q, qAll, html, svg, unsafeHTML, ifDefined, repeat, live, guard, nextFrame, sleep, ctor, range, loadScriptAsync, loadScriptsAsync, cache, tempClass }
 
 const debug = {}
 
-/**
- * Defines a custom element (window.customElements.define) and return whenDefined promise
- * @param components wait and load required components before define
- * @return whenDefined's promise
- * @usage `define('my-comp', MyCompClass, []).then( ...)`
- */
-export async function define( tag_name, clss, components){
-
-	// import comps (js & css) dependencies (when required right from the start)
-	if( components && components.length){
-		components = components.map( c => Component.load( c))
-		await Promise.all( components)
-	}
-
-	window.customElements.define( tag_name, clss)
-
-	return window.customElements.whenDefined( tag_name).then( () => {
-		//log('check', 'when defined:', tag_name)
-		if( tag_name === 'vision-stage'){
-			app.resize()
-			app.classList.add('resized')
-			app.updateForURL() //! do not delay; this sets .params and they might be used immediately in callbacks
-
-			setTimeout( () => {
-				q(':root > body > #loading').classList.add('faded')
-				setTimeout( () => { q(':root > body > #loading').remove() }, 1000)
-			}, 100)
-
-			setTimeout( e => {
-				window.addEventListener('resize', debounce( app.resize.bind( app), 300, 300)),
-				2000
-			})
-			// ->  Arg 1: debounce dly (wont callback until you stop calling and after a delay),
-			// ->  Arg 2: throttle dly (wont callback more often than at this frequency)
-		}
-	})
-}
-
-
-let app, store, store_namespace, after_resize_timeout
-let ASPECT_RATIOS
+let app, store, store_namespace, after_resize_timeout, ASPECT_RATIOS
 // let active_sw, redundant
-
-export const is_mac = navigator.platform === 'MacIntel'
-const is_iOS = /iPad|iPhone|iPod/.test( navigator.platform) ||
-							 (is_mac && navigator.maxTouchPoints > 1)
-const is_safari = /^((?!chrome|android).)*safari/i.test( navigator.userAgent)
-const isScrollbarVisible = (element) => element.scrollHeight > element.clientHeight
 
 // Will reference all components having an onResized method
 // to call them after window is resized
 const resize_watchers = new Set()
-
 
 const icons_mappings = {
 	delete: 'trash',
@@ -111,27 +65,19 @@ const icons_mappings = {
 	'+': 'plus',
 	'x': 'cross'
 }
-export function useSVG( id, clss='', ar, vb='0 0 32 32'){
-	let src = app.icons_path || '/_assets/images/icons.svg'
-	if( icons_mappings[id])
-		id = icons_mappings[id]
-	//log('check', 'svg path:', src)
-	return html`<svg class=${clss ? 'icon '+clss : 'icon'} viewBox=${vb} preserveAspectRatio=${ ifDefined( ar) }>
-		<use href='${src}#${id}'/>
-	</svg>`
-}
+
 
 // so we don't load the same component Class multiple times
 const loaded_components = new Set()
 
-// Component base class to be extended by our custom elements
+// Component base class to be extended by our components
 export class Component extends HTMLElement {
 
 	constructor(){
 		super()
 		if( this.localName === 'vision-stage'){
 			app = this
-			this.langs = this.getAttribute('langs').split(/\s*,\s/)
+			this.langs = this.getAttribute('langs').split(/\s*,?\s+/)
 			const path = decodeURI(location.pathname)
 			this.app_name =
 			this.ns = path.replace(/\//g, '') || 'home' //this.getAttribute('store')
@@ -575,8 +521,7 @@ export class Component extends HTMLElement {
 	}
 }
 
-
-// App base class
+// App Component
 export class VisionStage extends Component {
 
 	constructor(){
@@ -586,7 +531,7 @@ export class VisionStage extends Component {
 		this.classList.add('app')
 		this.is_iOS = is_iOS
 		this.scrolls = this.classList.contains('scroll')
-		window.addEventListener('popstate', () => this.updateForURL( true))
+		window.addEventListener('popstate', () => this.updateSceneFromURL( true))
 
 		// Save store on pagehide / unload
 		if( !CLEAR_STORE){
@@ -615,14 +560,14 @@ export class VisionStage extends Component {
 			document.body.classList.remove('using-mouse')
 		})
 
-		app.updateAspect( ctor( this).aspect)
+		app.updateAspect( ctor( this).aspects)
 	}
 
 	connectedCallback(){
-		//log('ok', 'APP connected', this.localName)
 
 		this.url_segments =
 			location.pathname.split('/').filter( item => item!=='').map( item => decodeURI( item))
+
 		this.onConnected && this.onConnected() // -> before setting scene
 
 		if( this.$doc_title){
@@ -630,31 +575,23 @@ export class VisionStage extends Component {
 		}
 		// else title remain as defined in the <title> tag
 
-		if( this.localName === 'vision-stage'){
-			setTimeout( e => {
-				this.faded = false
-			}, 200)
-		}
-		else log('err','What???')
+		this.buildCSSForScenes()
+		this.setupSounds() // playSound( name), stopSound( name)
+
+		setTimeout( e => {
+			// this.faded = false
+		}, 1000)
 	}
 
 	_onFirstRendered(){
-		// const veil = el('div','',{ id:'veil', class: 'layer' })
-		// veil.addEventListener('pointerdown', this._closeOpenedMenu)
-		// this.append( veil)
-		if( !this.menu_scenes)
-			this.classList.remove('waiting-scenes')
 		this.lang = this.lang // trigger watcher
-
-		// if we use app-header, set class: .has-app-header, and only then set listener:
-		// if( this.q('app-header')){
-		// 	this.classList.add('has-app-header')
-		// 	main = this.q('main')
-		// 	if( !main) return
-		// 	const throttledScrollListener = debounce( this.onMainScroll.bind( this), 0, 500)
-		// 	main.addEventListener('scroll', throttledScrollListener)
-		// }
 	}
+
+	/** return value of o (if string) || o[lang] */
+	stringOrLocale( o){
+		return typeof o === 'string' ? o : o[ this.lang] || o[ this.langs[0]];
+	}
+
 
 	// onMainScroll(e){
 	// 	this.classList.toggle('scrolled', main.scrollTop > 10)
@@ -764,7 +701,7 @@ export class VisionStage extends Component {
 		root.style.fontSize =	fs + 'px'
 
 		this.scale = fs / 16
-		log('purple', 'this.scale:', this.scale)
+		//log('purple', 'this.scale:', this.scale)
 			// -> floor else we might overflow and get scrollbar
 		//log('info', 'fontSize :', root.style.fontSize)
 		// VALUE OF ONE REM IN PX (0.00)
@@ -784,6 +721,17 @@ export class VisionStage extends Component {
 			}
 		}
 
+		// calc progress between tall AR (0) and x-tall AR (1);
+		// can be useful to adjust something progressively from one to the other AR
+		const range = AR.base - AR.min // ex: 0.1,  / 0.16 = 0.83333
+		let xtra = null
+		if( this.is_portrait){
+			// log('check', 'AR.base - AR.now) / range:', AR.base, AR.now, range, AR.min)
+			xtra = (AR.base - AR.now) / range // .66 - .6 = .06 over .16
+			xtra = Math.max( 0, Math.min( 1, xtra))
+			log('info', '--extra (-tall progress):', xtra)
+		}
+		this.style.setProperty('--extra', xtra===null?0:xtra) //[0,1]
 
 		// WE MIGHT WANT TO STYLE THE STAGE DIFFERENTLY WHEN THERE'S A SCROLLBAR
 		// e.g. BY DEFAULT WE USE ROUNDED CORNERS WHEN WE SET A MARGIN / CROSS-MARGIN ATTR ON <vision-stage>, BUT IT BECOME "UGLY" WITH A SCROLLBAR, SO WE REMOVE ROUNDED CORNERS THEN…
@@ -822,10 +770,9 @@ export class VisionStage extends Component {
 
 	}
 
-	updateForURL( pop=false){
+	updateSceneFromURL( pop=false){
 
 		this.params = location.hash.slice(1).split('/')
-		// scene from first param
 		let scene = decodeURI( this.params[0]) || ''
 
 		if( scene.includes('--')){
@@ -834,19 +781,41 @@ export class VisionStage extends Component {
 		}
 
 		// if( !pop)
-		// 	// we might not be ready to render
 		// 	this._state.scene = scene
-		// else
-		//if( pop) log('info', 'pop for scene:', scene)
-		//else log('info', 'initial updateForURL();', scene)
-		// log('check', 'this::', this)
 
-		/// must know if pop or not
-		this.popping = true
+		this.popping = true // we must know if pop or not to push/replace history or not
 		this.scene = scene
-		// log('info', 'updateForURL(); scene:', scene, 'pop?', pop)
 	}
 
+	// build CSS to hide elements with a lang attribute not matching the app's
+	buildCSSForLangs(){
+		let str = ''
+		for( let lang of this.langs)
+			str += `vision-stage[lang='${lang}'] [lang]:not([lang='${lang}']) { display: none !important }\n`
+		const stylesheet = document.createElement('style')
+		stylesheet.textContent = str
+	  document.head.appendChild( stylesheet)
+	}
+
+	buildCSSForScenes(){
+		const routes = ctor( this).routes
+		let str = []
+
+		// hide all other than show-for='none' when no scene
+		str.push(`.app[scene=''] [show-for\\:scene]:not([show-for\\:scene='none'])`)
+
+		for( let r of routes){
+			// hide all that do not match scene or is not 'all' or is not 'none'
+			str.push(`.app[scene='${r.path}'] [show-for\\:scene]:not([show-for\\:scene='all']):not([show-for\\:scene~='${r.path}']):not([show-for\\:scene='none'])`)
+		}
+		str = str.join(',\n') + '{ visibility: hidden ; opacity: 0 }'
+		const stylesheet = document.createElement('style')
+		stylesheet.classList.add('show-for-styles')
+		stylesheet.textContent = str
+		document.head.appendChild( stylesheet)
+
+		this.has_scenes = routes.length > 1
+	}
 
 	// must be called from the app after user event, or onConnected but then the first time it won't play on iOS
 	/**
@@ -856,6 +825,7 @@ export class VisionStage extends Component {
 	 * @return {Promise}
 	 */
 	setupSounds(){
+		log('info', 'setupSounds')
 		const sounds_data = ctor( this).sounds
 		if( !sounds_data)
 			return
@@ -915,19 +885,10 @@ export class VisionStage extends Component {
 			this.playing_source = null
 		}
 	}
-
-	// build CSS to hide elements with a lang attribute not matching the app's
-	buildCSSForLangs(){
-		let str = ''
-		for( let lang of this.langs)
-			str += `vision-stage[lang='${lang}'] [lang]:not([lang='${lang}']) { display: none !important }\n`
-		const stylesheet = document.createElement('style')
-		stylesheet.textContent = str
-	  document.head.appendChild( stylesheet)
-	}
 }
 
-// these static members are underscore prefix so they are merged and not overriden next by MyApp.properties
+// these static members are underscore prefixed
+// so they are merged and not overriden next by > MyApp.properties
 
 VisionStage._properties = {
 	title: '',
@@ -977,30 +938,6 @@ VisionStage._properties = {
 		value: false,
 		class: 'ios'
 	},
-	admin: {
-		value: false,
-		class: 'admin'
-	},
-
-	/// Menus
-
-	// menu_options: null,
-	// menu_auth: null,
-	// opened_menu: { // <[opened-menu]>
-	// 	value: '',
-	// 	attribute: 'opened-menu',
-	// 	watcher( val, prev){
-	// 		//log('check', 'opened-menu:', val)
-	// 		//if( !val) debugger
-	// 		if( !this.scene && prev==='auth'&& !val && this.default_scene!==''){
-	// 			this.menu_scenes && setTimeout( e => {
-	// 				this.menu_scenes.open = true
-	// 			}, 500)
-	// 		}
-	// 	}
-	// },
-
-	scenes: null,
 	scene: {
 		value: null, /// {}
 		stored: false, //!! depends on url, should not override...
@@ -1011,51 +948,39 @@ VisionStage._properties = {
 
 			this.setAttribute('scene', val)
 			this.onSceneChanged && this.onSceneChanged( val, prev)
+			// immediate scenes fade-out transition (no delay) OF .no-delay-… > section.scene
+			tempClass( this, 'no-delay-fade-out', .5)
 
 			if( !SCENE_HISTORY) return
 
 			const requested_path = decodeURI(location.pathname + (val ? '#'+val : ''))
-			const current_path = decodeURI( location.pathname+location.hash||'')
-			const is_new_path = requested_path !== current_path
+			// const current_path = decodeURI( location.pathname+location.hash||'')
+			// const is_new_path = requested_path !== current_path
 			const is_new_scene = val && val !== this.last_scene // so implies !!val
 			const is_same_scene = val && val === this.last_scene
-			//const is_new = is_new_scene||is_new_path
 			const pop = this.popping
 			this.popping = false // reset
 
-			// condensed version of below
-			// initial load
 			const pop_scene_and_prev_is_null = 					 pop && prev===null
 			const empty_scene_request = 								!pop && !val
 			const new_scene_request_and_prev_exists = 	!pop && !!prev && is_new_scene // implies !!val
 			const new_scene_request_and_prev_is_empty = !pop && prev==='' && is_new_scene
 			const same_scene_request = !pop && is_same_scene
 
-			/// what if: scene=A, scene='', scene=A ?
-			const same_scene_and_prev_is_empty = 				!pop && prev==='' && is_same_scene
-
 			if( pop_scene_and_prev_is_null || empty_scene_request || new_scene_request_and_prev_exists){
 				history.pushState( null, '', requested_path)
-				log('warn', 'shorthand pushState:', requested_path)
+				log('check', 'shorthand pushState:', requested_path)
 			}
+			// replace if prev was same or empty scene
 			else if( new_scene_request_and_prev_is_empty || same_scene_request){
-				// we've made a choice from nav menu
-				//! replaces the empty scene entry in history, not the last scene...
-				//! -> we still can have doubles (we must allow them in this case)
 				history.replaceState( null, '', requested_path)
-				log('warn', 'shorthand replaceState:', requested_path)
-			}
-			else {
-				log('warn', 'shorthand; no action')
+				log('check', 'shorthand replaceState:', requested_path)
 			}
 
 			if( val)
 				this.last_scene = val
 
-
-
-			//log('purple', 'HISTORY REPLACE:', requested_path)
-			/// FULL VERSION WITH LOGS FOR DEBUGGING
+			// FULL logic tree VERSION WITH LOGS FOR DEBUGGING
 			/*
 			if( !pop){
 				if( val){
@@ -1091,9 +1016,6 @@ VisionStage._properties = {
 				}
 			}
 			*/
-
-
-
 		},
 	},
 }
@@ -1116,8 +1038,58 @@ VisionStage._strings = {
 	}
 }
 
+/**
+ * Defines a custom element (window.customElements.define) and return whenDefined promise
+ * @param components wait and load required components before define
+ * @return whenDefined's promise
+ * @usage `define('my-comp', MyCompClass, []).then( ...)`
+ */
+export async function define( tag_name, clss, components){
 
-///  STORE  ///
+	// import comps (js & css) dependencies (when required right from the start)
+	if( components && components.length){
+		components = components.map( c => Component.load( c))
+		await Promise.all( components)
+	}
+
+	window.customElements.define( tag_name, clss)
+
+	return window.customElements.whenDefined( tag_name).then( () => {
+		//log('check', 'when defined:', tag_name)
+		if( tag_name === 'vision-stage'){
+
+			app.resize()
+			app.classList.add('resized')
+			// do not delay; this sets .params and they might be used immediately in callbacks
+			app.updateSceneFromURL()
+
+			//setTimeout( () => {
+				q(':root > body > #loading').classList.add('faded')
+				setTimeout( () => { q(':root > body > #loading').remove() }, 1000)
+			//}, 100)
+
+			setTimeout( e => {
+				window.addEventListener('resize', debounce( app.resize.bind( app), 300, 300)),
+				2000
+			})
+			// ->  Arg 1: debounce dly (wont callback until you stop calling and after a delay),
+			// ->  Arg 2: throttle dly (wont callback more often than at this frequency)
+		}
+	})
+}
+
+/**	=> html`<svg><use src='#'>...</svg>` */
+export function useSVG( id, clss='', ar, vb='0 0 32 32'){
+	let src = app.icons_path || '/_assets/images/icons.svg'
+	if( icons_mappings[id])
+		id = icons_mappings[id]
+	//log('check', 'svg path:', src)
+	return html`<svg class=${clss ? 'icon '+clss : 'icon'} viewBox=${vb} preserveAspectRatio=${ ifDefined( ar) }>
+		<use href='${src}#${id}'/>
+	</svg>`
+}
+
+//  STORE  //
 
 /** Parse store from localStorge or init a new one */
 function initStore( ns){

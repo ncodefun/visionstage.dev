@@ -1,4 +1,8 @@
-
+export const is_mac = navigator.platform === 'MacIntel'
+export const is_iOS = /iPad|iPhone|iPod/.test( navigator.platform) ||
+							 (is_mac && navigator.maxTouchPoints > 1)
+export const is_safari = /^((?!chrome|android).)*safari/i.test( navigator.userAgent)
+export const isScrollbarVisible = (element) => element.scrollHeight > element.clientHeight
 
 /** optional chaining util since iOS 12 doesn't support it natively and old iPads are stuck at this version */
 export const chain = (obj, ...keys) => {

@@ -1,0 +1,76 @@
+
+popup-full {
+
+  position: fixed;
+  width: var(--stw, 100%);
+  height: var(--sth, 100%);
+  /* left: 0; */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  background: hsla(217, 100%, 56%, .92);
+  color: white;
+  padding: 1rem 2rem;
+  border-radius: inherit;
+  transition: transform .25s linear;
+  will-change: transform;
+  cursor: default;
+}
+popup-full header {
+  font-size: 1.33rem;
+  line-height: 1.33;
+  font-weight: 400;
+  margin: .1rem 1rem .3rem;
+  letter-spacing: 1px;
+}
+popup-full small {
+  font-size: 1rem;
+  line-height: 1.5;
+  display: block;
+}
+popup-full i {
+  /* letter-spacing: 0; */
+  /* color: rgba(255, 255, 255, 0.85); */
+  font-family: Roboto Condensed;
+}
+popup-full:not([shown]) {
+  transform: translateY(101vh);
+}
+
+popup-full button {
+  margin: .2rem .5rem;
+}
+
+popup-full .buttons {
+  margin-top: 1.25rem;
+}
+popup-full .buttons button {
+  font-family: Roboto, sans-serif;
+  font-weight: 500;
+  margin: 0 .75rem;
+  min-width: 6rem;
+}
+
+popup-full h1 {
+  margin: 0;
+  font-size: 1.75rem;
+}
+
+popup-full a {
+  color: white;
+}
+
+popup-full[shown] ~ main,
+popup-full[shown] ~ .main,
+popup-full[shown] ~ app-header button {
+  filter: blur(5px);
+}
+
+popup-full input {
+  font-size: 1.25rem;
+  background: #fffc;
+  border: 2px solid #fff;
+  padding: .25rem .5ch;
+}

@@ -1,6 +1,7 @@
 {
-  "short_name": "visionstage",
+  "short_name": "vision-stage",
   "name": "Vision Stage",
+  "id": "/",
   "icons": [
     {
       "src": "./_assets/images/app-icons/android-chrome-192x192.png",
@@ -13,10 +14,10 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "./",
-  "scope": "./",
-  "theme_color": "hsl(266, 88%, 40%)",
-  "background_color": "hsl(258, 66%, 33%)",
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "hsl(252, 88%, 40%)",
+  "background_color": "hsl(248, 66%, 33%)",
   "display": "fullscreen",
   "orientation": "landscape"
 }
