@@ -34,12 +34,15 @@ export function objectFromString( string, remove_key_prefix=''){
 		string = string.replace(re,'')
 		console.log('pink', 'now string:', string)
 	}
+	//! first we should extract quoted strings that may contain reserved char (:)
 	let arr = string.trim()
-		/// replace reserved chars (use :: -> :)
-		.replace(/\:\:/g,'&colon;')
+		// replace reserved chars (use :: -> :)
+		//.replace(/\:\:/g,'&colon;')
 		.match(/[^:]+\:[^:]+((\s*,\s*)|$)/g)
 		.map( part => part.trim())
-		.map( part => part.endsWith(',') ? part.slice(0,-1).split(/\s*:\s*/) : part.split(/\s*:\s*/) )
+		.map( part => part.endsWith(',') ?
+			part.slice(0,-1).split(/\s*:\s*/) :
+			part.split(/\s*:\s*/) )
 	//log('info', 'string converted:', arr)
 	return Object.fromEntries( arr)
 }

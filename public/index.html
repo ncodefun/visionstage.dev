@@ -4,7 +4,7 @@
 	<title>Vision Stage</title>
 	<meta 	charset=		'UTF-8'>
 	<meta 	name=				'theme-color'
-					content=			'hsl(250, 100%, 58%)'>
+					content=			'hsl(240, 44%, 15%)'>
 	<meta 	name=				'description'
 					content=			''>
 	<meta 	name=				'keywords'
@@ -24,7 +24,9 @@
 					content=			'black-translucent'>
 
 	<!-- <link 	rel='author' href='./humans.txt'> -->
-	<!-- <link rel='preload' as='font' crossorigin	href='./_assets/fonts/GROBOLDX.woff'> #loading h1 -->
+	<!-- <link rel='preload' as='font' crossorigin	href='./_assets/fonts/fffffff.woff2'> -->
+
+
 	<link rel='preload' as='style' 	href='./vision-stage.css'>
 	<link rel='preload' as='style' 	href='./app.css'>
 	<link rel='modulepreload' 			href='./vision-stage.min.js'>
@@ -36,7 +38,9 @@
 	<link rel='apple-touch-icon' 			sizes='60x60' 	href='./_assets/images/app-icons/apple-touch-icon.png'>
 	<link rel='manifest' 	 href='./manifest.json'>
 
-
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 	<!-- <link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Russo+One&display=block" rel="stylesheet"> -->
@@ -44,18 +48,16 @@
 	<!-- <link rel='preload' as='style'
 				onload="this.rel='stylesheet'"
 				href='/non-critical.css'> -->
+	<!-- <img src="./_assets/images/icons.svg" style="display: none"> -->
 
 	<link rel='stylesheet' href	='./vision-stage.css'>
 	<link rel='stylesheet' href	='./app.css'> <!-- blocking as it should; so this should use only critical CSS, and delegate most to components, so it and its CSS load async-->
 	<script type='module'  src	='./app.js'></script>
+
 </head>
 
 <body flow>
-	<vision-stage flow='col top stretch' langs='fr en' string:doc-title='fr:Allo,en:Hello'
+	<vision-stage flow='col top stretch' langs='fr en' string:doc-title='fr:Vision Stage'
 	></vision-stage>
-
-	<div id='loading' class='layer' flow='col'>
-		<div class='loader'><div></div><div></div><div></div><div></div></div>
-	</div>
 </body>
 </html>

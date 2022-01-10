@@ -8,7 +8,7 @@ const COMPONENTS_DIR = '/_components/'
  * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
  * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
  *  -> component instances are directly accessed / queried and modified without any limitations.
- *	-> smart properties: comp. self-renders on change: stored:true (for stringifyable values),
+ *	-> smart properties: self-renders on change: stored:true (for stringifyable values),
  *	   watcher(val,prev){}, transformer(val,prev){return val}, class:'' (for bool - auto add/remove), attribute:'name' (mirrors value)
  * Old school: unscoped CSS & full reload (no hot module reloading…)
  *
@@ -47,7 +47,7 @@ log('info','Vision Stage • version:', VERSION)
 import { q, qAll, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, sleep, cleanNum, chain, range, loadScriptAsync, loadScriptsAsync, tempClass, isScrollbarVisible, is_iOS, is_safari  } from './utils-core.js'
 
 // Share with other components
-export { log, q, qAll, html, svg, unsafeHTML, ifDefined, repeat, live, guard, nextFrame, sleep, ctor, range, loadScriptAsync, loadScriptsAsync, cache, tempClass }
+export { log, q, qAll, html, svg, unsafeHTML, ifDefined, repeat, live, guard, nextFrame, sleep, ctor, range, loadScriptAsync, loadScriptsAsync, cache, tempClass, debounce }
 
 const debug = {}
 
@@ -579,8 +579,8 @@ export class VisionStage extends Component {
 		this.setupSounds() // playSound( name), stopSound( name)
 
 		setTimeout( e => {
-			// this.faded = false
-		}, 1000)
+			this.faded = false
+		}, 0)
 	}
 
 	_onFirstRendered(){
@@ -1062,11 +1062,6 @@ export async function define( tag_name, clss, components){
 			app.classList.add('resized')
 			// do not delay; this sets .params and they might be used immediately in callbacks
 			app.updateSceneFromURL()
-
-			//setTimeout( () => {
-				q(':root > body > #loading').classList.add('faded')
-				setTimeout( () => { q(':root > body > #loading').remove() }, 1000)
-			//}, 100)
 
 			setTimeout( e => {
 				window.addEventListener('resize', debounce( app.resize.bind( app), 300, 300)),

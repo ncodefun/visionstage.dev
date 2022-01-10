@@ -11,7 +11,7 @@
 /// todo: floating chevrons as signifiers of choice, cycle buttons & options
 
 /** select / tabs / checkbox  */
-import { q, qAll, log, Component, html, define, useSVG as ICON } from '../vision-stage.min.js'
+import { q, qAll, log, Component, html, define, useSVG as ICON, sleep } from '../vision-stage.min.js'
 
 const app = q('vision-stage')
 
@@ -60,7 +60,9 @@ class ButtonSelect extends Component {
 
 		// find the buttons' natural width as a min-width for all to use
 		// so the fold header keep the same width even when menu is folded
+		//await sleep( 0)
 		let btn_width = this.q('.menu button').offsetWidth
+		//log('check', 'btn width:', btn_width)
 		this.style.setProperty('--min-width', btn_width+'px')
 	}
 

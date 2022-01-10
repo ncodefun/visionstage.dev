@@ -30,25 +30,62 @@
 		font-weight: 600;
 		src: url('/_assets/fonts/josefin-sans-v20-latin-600italic.woff2') format('woff2');
 	}
+/* josefin-slab-600 - latin */
+@font-face {
+  font-family: 'Josefin Slab';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/_assets/fonts/josefin-slab-v13-latin-600.woff2') format('woff2');
+}
+/* josefin-slab-700 - latin */
+@font-face {
+  font-family: 'Josefin Slab';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/_assets/fonts/josefin-slab-v13-latin-700.woff2') format('woff2');
+}
+/* josefin-slab-600italic - latin */
+@font-face {
+  font-family: 'Josefin Slab';
+  font-style: italic;
+  font-weight: 600;
+  src: url('/_assets/fonts/josefin-slab-v13-latin-600italic.woff2') format('woff2');
+}
+/* josefin-slab-700italic - latin */
+@font-face {
+  font-family: 'Josefin Slab';
+  font-style: italic;
+  font-weight: 700;
+  src: url('/_assets/fonts/josefin-slab-v13-latin-700italic.woff2') format('woff2');
+}
+/* russo-one-regular - latin */
+@font-face {
+  font-family: 'Russo One';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/russo-one-v9-latin-regular.woff2') format('woff2');
+}
+
+
 	/** Germes */
-	@font-face {
+	/* @font-face {
 		font-family: 'Germes';
-		src: url("./_assets/fonts/GermesBoldX.woff") format("woff");
+		src: url("/_assets/fonts/GermesBoldX.woff") format("woff");
 		font-weight: 700;
 		font-style: normal;
-	}
+	} */
 	/** jost-600 - latin */
-	@font-face {
+	/* @font-face {
 		font-family: 'Jost';
 		font-style: normal;
 		font-weight: 600;
-		src: url('./_assets/fonts/jost-v2-latin-600.woff2') format('woff2');
-	}
+		src: url('/_assets/fonts/jost-v2-latin-600.woff2') format('woff2');
+	} */
 /***/
 
 /*/  -- COLORS NEW --  /*/
 	html {
-		--html-theme: hsl(250, 100%, 58%);
+		--html-theme: hsl(240, 44%, 15%);
 		--sea: hsl(150, 100%, 64%);
 		--sky: hsl(159, 100%, 83%);
 		--scrollbar-bg-color: #0001;
@@ -112,7 +149,7 @@
 		color: white;
 		z-index: 1;
 		/* background: var(--purp); */
-		transition: opacity .4s ease-out;
+		transition: opacity .4s 0s ease-out;
 	}
 	#loading.faded {
 		opacity: 0;
@@ -202,6 +239,7 @@
 	html {
 		height: 100%;
 		font: 18px/1.5 Josefin Sans, serif;
+		--app-height: 40; /* ! set this var if non-default in vs.js */
 	}
 	body {
 		margin: 0;
@@ -240,7 +278,10 @@
 		height: var(--sth);
 		position: relative;
 		display: block;
-		transition: opacity 1s .33s ease; /** delay, let #loading fade out first */
+		transition: opacity 1s .1s ease; /** delay, let #loading fade out first */
+	}
+	vision-stage.faded {
+		opacity: 0;
 	}
 	vision-stage.has-margins {
 		border-radius: .5rem;
@@ -250,15 +291,13 @@
 /***/
 
 
-/**/  -- HELPERS --  /**/
-
-vision-stage.faded { opacity: 0 !important }
-
-.app[orientation='portrait'] .stay-big-port {
-	font-size: calc(var(--sth) / 24);
+/**  -- HELPERS --  **/
+.app[orientation='portrait'] .stay-big {
+	/* font-size: calc(var(--sth) / 24) !important; */
+	font-size: calc(var(--sth) / var(--app-height, 40)) !important;
 }
-.stay-big {
-	font-size: calc(var(--sth) / 24) !important;
+.app[orientation='portrait'] .stay-bigger {
+	font-size: calc(var(--sth) / var(--app-height, 40) * 1.25) !important;
 }
 
 /* so button stays same size, just svg gets bigger */
@@ -319,7 +358,7 @@ button svg.icon { height: var(--icon-height, 100%) }
 
 
 button.dummy {
-	display: none;
+	visibility: hidden;
 }
 hr {
 	width: 80%;
@@ -666,6 +705,12 @@ button.blue {
 	background: #0a68ff;
 	color: #fffe;
 	border-color: #3f89ff
+}
+button.orange {
+	background: hsl(29, 100%, 70%);
+	color: #000e;
+	text-shadow: 0 .07rem .07rem rgba(0, 0, 0, .2);
+	border-color: hsl(29, 100%, 68%);
 }
 
 button.green:hover {

@@ -8,7 +8,7 @@
 import { Component, VisionStage, html, define, log, sleep, q, tempClass, useSVG as ICON, ctor }
 	from './vision-stage.min.js'
 
-const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = true
+const RETURN_TO_LAST_SCENE_ON_MENU_CLOSE = false
 
 class App extends VisionStage {
 
@@ -22,12 +22,19 @@ class App extends VisionStage {
 	template(){
 		const port = this.is_portrait
 		// on first load, navicon is unavailable (we see both parts, no need to switch)
-		const unavailable = !this.scene&&!this.last_scene && !port
-		const show_quest_alt = !this.scene && !!this.last_scene && port
-		const show_quest = !this.scene && !this.hide_nav && !this.last_scene && port
-		const show_back =
-			!this.scene && this.last_scene   // NAV IS OPEN, LAST SCENE EXISTS
-			&& !RETURN_TO_LAST_SCENE_ON_MENU_CLOSE
+		const unavailable 	 = !this.scene && !this.last_scene && !port
+		const show_quest_alt = !this.scene && this.last_scene && port
+
+		// const show_back =
+		// 	!this.scene && this.last_scene   // NAV IS OPEN, LAST SCENE EXISTS
+		// 	&& !RETURN_TO_LAST_SCENE_ON_MENU_CLOSE
+
+		const show_quest = port && !this.scene && (!this.last_scene||this.hide_nav)
+			&& !this.hide_nav
+
+		// conditions to show the question mark meaning show the about section / hide nav
+		// portrait mode, no scene (menu/home),
+
 
 		return html`
 			<section show-for:scene='none' id='home'
@@ -36,28 +43,24 @@ class App extends VisionStage {
 				<header id='home-header'
 					flow='row full'
 					@click=${ this.setLang }>
-					<div id='lang-bar' flow='row' class='stay-big x-tall-based-scaling'>
+					<div id='lang-bar' flow='row' class='stay-bigger x-tall-based-scaling'>
+						<span class='equal'> = </span>
 					${
 						this.langs.length === 1 ? '' :
-						this.langs.map( lang => html`
+						this.langs.map( (lang,i,arr) => [html`
 							<button class='bare medium square pseudo-link ${ this.lang === lang ? 'active':'' }'>
 								<div class='text'>${ lang.toUpperCase() }</div>
 							</button>
-						`)
+						`, i===-1 ? '' : html`<span class='equal'> = </span> `])
 					}
 					</div>
-					<!-- <button
-						@click=${ this.onClickMore }
-						class='abs right round bare bigger'
-						style='color:white ; margin:1rem'>
-						i
-					</buttin> -->
 				</header>
 
 				<h1 id='home-title'
-					class='align-self-end'>
-					VISION<div class=''>STAGE<div>
+					class='align-self-end' flow='col'>
+					VISION<div>STAGE</div>
 				</h1>
+
 
 				<div id='home-welcome'
 					class='rel'
@@ -70,30 +73,24 @@ class App extends VisionStage {
 						class='text-center ${!this.hide_nav&&this.is_portrait ? 'fade-out':''}'
 						flow='col top'>
 
-						<h2>Simple Web apps, <strong><em>fast</em></strong>.<br><small>Pure and <strong>simple</strong>.</small></h2>
-						<!-- <h3><button @click=${this.onClickTest}>TEST</button></h3> -->
-						<p id='intro'>
-							Vanilla JS components with lit-html template<br>
-							<code>=><em> no build, 5 minutes learning curve…</em></code>
-							<!-- Develop prototypes / small apps without a massive framework that promise the moon. -->
-							<br>
-							<!-- <selector-button
-							.labels=${ ['A','BBB','CC'] }
-								direction='col'
-								label-position='top'
-							>Label</selector-button> -->
-							<!-- All the essentials → staging/resizing	•	scenes (#hash routing)	•	strings/sounds/icons easy management • smart properties (change = self-render + those w/ this.uses([ 'comp-in-question', ['prop-in-question'] ]):
-							{} • one menu
-							<br>
-							<div>
-								Native components • vanilla JS / lit-html -> no build
-								– p
-							</div> -->
-							<!-- (<button @click=… .prop=… ?disabled=… etc.) -->
-						</p>
-						<div style='flex-grow:1' flow>
-							<!-- <button-checkbox .target=${this} property='lean'>Lean mode</button-checkbox> -->
+						<div id='taglines'>
+							<div>A new agile</div>
+							<!-- localization, svg icons -->
+							<!-- - Scenes+menu (virtual pages routing)
+							- basic UI components
+							- fullscreen, lang,  -->
+							<h2>•• from concept to reality at lightspeed ••</h2>
 						</div>
+
+						<p id='' class='text-center purp'>
+							<code><a href='#components'>Native Web components</a> – <strong><em>no toolchain hell of diversions – Pure focus</em></strong></code><br>
+							<code><a href='#stage'>Stage</a> / app component – rem value resizing, multi aspect control for consistant presentation</code>
+						</p>
+						<!-- <h2 >Prototyping the futur</h2> -->
+						<!-- <a href='https://manifest.vision/'> -->
+						<!-- Props: stored:true, class:'on' (for bool prop), attribute:'data-x'|['disabled','bool'] -->
+						<!-- (<button @click=… .prop=… ?disabled=… etc.) -->
+
 					</article>
 
 					<!-- > NAV (nav items) -->
@@ -104,7 +101,7 @@ class App extends VisionStage {
 							id='scenes-nav'
 							flow-land='row wrap'
 							flow-port='col top stretch'
-							class='stay-big-port scroll mini-scrollbar'
+							class='scroll mini-scrollbar stay-bigger'
 							@click=${this.onClickNavItem}
 							>
 							${
@@ -117,67 +114,67 @@ class App extends VisionStage {
 
 				</div>
 
-
 			</section>
 
 			<main id='scenes' flow='col grow'>
 
-				<section show-for:scene='A B C admin'
-					flow='col top' class='layer scene partial'>
-					<p>${this.getString('header')}</p>
-				</section>
-
-				<section show-for:scene='A'
+				<section show-for:scene='ethos'
 					id='sceneA' flow='col top' class='layer scene'>
-					<h2>Page A</h2>
-
-					<p><a href='#B'>Go to Page B</a></p>
+					<h2>Ethos abstract in French</h2>
 					<p>
-						<button-select
-							.onChange=${this.onChangeSelect}
-							fold  multi*
-								comment='-> mutually exclusive (do not set both active)'
-							menu-dir='col'
-							menu-pos='top-left'
-							.labels=${ my_selection_labels }
-							.selections=${ this.my_selections }
-							icon='bar'
-								comment="option to replace radio buttons and checkboxes by a led light icon"
-							icon-position='right'
-							>
-							Please make a selection…
-						</button-select>
+						La seule chose je crois qu'on perd vraiment avec l'indépendance, c'est toutes les barrières inventées par les bien-pensants, les gardiens de la vertu, les "experts" en vérité, for your own good.
+						Mon coeur me dit que la simplicité libre de toute contrainte qui ne sont pas l'amour, même si tu vas pas sur la lune avec ça, c'est toujours plus payant en fin de compte... moi j'aime mieux naviguer au soleil, et que le bon vent m'emmène où mon coeur regarde.
+
+						Je laisse les grands jouer à s'enfoncer dans leurs complexité et réinventer le monde et faire des frameworks pour les in-nénieurs... Vision Stage c'est pour le monde de demain, le monde des joueurs libérés, des créateurs conscients, les devs de très haut niveau qui n'ont plus de temps à perdre avec des solutions pré-digérées avec lesquelles ont s'emmèle éternellement...
 					</p>
-					<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis, dolor iusto accusamus quae quis earum odio maxime dolores tempora commodi consectetur ipsum dolorum, voluptates rerum quia laboriosam! Officia, facilis alias?</p>
+
 				</section>
 
-				<section show-for:scene='B'
-					flow='col' class='layer scene'>
-					<h2>Page B</h2>
-					<p><a href='#A'>Go to Page A, it's better.</a></p>
+				<section show-for:scene='components'
+					id='sceneA' flow='col top' class='layer scene'>
+					<h2>Components</h2>
+					<p>
+						<li>ES modules / class expands Component or VisionStage for the main (app) component.</li>
+						<li>Lit-html templates - string literals + js expressions <sup>(syntax highlight + intellisense support with code extension)</sup></li>
+					</p>
 				</section>
 
-				<section show-for:scene='A B'
-					id='page-footer' flow='row bottom space-between' class='layer scene partial'>
-					<div>page</div>
-					<div>footer</div>
+				<section show-for:scene='stage'
+					id='sceneA' flow='col top' class='layer scene'>
+					<h2>Stage</h2>
+					<p>
+
+					</p>
 				</section>
 
+				<!-- EXAMPLES
+					! prob: width of header doesn't expand...
+					<button-select
+						.onChange=${this.onChangeSelect}
+						fold  multi*
+							comment='-> mutually exclusive (do not set both active)'
+						menu-dir='col'
+						menu-pos='top-left'
+						.labels=${ my_selection_labels }
+						.selections=${ this.my_selections }
+						icon='bar'
+							comment="option to replace radio buttons and checkboxes by a led light icon"
+						icon-position='right'
+						>
+						Please make a selection…
+					</button-select>
+
+				 -->
 			</main>
 
 			<!-- navicon btn + FS btn ; not in a scene => always visible -->
 			<footer
 				id='app-footer'
-				class='stay-big-port'
+				class='stay-big'
 				flow='row space-between'
 				>
 
-				<button data-show-back=${show_back?'true':'false'}
-					class='round bare ${show_back?'rot90':'big'} ${show_back||show_quest_alt&&!show_quest?'':'hidden'}'
-					style='--icon-height:80%'
-					@click=${this.onClickBack}>
-					${ show_back ? ICON('chevron-down') : '?'}
-				</button>
+				<button class='dummy round'></button>
 
 				<button
 					id='nav-menu-toggle'
@@ -185,7 +182,7 @@ class App extends VisionStage {
 					self='center'
 					@pointerdown=${ this.onClickNavicon }
 					>
-					${ show_quest ? '?' : ICON('navicon-round') }
+					${ ICON('navicon-round') }
 				</button>
 
 				<button id='fullscreen-toggle'
@@ -198,6 +195,24 @@ class App extends VisionStage {
 			</footer>
 		`
 	}
+
+	/*
+	<section show-for:scene='A B C admin'
+		flow='col top' class='layer scene partial'>
+		<p>${this.getString('header')}</p>
+	</section>
+	<section show-for:scene='B'
+		flow='col' class='layer scene'>
+		<h2>Page B</h2>
+		<p><a href='#A'>Go to Page A, it's better.</a></p>
+	</section>
+
+	<section show-for:scene='A B'
+		id='page-footer' flow='row bottom space-between' class='layer scene partial'>
+		<div>page</div>
+		<div>footer</div>
+	</section>
+	*/
 
 	onChangeSelect( selections){
 		log('check', 'onChangeSelect:', selections)
@@ -275,6 +290,8 @@ class App extends VisionStage {
 	}
 
 	onClickNavItem( e){
+		if( !e.target.hash)
+			return
 		e.preventDefault() // <a> elements…
 		let scene = e.target.hash.slice(1)
 		// log('check', 'link hash / scene:', scene)
@@ -303,25 +320,13 @@ class App extends VisionStage {
 
 
 App.routes = [
-	{ path:'A', title:{fr:"Page A fr",en:"Page A en"} },
-	{ path:'B', title:{fr:"Page B fr",en:"Page B en"}, enabled:false },
-	{ path:'C', title:{fr:"Page C",en:"Page C"} },
-	{ path:'admin', title:"-- Admin --", access:'admin' },
-
-	// { path:'credits', title:{fr:"credits",en:"credits"}, visible: false },
-	{ path:'C', title:{fr:"Page C",en:"Page C"} },
-
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'C', title:{fr:"Page C",en:"Page C"} },
-	// { path:'Z', title:{fr:"Page Zfr",en:"Page Zen"} },
+	{ path:'ethos', title: { fr:"Ethos", en:"Ethos (French)" } },
 ]
 
 App.aspects = {
-	'x-tall': 0.5 , tall: 0.6 , medium: 0.67 ,
+	'x-tall': 0.35 , tall: 0.55 , //medium: 0.67 ,
 	wide: 3/2 ,'x-wide': 18/9 ,
-	'cross-margin': '1.8%'
+	'cross-margin': '1.33%'
 }
 
 App.properties = {
@@ -367,7 +372,7 @@ App.sounds = [
 const my_selection_labels = ['AA','B','Ccccc aaas']; // for <button-select> demo
 
 define( 'vision-stage', App, [])
-
+/*
 if ('serviceWorker' in navigator){
 	window.addEventListener('load', () => {
 		navigator
@@ -383,3 +388,4 @@ if ('serviceWorker' in navigator){
 			)
 	})
 }
+*/
