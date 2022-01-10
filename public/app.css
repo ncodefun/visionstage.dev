@@ -320,7 +320,9 @@ main {
 	/* margin-top: calc(0rem + var(--extra) * 3rem); */
 	/* background: rgba(255, 192, 203, 0.027);
 	border: 1px solid hsla(248, 86%, 67%, 0.95); */
-	padding: 2rem 3rem; border-radius: .7rem;
+	padding: 2rem 0;
+	border-radius: .7rem;
+	width: 100%;
 }
 #home-main a {
 	color: hsla(159, 100%, 74%)
@@ -571,7 +573,7 @@ button {
 }
 
 #sceneA {
-	padding-top: 10rem;
+	/* padding-top: 10rem; */
 }
 
 /*/ transitions /*/

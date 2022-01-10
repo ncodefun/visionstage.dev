@@ -74,12 +74,14 @@ class App extends VisionStage {
 						flow='col top'>
 
 						<div id='taglines'>
-							<div>A new agile</div>
+							<h2>Native Web components</h2>
+							<div>no more toolchain hell of diversions and frustration – <em>Pure focus!</em> 🙏😇</div>
+							<div>A new agile…</div>
 							<!-- localization, svg icons -->
 							<!-- - Scenes+menu (virtual pages routing)
 							- basic UI components
 							- fullscreen, lang,  -->
-							<h2>•• from concept to reality at lightspeed ••</h2>
+							<!-- •• from concept to reality at lightspeed •• -->
 						</div>
 
 						<p id='' class='text-center purp'>
@@ -116,16 +118,16 @@ class App extends VisionStage {
 
 			</section>
 
-			<main id='scenes' flow='col grow'>
+			<main id='scenes' flow='col grow' class='scroll mini-scrollbar'>
 
 				<section show-for:scene='ethos'
 					id='sceneA' flow='col top' class='layer scene'>
-					<h2>Ethos abstract in French</h2>
+					<h2>Ethos abstract in French – Vive l'Indépendence!</h2>
 					<p>
 						La seule chose je crois qu'on perd vraiment avec l'indépendance, c'est toutes les barrières inventées par les bien-pensants, les gardiens de la vertu, les "experts" en vérité, for your own good.
 						Mon coeur me dit que la simplicité libre de toute contrainte qui ne sont pas l'amour, même si tu vas pas sur la lune avec ça, c'est toujours plus payant en fin de compte... moi j'aime mieux naviguer au soleil, et que le bon vent m'emmène où mon coeur regarde.
 
-						Je laisse les grands jouer à s'enfoncer dans leurs complexité et réinventer le monde et faire des frameworks pour les in-nénieurs... Vision Stage c'est pour le monde de demain, le monde des joueurs libérés, des créateurs conscients, les devs de très haut niveau qui n'ont plus de temps à perdre avec des solutions pré-digérées avec lesquelles ont s'emmèle éternellement...
+						Je laisse les grands jouer à s'enfoncer dans leurs complexité et réinventer le monde et faire des frameworks pour les in-nénieurs... Vision Stage c'est pour le monde de demain, le monde des joueurs libérés, des créateurs conscients, les devs de très haut niveau qui n'ont plus de temps à perdre à gérer des solutions pré-digérées avec lesquelles ont s'emmèle éternellement...
 					</p>
 
 				</section>
@@ -369,9 +371,10 @@ App.sounds = [
 	// { name:'click', url:'sounds/click.mp3', options:{ volume:0.5 } },
 ]
 
-const my_selection_labels = ['AA','B','Ccccc aaas']; // for <button-select> demo
+// const my_selection_labels = ['AA','B','Ccccc aaas']; // for <button-select> demo
 
 define( 'vision-stage', App, [])
+
 /*
 if ('serviceWorker' in navigator){
 	window.addEventListener('load', () => {
