@@ -192,6 +192,9 @@ section.scene > * {
 	border-radius: 1rem;
 	background: linear-gradient(to top,#00000022, #00000000);
 }
+.app[orientation='landscape'] #home-nav {
+	bottom: -4rem;
+}
 .app[orientation='portrait'] #home-nav {
 	height:100%;
 	top: 0;
@@ -328,38 +331,33 @@ main {
 	color: hsla(159, 100%, 74%)
 }
 #home-main h2 {
-	/* font-weight: 400; */
-	font-size: 1.6rem;
-	/* font-style: italic; */
-	font-family: Rajdhani, serif;
-	font-weight: 400;
-	line-height: 1.1;
-	margin: .5rem 0 1rem;
-	margin: 0 0 .5rem;
+	margin: 0 0 1rem;
 	/* color: hsl(250, 100%, 90%); */
-	color: hsl(251, 95%, 84%);
 }
 #taglines {
 	margin: 0 0 2rem;
 }
-#home-main h2 + p {
-	/* text-transform: uppercase; */
-	/* font-size: .85em; */
-	font-weight: 700;
-	/* line-height: 1; */
-	display: block;
-	margin: .2rem 0 0;
-	padding: .5rem;
-	color: hsl(250, 100%, 90%);
-	letter-spacing: 0.6px;
-}
+
 
 .purp {
-	padding: .57rem 1rem .4rem;
+	padding: .5rem 1rem 1rem;
 	border-radius: .4rem;
 	background: hsla(248, 86%, 67%, 0.25);
 	border: 1px solid hsla(248, 86%, 67%, 0.95);
 	min-width: 20rem;
+	max-width: calc(100% - 1rem);
+	/* margin: 0 .2rem; */
+}
+.purp h3 {
+	/* font-weight: 400; */
+	font-size: 1.2rem;
+	/* font-style: italic; */
+	/* font-family: Rajdhani, serif; */
+	font-weight: 400;
+	line-height: 1.1;
+	margin: 1rem 0 .5rem;
+	color: hsl(251, 95%, 84%);
+
 }
 
 
@@ -546,7 +544,8 @@ main#scenes {
 	font-weight: 700;
 }
 #nav-menu-toggle.unavailable {
-	opacity: .125;
+	/* opacity: .125; */
+	visibility: hidden;
 	pointer-events: none;
 }
 #nav-menu-toggle.credits {

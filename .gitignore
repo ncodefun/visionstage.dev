@@ -1,4 +1,5 @@
 node_modules
 .vscode
 .firebaserc
+.firebase/**
 _aside

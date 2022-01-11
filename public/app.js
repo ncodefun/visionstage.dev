@@ -22,7 +22,7 @@ class App extends VisionStage {
 	template(){
 		const port = this.is_portrait
 		// on first load, navicon is unavailable (we see both parts, no need to switch)
-		const unavailable 	 = !this.scene && !this.last_scene && !port
+		const unavailable 	 = !this.scene //&& !this.last_scene && !port
 		const show_quest_alt = !this.scene && this.last_scene && port
 
 		// const show_back =
@@ -61,7 +61,6 @@ class App extends VisionStage {
 					VISION<div>STAGE</div>
 				</h1>
 
-
 				<div id='home-welcome'
 					class='rel'
 					flow='col space-between'
@@ -73,26 +72,19 @@ class App extends VisionStage {
 						class='text-center ${!this.hide_nav&&this.is_portrait ? 'fade-out':''}'
 						flow='col top'>
 
-						<div id='taglines'>
-							<h2>Native Web components</h2>
+						<h2>•• from concept to reality @ lightspeed •• <br><em><small>A new level of agile…</small></em></h2>
+
+						<div id='taglines' class='purp'>
+							<h3>Native Web components</h3>
 							<div>no more toolchain hell of diversions and frustration – <em>Pure focus!</em> 🙏😇</div>
-							<div>A new agile…</div>
-							<!-- localization, svg icons -->
-							<!-- - Scenes+menu (virtual pages routing)
-							- basic UI components
-							- fullscreen, lang,  -->
-							<!-- •• from concept to reality at lightspeed •• -->
+
+							<h3>Consistant presentation on any screen</h3>
+							<div>rem scaling & multi-aspect stage for resizing & framing your content</div>
+
+
+							<!-- back to the simple future of the Web. -->
 						</div>
-
-						<p id='' class='text-center purp'>
-							<code><a href='#components'>Native Web components</a> – <strong><em>no toolchain hell of diversions – Pure focus</em></strong></code><br>
-							<code><a href='#stage'>Stage</a> / app component – rem value resizing, multi aspect control for consistant presentation</code>
-						</p>
-						<!-- <h2 >Prototyping the futur</h2> -->
-						<!-- <a href='https://manifest.vision/'> -->
-						<!-- Props: stored:true, class:'on' (for bool prop), attribute:'data-x'|['disabled','bool'] -->
-						<!-- (<button @click=… .prop=… ?disabled=… etc.) -->
-
+<!-- <a href='#stage'>Stage</a> / app component – rem value resizing, multi aspect control for consistant presentation -->
 					</article>
 
 					<!-- > NAV (nav items) -->
@@ -118,16 +110,16 @@ class App extends VisionStage {
 
 			</section>
 
-			<main id='scenes' flow='col grow' class='scroll mini-scrollbar'>
+			<main id='scenes' flow='col grow' class=''>
 
 				<section show-for:scene='ethos'
-					id='sceneA' flow='col top' class='layer scene'>
+					id='sceneA' flow='col top' class='layer scene scroll mini-scrollbar'>
 					<h2>Ethos abstract in French – Vive l'Indépendence!</h2>
 					<p>
 						La seule chose je crois qu'on perd vraiment avec l'indépendance, c'est toutes les barrières inventées par les bien-pensants, les gardiens de la vertu, les "experts" en vérité, for your own good.
 						Mon coeur me dit que la simplicité libre de toute contrainte qui ne sont pas l'amour, même si tu vas pas sur la lune avec ça, c'est toujours plus payant en fin de compte... moi j'aime mieux naviguer au soleil, et que le bon vent m'emmène où mon coeur regarde.
 
-						Je laisse les grands jouer à s'enfoncer dans leurs complexité et réinventer le monde et faire des frameworks pour les in-nénieurs... Vision Stage c'est pour le monde de demain, le monde des joueurs libérés, des créateurs conscients, les devs de très haut niveau qui n'ont plus de temps à perdre à gérer des solutions pré-digérées avec lesquelles ont s'emmèle éternellement...
+						Je laisse les grands jouer à s'enfoncer dans leurs complexité et réinventer le monde et faire des frameworks pour les in-nénieurs... Vision Stage c'est pour le monde de demain, le monde des joueurs libérés, des créateurs conscients, les devs de très haut niveau qui n'ont plus de temps à perdre à gérer des solutions pré-digérées avec lesquelles on s'emmèlent éternellement...
 					</p>
 
 				</section>
@@ -150,21 +142,7 @@ class App extends VisionStage {
 				</section>
 
 				<!-- EXAMPLES
-					! prob: width of header doesn't expand...
-					<button-select
-						.onChange=${this.onChangeSelect}
-						fold  multi*
-							comment='-> mutually exclusive (do not set both active)'
-						menu-dir='col'
-						menu-pos='top-left'
-						.labels=${ my_selection_labels }
-						.selections=${ this.my_selections }
-						icon='bar'
-							comment="option to replace radio buttons and checkboxes by a led light icon"
-						icon-position='right'
-						>
-						Please make a selection…
-					</button-select>
+
 
 				 -->
 			</main>
@@ -176,7 +154,9 @@ class App extends VisionStage {
 				flow='row space-between'
 				>
 
-				<button class='dummy round'></button>
+				<button class='dummy round'>
+
+				</button>
 
 				<button
 					id='nav-menu-toggle'
@@ -199,32 +179,32 @@ class App extends VisionStage {
 	}
 
 	/*
-	<section show-for:scene='A B C admin'
-		flow='col top' class='layer scene partial'>
-		<p>${this.getString('header')}</p>
-	</section>
-	<section show-for:scene='B'
-		flow='col' class='layer scene'>
-		<h2>Page B</h2>
-		<p><a href='#A'>Go to Page A, it's better.</a></p>
-	</section>
-
-	<section show-for:scene='A B'
-		id='page-footer' flow='row bottom space-between' class='layer scene partial'>
-		<div>page</div>
-		<div>footer</div>
-	</section>
-	*/
+	! prob: width of header doesn't expand...
+	<button-select
+		.onChange=${this.onChangeSelect}
+		fold  multi*
+			comment='-> mutually exclusive (do not set both active)'
+		menu-dir='col'
+		menu-pos='top-left'
+		.labels=${ my_selection_labels }
+		.selections=${ this.my_selections }
+		icon='bar'
+			comment="option to replace radio buttons and checkboxes by a led light icon"
+		icon-position='right'
+		>
+		Please make a selection…
+	</button-select>
 
 	onChangeSelect( selections){
 		log('check', 'onChangeSelect:', selections)
 		// single (checkbox): [] or [0]
 	}
-
-	// General methods
+	*/
 
 	onResized( rem, AR){
 		// log('check', 'resized; AR:', AR )
+		if( this.is_portrait)
+			this.hide_nav = true
 	}
 
 	setLang( e){
@@ -323,6 +303,7 @@ class App extends VisionStage {
 
 App.routes = [
 	{ path:'ethos', title: { fr:"Ethos", en:"Ethos (French)" } },
+
 ]
 
 App.aspects = {
