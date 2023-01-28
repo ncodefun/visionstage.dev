@@ -7,3 +7,4 @@
 /package-lock.json
 /rollup.config.dev.js
 /rollup.config.prod.js
+/public/cv*
