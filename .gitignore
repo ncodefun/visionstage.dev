@@ -1,0 +1,9 @@
+/.firebase
+/.firebaserc
+/.vscode
+/docs
+/node_modules
+/old_components
+/package-lock.json
+/rollup.config.dev.js
+/rollup.config.prod.js

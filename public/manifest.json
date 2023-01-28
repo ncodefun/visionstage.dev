@@ -1,0 +1,18 @@
+{
+  "short_name": "mystic-vision",
+  "name": "Mystic Vision",
+  "id": "/",
+  "icons": [
+    {
+      "src": "./_assets/images/app-icons/android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "theme_color": "hsl(256, 80%, 27%)",
+  "background_color": "hsl(256, 88%, 40%)",
+  "display": "fullscreen",
+  "orientation": "any"
+}

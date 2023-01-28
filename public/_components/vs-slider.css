@@ -1,0 +1,88 @@
+
+
+vs-slider {
+	--progress-percent: 50%;
+	--track-color: #ccc;
+	--track-color-before: #fff;
+	display: inline-flex;
+	height: 1.6em;
+	margin: .25rem;
+	width: 11rem;
+	position: relative;
+	z-index: 0;
+}
+
+vs-slider input[type=range]{
+	-webkit-appearance: none;
+	background: none;
+	border: none;
+	margin: 0;
+	width: 100%;
+	height: auto !important;
+	display: flex;
+	align-items: center !important;
+	outline: none;
+	font-size: inherit;
+}
+
+vs-slider input[type=range]::-webkit-slider-runnable-track {
+	/* margin: 0; */
+	background:
+		linear-gradient( to right,
+			var(--track-color-before) 0%,
+			var(--track-color-before) var(--progress-percent),
+			var(--track-color) var(--progress-percent),
+			var(--track-color) 100%
+		);
+	border-radius: 1em;
+	height: .5em;
+	/* margin: 0 .75em; */
+}
+vs-slider input[type=range]::-moz-range-track {
+	background:
+		linear-gradient( to right,
+			var(--track-color-before) 0%,
+			var(--track-color-before) var(--progress-percent),
+			var(--track-color) var(--progress-percent),
+			var(--track-color) 100%
+		);
+	border-radius: 1em;
+	height: .5em;
+	margin: 0 .75em;
+}
+
+vs-slider input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	height: 1.5em;
+	width: 1.5em;
+	border-radius: 50%;
+	position: relative;
+	top: 50%;
+	/* background: var(--thumb-color, var(--primary-adapt, var(--primary))); */
+	transform: translateY(-50%);
+	box-shadow: 0 .16rem .12rem #00000033;
+}
+vs-slider input[type=range]::-moz-range-thumb {
+	-webkit-appearance: none;
+	height: 1.5em;
+	width: 1.5em;
+	border-radius: 50%;
+	position: relative;
+	top: 50%;
+	/* background: var(--thumb-color, var(--primary-adapt, var(--primary))); */
+	box-shadow: 0 .14rem .14rem #00000028;
+	transform: none;
+}
+vs-slider input::-moz-focus-outer {
+	border: 0;
+}
+
+vs-slider[tickmarks] .steps {
+	position: absolute;
+	background-image: repeating-linear-gradient(to right, transparent 1px calc(var(--step-percent) - 0px), #FFF calc(var(--step-percent) - 0px) calc(var(--step-percent) + 1px) );
+	/* background-position: .75em 0; */
+	height: .5em;
+
+	top:80%; left:.75em; right:.75em;
+	z-index: -1;
+}

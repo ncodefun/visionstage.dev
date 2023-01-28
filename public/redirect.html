@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang='fr'>
+<head>
+	<meta charset='UTF-8'>
+	<meta name='viewport' content='width=device-width, initial-scale=1.0'>
+	<title>Vision Stage</title>
+	<style>
+		html, body {
+			background: hsl(214, 6%, 25%);
+			color: white;
+			font: 2rem/2 sans-serif;
+		}
+	</style>
+</head>
+<body>
+	<script>
+		/// Misspelled paths are catched by Firebase hosting
+		/// using a global rewrite which points here
+		/// this is a SPA-like rewrite but Firebase still serve a path that matches,
+		/// including an implicit /index.html
+
+		/// Here we look for a regex matching the pathname and get the correct folder / path.
+		/// We can use accents in folder name or allow them as a misspelling...
+
+		/// format -> 'real-path' : regex matching all allowed variation (case insensitive)
+
+		const map = {
+			'cv': /\/cv\-fr/i,
+			'sélecteurs': /\/s[ée]lect(o|eu)rs?/i, // matches sélecteurs? | selectors?
+		}
+
+		const path = decodeURI( location.pathname)
+		console.warn('path:', path)
+		let matches, dest = ''
+		for( let app in map){
+			let reg = map[ app]
+			matches = reg.test( path)
+			if( matches){
+				dest = '/'+app+'/'
+				break
+			}
+		}
+		if( dest) location.assign( dest)
+		else location.assign( '/404.html')
+	</script>
+</body>
+</html>

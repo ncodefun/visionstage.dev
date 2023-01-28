@@ -1,0 +1,309 @@
+#app {
+	--text-color-dark: hsl(var(--hue), 20%, 17%);
+	--text-color-light: hsl(var(--hue), 56%, 88%);
+	--hue: 150deg;
+}
+
+
+
+/**  Basic light and dark button colors  **/
+button {
+
+	--btn-bg-color: hsl(0, 0%, 96%);
+	--btn-bg-color-hl: hsl(0, 0%, 100%);
+	--btn-text-color: hsla(0, 0%, 7%, 0.95);
+	--btn-text-color-hl: hsl(0, 0%, 7%);
+	--btn-border-color: hsla(0, 0%, 100%, 0.5);
+	--btn-border-color-hl: hsla(0, 0%, 100%, 0.6);
+	--btn-border-color-darker: hsl(var(--hue), 12%, 88%); /*hsla(0, 0%, 70%, 0.5);*/
+	--btn-border-color-lighter: hsl(var(--hue), 12%, 100%);
+	--btn-outline-color: hsla(var(--hue), 90%, 62%, 0.5);
+	--btn-outline-color: hsl(var(--hue), 37%, 64%);
+
+	box-shadow:
+		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 25%);
+		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
+}
+.dark-components button {
+	--btn-bg-color: #272727;
+	--btn-bg-color-hl: #303030;
+	--btn-text-color: #fffe;
+	--btn-text-color-hl: #fff;
+	--btn-border-color: hsla(0, 0%, 0%, 0.25);
+	--btn-border-color-hl: #00000080;
+	--btn-border-color-darker: hsl(var(--hue), 11%, 11%);
+	--btn-border-color-lighter: hsl(var(--hue), 0%, 19%);
+	--btn-outline-color: hsla(var(--hue), 90%, 62%, 0.5);
+
+	box-shadow:
+		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 50%);
+		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
+}
+:where(.dark-components) button:not(.bare) {
+	font-weight: 300;
+}
+
+/**  Vivid color following the theme; if multiple, set these (or at least --hue) for each **/
+button.primary {
+	font-weight: 500;
+	--btn-bg-color: var(--primary, hsl(var(--hue), 90%, 62%));
+	--btn-bg-color-hl: var(--primary-hl, hsl(var(--hue), 93%, 79%));
+	--btn-text-color: #000e;
+	--btn-text-color-hl: #000;
+	--btn-border-color: hsl(var(--hue), 100%, 87%);
+	--btn-border-color-hl: hsl(var(--hue), 100%, 87%);
+	--btn-border-color-darker: hsl(var(--hue), 50%, 84%);
+	--btn-border-color-lighter: hsl(var(--hue), 100%, 92%);
+	--btn-outline-color: hsla(var(--hue), 0%, 100%, 0.75);
+}
+/**  primary-adapt: a lighter primary color when light-controls  **/
+button.primary-adapt,
+vs-slider input[type=range]::-webkit-slider-thumb {
+	--btn-bg-color: hsl(var(--hue), 77%, 88%); /* subtle */
+	--btn-bg-color-hl: hsl(var(--hue), 100%, 88%);
+	/* --btn-text-color: ;
+	--btn-text-color-hl: ; */
+	/* --btn-border-color: ;
+	--btn-border-color-hl: ; */
+	--btn-border-color-darker: hsl(var(--hue), 50%, 84%);
+	--btn-border-color-lighter: hsl(var(--hue), 100%, 92%);
+	--btn-outline-color: hsla(var(--hue), 90%, 50%, 0.5);
+}
+/**  primary-adapt: a darker primary color when dark-bg  **/
+.dark-components button.primary-adapt,
+.dark-components vs-slider input[type=range]::-webkit-slider-thumb {
+	--btn-bg-color: hsl(var(--hue), 29%, 20%); /* subtle */
+	--btn-bg-color-hl: hsl(var(--hue), 29%, 24%);
+	/* --btn-text-color: ;
+	--btn-text-color-hl: ; */
+	--btn-border-color:  hsl(var(--hue), 70%, 12%);
+	--btn-border-color-hl: hsl(var(--hue), 70%, 14%);
+	--btn-border-color-darker:  hsl(var(--hue), 19%, 17%);
+	--btn-border-color-lighter: hsl(var(--hue), 20%, 26%);
+	--btn-outline-color: hsla(var(--hue), 90%, 70%, 0.5);
+}
+
+/**  FIXED COLORS WITH MEANINGS (warn, error, ok)  **/
+
+button.blue {
+	--btn-bg-color: hsl(217, 100%, 52%);
+	--btn-bg-color-hl: hsl(217, 90%, 55%);
+	--btn-text-color: #fffe;
+	--btn-text-color-hl: #fffe;
+	--btn-border-color: hsl(217, 100%, 62%);
+	--btn-border-color-hl: hsl(217, 100%, 66%);
+	--btn-border-color-darker: hsl(217, 80%, 42%);
+	--btn-border-color-lighter: hsl(217, 100%, 72%);
+}
+
+/* .dark-components button.blue {
+	--btn-bg-color: ;
+	--btn-bg-color-hl: ;
+	--btn-text-color: ;
+	--btn-text-color-hl: ;
+	--btn-border-color: ;
+	--btn-border-color-hl: ;
+	--btn-border-color-darker: ;
+	--btn-border-color-lighter: ;
+} */
+
+button.green {
+	font-weight: 300;
+	--btn-bg-color: hsl(128, 54%, 44%);
+	--btn-bg-color-hl: hsl(128, 50%, 48%);
+	--btn-text-color: #000e;
+	--btn-text-color-hl: #fffe;
+	--btn-border-color: hsl(128, 58%, 49%);
+	--btn-border-color-hl: hsl(128, 58%, 49%);
+	--btn-border-color-darker: hsl(128, 50%, 35%);
+	--btn-border-color-lighter: hsl(128, 58%, 59%);
+	--btn-outline-color: hsl(128, 100%, 65%);
+}
+/* .dark-components button.green {
+	--btn-bg-color: ;
+	--btn-bg-color-hl: ;
+	--btn-text-color: ;
+	--btn-text-color-hl: ;
+	--btn-border-color: ;
+	--btn-border-color-hl: ;
+	--btn-border-color-darker: ;
+	--btn-border-color-lighter: ;
+} */
+button.yellow {
+	font-weight: 300;
+	--btn-bg-color: hsl(60, 90%, 72%);
+	--btn-bg-color-hl: hsl(60, 100%, 79%);
+	--btn-text-color: #000e;
+	--btn-text-color-hl: #000e;
+	--btn-border-color: hsl(60, 100%, 68%);
+	--btn-border-color-hl: hsl(60, 100%, 68%);
+	--btn-border-color-darker: hsl(60, 100%, 58%);
+	--btn-border-color-lighter: hsl(60, 100%, 78%);
+	--btn-outline-color: hsl(60, 100%, 52%);
+}
+button.orange {
+	--btn-bg-color: hsl(16, 100%, 60%);
+	--btn-bg-color-hl: hsl(16, 100%, 65%);
+	--btn-text-color: white;
+	--btn-text-color-hl: white;
+	--btn-border-color: hsl(29, 100%, 68%);
+	--btn-border-color-hl: hsl(29, 100%, 68%);
+	--btn-border-color-darker: hsl(29, 100%, 42%);
+	--btn-border-color-lighter: hsl(29, 90%, 77%);
+	--btn-outline-color: hsl(16, 100%, 52%);
+	text-shadow: 0 .07rem .07rem rgba(0, 0, 0, .2);
+}
+/* .dark-components button.orange {
+	--btn-bg-color: ;
+	--btn-bg-color-hl: ;
+	--btn-text-color: ;
+	--btn-text-color-hl: ;
+	--btn-border-color: ;
+	--btn-border-color-hl: ;
+	--btn-border-color-darker: ;
+	--btn-border-color-lighter: ;
+} */
+button.red {
+	--btn-bg-color: hsl(0, 100%, 38%);
+	--btn-bg-color-hl: hsl(0, 76%, 48%);
+	--btn-text-color: #fffd;
+	--btn-text-color-hl: #fffd;
+	--btn-border-color: hsl(0, 46%, 56%);
+	--btn-border-color-hl: hsl(0, 46%, 56%);
+	--btn-border-color-darker: hsl(0, 46%, 46%);
+	--btn-border-color-lighter: hsl(0, 88%, 60%);
+	--btn-outline-color: hsl(0, 100%, 59%);
+}
+/* .dark-components button.red {
+	--btn-bg-color: ;
+	--btn-bg-color-hl: ;
+	--btn-text-color: ;
+	--btn-text-color-hl: ;
+	--btn-border-color: ;
+	--btn-border-color-hl: ;
+	--btn-border-color-darker: ;
+	--btn-border-color-lighter: ;
+} */
+
+vs-slider input[type=range]::-webkit-slider-thumb {
+	background-color: var(--btn-bg-color);
+}
+vs-slider input[type=range]::-webkit-slider-thumb:hover {
+	background-color: var(--btn-bg-color-hl);
+}
+button:not(.bare) {
+	color: var(--btn-text-color);
+	background-color: var(--btn-bg-color);
+	border: .12rem solid var(--btn-border-color);
+}
+button:not(.bare):hover,
+body:not(.using-mouse) button:not(.bare):focus {
+	color: var(--btn-text-color-hl);
+	background-color: var(--btn-bg-color-hl);
+	border-color: var(--btn-border-color-hl);
+}
+body:not(.using-mouse) button:focus {
+	outline-width: 2px;
+	outline-style: solid;
+	outline-offset: -3px;
+	outline-color: var(--btn-outline-color);
+}
+body:not(.using-mouse) button.bare:focus {
+	outline-offset: 0;
+}
+
+.button-group[flow~='row'] > button:not(:last-of-type)
+	{ border-right-color: var(--btn-border-color-darker) }
+.button-group[flow~='row'] > button:not(:first-of-type)
+	{ border-left-color: var(--btn-border-color-lighter) }
+.button-group[flow~='col'] > button:not(:last-of-type)
+	{ border-bottom-color: var(--btn-border-color-darker) }
+.button-group[flow~='col'] > button:not(:first-of-type)
+	{ border-top-color: var(--btn-border-color-lighter) }
+
+
+
+/**  inputs  **/
+/* .light-controls :is(input, textarea) {
+	--inp-text-color: #111;
+	--inp-text-color-hl: #111;
+	--inp-bg-color: #f7f7f7;
+	--inp-bg-color-hl: #fff;
+	--inp-border-color: #ffffff80;
+	--inp-outline-color: #0007;
+}
+.dark-components :is(input, textarea) {
+	--inp-text-color: #111;
+	--inp-text-color-hl: #111;
+	--inp-bg-color: #f7f7f7;
+	--inp-bg-color-hl: #fff;
+	--inp-border-color: #ffffff80;
+	--inp-outline-color: #0007;
+} */
+
+input, textarea {
+	--inp-text-color: var(--text-color-dark);
+	--inp-text-color-hl: var(--text-color-dark);
+	--inp-bg-color: #f7f7f7;
+	--inp-bg-color-hl: #fff;
+	--inp-border-color: #ffffff80;
+	--inp-border-color-hl: #fff;
+	--inp-outline-color: hsl(var(--hue), 90%, 62%);;
+
+	background: var(--inp-bg-color);
+	border: .12rem solid var(--inp-border-color);
+	color: var(--inp-text-color);
+}
+
+input:hover, textarea:hover,
+input:focus, textarea:focus {
+	color: var(--inp-text-color-hl);
+	background: var(--inp-bg-color-hl);
+	border-color: var(--inp-border-color-hl);
+}
+input:focus, textarea:focus {
+	outline-width: 2px;
+	outline-style: solid;
+	outline-offset: -3px;
+	outline-color: var(--inp-outline-color);
+}
+
+
+.bright-bg, .auto-bg {
+	background-color: #ddd;
+}
+
+.has-bright-bg,
+.bright-bg, .auto-bg {
+	color: var(--text-color-dark);
+	--link-color: hsla(var(--hue), 90%, 70%, .85);
+	--link-color-hl: hsl(var(--hue), 90%, 70%);
+}
+
+.dark-bg, .dark-components .auto-bg {
+	background-color: #272727;
+}
+
+#app {
+	--link-color: hsla(var(--hue), 90%, 70%, .85);
+	--link-color-hl: hsl(var(--hue), 90%, 70%);
+}
+
+.has-dark-bg,
+.dark-bg, .dark-components .auto-bg {
+	color: var(--text-color-light);
+	--link-color: hsla(var(--hue), 90%, 70%, .85);
+	--link-color-hl: hsl(var(--hue), 90%, 70%);
+}
+
+/**  LINKS and bare buttons text color **/
+
+a, button.bare { color: var(--link-color) }
+a:hover, button.bare:hover { color: var(--link-color-hl) }
+/* button.bare { color: var(--link-color-hl) } */
+
+
+/* :is( button.bare, a).selected,
+:is( button.bare, a):hover {
+	color: var(--link-color-hl);
+} */

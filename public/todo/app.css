@@ -1,0 +1,89 @@
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-regular.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 400;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-italic.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 500;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-500.woff2) format('woff2');
+}
+
+#app {
+	font: 1rem/1.5 Open Sans, serif;
+	color: var(--text-color-bright);
+}
+/* #app-header {
+	grid-template-columns: 1fr max-content 1fr;
+} */
+
+form {
+	margin: .25rem 0 1rem;
+}
+ul {
+	border: 1px solid #fff6;
+	border-radius: .2rem;
+	padding: 1rem;
+	margin: 0 0 1rem;
+	list-style-type: none;
+	min-width: 20rem;
+	/* max-height: 20rem; */
+	min-height: 10rem;
+}
+li	{
+	background: #fff1;
+	margin-bottom: .2rem;
+	/* padding-left: 1ch; */
+	cursor: default;
+}
+li.selected {
+	background: #fff2;
+}
+button.bare.checkbox {
+	padding-top: .08rem;
+	--icon-height: 1.25em;
+}
+button.bare.todo-item {
+	margin: 0 1.5ch 0 0;
+	flex-grow: 1;
+	line-height: 1;
+	color: #fffc;
+	justify-content: flex-start;
+}
+#todo-title {
+	margin-bottom: .25rem;
+}
+label {
+	font-size: .85em;
+}
+.done {
+	text-decoration: line-through;
+	color: #fff7;
+	font-style: italic;
+}
+textarea {
+	font-family: inherit;
+	background: #fffd;
+	padding: 1ch;
+	font-size: .85em;
+}
+h1 {
+	font: italic 400 2rem/1.5 Josefin Sans, Roboto, serif;
+	margin: 1rem 0 0;
+}
+
+button.shift {
+	width: 7.5rem;
+}
+
+main#home {
+	padding-bottom: 2rem;
+}

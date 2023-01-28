@@ -1,0 +1,169 @@
+/* inter-regular - latin */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/inter-v12-latin-regular.woff2') format('woff2');
+}
+button, input, a.button {
+	font-family: Inter, Open Sans, serif;
+	font-size: .9em;
+	line-height: 1.6;
+	font-weight: 400;
+}
+
+/* :is(button, input, .button):not(.colored) {
+	font-weight: 460;
+}*/
+
+#app {
+	--hue: 150deg;
+	--lum: 61%;
+	--primary: hsl(150deg, 90%, 62%);
+	color: var(--text-color-bright);
+}
+
+#app[aspect-range*='portrait'] main {
+	padding-bottom: 2rem;
+}
+
+
+/** LINKS **/
+#app[highlight='yellow-green'].bright-bg,
+#app[highlight='yellow-green'].dark-bg {
+	--link-color: hsla(var(--hue), 68%, 60%);
+	--link-color-hl: hsl(var(--hue), 93%, 70%);
+}
+
+#app[theme-bg='whitish'] {
+	--scrollbar-handle-color: #555;
+	/* --main-hue: 200deg; */
+	--scrolls-shadow-color: #0003;
+	--scrolls-header-background: #222;
+	--scrolls-footer-background: #222;
+	text-shadow: 0 .1rem .12rem hsl(261, 15%, 23%, .5);
+	background: url(/_assets/images/textures/paper-opaque-8bit.png);
+}
+
+	/* --btn-outline: hsla(var(--theme-hue), 100%, 62%, .5); */
+/**!/ find out what to do with links / bare buttons on pale bg... */
+
+
+
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 300;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-300.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 300;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-300italic.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-regular.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 400;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-italic.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 500;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-500.woff2) format('woff2');
+}
+@font-face {
+	font-family: 'Open Sans';
+	font-style: italic;
+	font-weight: 500;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-500italic.woff2) format('woff2');
+}
+h1 { margin: 1.5rem 0 0 ; background: var(--theme-hsl); }
+h2 { margin: 1rem 0 0 }
+h3 { margin: 0 }
+
+.has-dark-bg :is(h2, h3) { font-weight: 300 } /** light text **/
+.has-bright-bg :is(h2, h3) { font-weight: 400 }
+
+/* h2,h3 { display:none } */
+/* main { padding-bottom: 5rem } */
+
+
+/**
+#app[night-mode='2'] h1 {
+	color: hsl(344, 67%, 64%);
+	text-shadow: 0 0.16rem 0.5rem hsl(330deg 63% 45%);
+	-webkit-text-stroke: #fff4 .1rem;
+}
+#app[night-mode='2'] .vivid { color: hsl(345, 80%, 75%) }
+#app[night-mode='2'] .soft { color: hsl(346, 100%, 82%) }
+#app[night-mode='2'] .filter { filter: hue-rotate(208deg) }
+*/
+
+.grid-2x3 {
+	display: grid !important;
+	grid-template-columns: auto auto;
+	grid-template-rows: auto auto auto;
+	gap: 1px;
+	background: palegreen;
+	padding: 1rem;
+}
+.grid-2x3 > button { border-radius: 0 !important}
+.grid-2x3 > button:nth-child(2n+1)
+	{ border-right-color: var(--btn-border-color-darker) }
+.grid-2x3 > button:nth-child(2n)
+	{ border-left-color: var(--btn-border-color-lighter) }
+.grid-2x3 > button/*:not(:last-child):not(:nth-child(5)) /* first four / not last two */
+	{ border-bottom-color: var(--btn-border-color-darker) !important}
+.grid-2x3 > button
+	{ border-top-color: var(--btn-border-color-lighter) }
+
+#play-btn {
+	margin: .2rem;
+}
+#play-btn:not(.active){ /* shows play symbol */
+	padding-left: .15rem;
+}
+#play-btn.active {
+	background: palegreen;
+}
+
+div > label {
+	font-size: .85em;
+	background: #0006;
+	padding: .2rem .6rem 0;
+	border-radius: .5rem .5rem 0 0;
+}
+/* #app.flash fret-board .dot.triad {
+	background: #FFF;
+	transition: all .36s ease;
+} */
+
+#tempo-value {
+	position: absolute;
+	left: 100%;
+	display: inline-block;
+	padding: .2rem .5rem 0;
+	/* min-width: 5rem; */
+	background: #0007;
+	line-height: 1.1;
+	border-radius: .4rem;
+	font-size: .85rem;
+}
+fret-board {
+	outline: 3px solid transparent;
+	outline-offset: .33rem;
+	transition: outline-color .3s ease;
+}
+#app.beat-flash fret-board {
+	outline-color: #fff6;
+	transition: none;
+}

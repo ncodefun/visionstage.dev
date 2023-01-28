@@ -1,0 +1,100 @@
+.card {
+	background: #0004;
+	padding: 1rem;
+	border-radius: 1rem;;
+}
+#demo-js {
+	width: 40rem;
+	background: pink;
+}
+#demo-js img {
+	width: 100%;
+	display: block;
+}
+main {
+	font-size: 1.2rem;
+}
+.intro b {
+	font-weight: 400
+}
+.intro {
+	font-weight: 300;
+	color: hsl(250, 100%, 94%);
+}
+h1 {
+	font-size: 3rem;
+	line-height: 1.25;
+	text-align: center;
+	font-weight: 600;
+	color: hsl(250deg 100% 82%);
+	text-shadow: 0 0.08em 11px hsl(260, 100%, 69%);
+	-webkit-text-stroke: #fff7 0.1rem;
+	margin: 2.5rem 0 0;
+}
+h2 {
+	margin: 1rem 0 0;
+	font-size: 1.7em;
+}
+h1 small {
+	font-size: .72em;
+	opacity: .76;
+}
+
+#tagline {
+	font-size: 1.1em;
+	line-height: 1.5;
+	letter-spacing: .06em;
+	margin: 0rem 0 3.5rem;
+	color: hsl(250, 100%, 88%);
+	text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6);
+}
+
+hr.medium {
+	margin: .125rem auto .6rem;
+}
+hr.small {
+	margin: .125rem auto .25rem;
+	width: 16rem;
+}
+
+.frame {
+	border: .1rem solid hsl(160, 100%, 95%, .7);
+	padding: 1ch 3ch;
+	background: hsl(159, 100%, 80%,.37);
+	color: hsl(160, 90%, 98%);
+	border-radius: .33rem;
+	text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6);
+}
+
+main > footer a {
+	letter-spacing: 1px;
+}
+
+/** Reusable styles **/
+
+#btn-prev-presentation {
+	transform: scaleX(-1);
+}
+
+#app[orientation='portrait'] .portrait-break {
+	display: block;
+	visibility: hidden;
+	height: 0;
+}
+#app[orientation='portrait'] #tagline {
+	margin-bottom: 2rem;
+}
+/** OVERRIDES **/
+
+#app[orientation='portrait'] .frame { padding:1ch 0 ; margin-inline:1ch !important }
+#app[orientation='portrait'] hr { width:90% }
+#app[orientation='portrait'] #presentation { margin-bottom:.7rem !important ; top:auto !important }
+
+#app[aspect-range*='portrait'] .equal-deco { display: none }
+#app[aspect-range*='portrait'] #app-header.lang-center {
+	grid-template-columns: 0 minmax(auto, 15rem) 1fr;
+}
+#app[aspect-range*='portrait'] #app-header.lang-center #lang-bar {
+	justify-content: start;
+	border: none;
+}

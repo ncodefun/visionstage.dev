@@ -1,0 +1,31 @@
+vs-number-input {
+	margin: .25rem;
+}
+vs-number-input label {
+	font: 500 .85em/1.7 Encode Sans Semi Condensed, serif;
+	background: #0004;
+	padding: 0 1ch;
+	border-radius: .33rem;
+}
+vs-number-input div {
+	font: 500 1rem/1.5 Fira Code, Encode Sans Semi Condensed, sans-serif;
+	/* height: 2em; */
+}
+vs-number-input button {
+	padding-inline: .3rem;
+	font-family: monospace;
+	/* padding-bottom: .35em; */
+}
+vs-number-input input {
+	text-align: center;
+	font: inherit;
+	width: calc(var(--size,2) * 1ch);
+	/* line-height: 1.6; */
+}
+vs-number-input .inc {
+	border-radius: 0 .33rem .33rem 0;
+}
+vs-number-input .dec {
+	border-radius: .33rem 0 0 .33rem;
+}
+

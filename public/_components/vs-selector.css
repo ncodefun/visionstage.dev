@@ -1,0 +1,363 @@
+vs-selector {
+	position: relative;
+	z-index: 1;
+	user-select: none;
+	margin: .25rem;
+}
+vs-selector:not(.bare) {
+	filter: drop-shadow(0 0.2rem 0.2rem rgb(0 0 0 / 20%));
+}
+.dark-components vs-selector:not(.tabs):not(.bare) {
+	filter: drop-shadow(0 0.2rem 0.2rem rgb(0 0 0 / 33%));
+}
+
+vs-selector.tabs {
+	margin: .25rem 0 0 0;
+}
+
+vs-selector[folds] { z-index: 2 }
+
+
+vs-selector button {
+	box-shadow: none !important;
+	text-transform: inherit;
+	/* font-family: inherit; */
+	line-height: 1.6;
+	/* overflow: hidden; */
+	align-items: baseline;
+	gap: 1ch;
+	border-radius: 0;
+	height: auto;
+	min-width: var(--min-width, 0);
+}
+vs-selector.small-caps button {
+	text-transform: uppercase;
+	font-size: .82rem;
+	font-weight: 460;
+}
+vs-selector .menu {
+	top: calc(100% + 1px);
+	/* width: 100%; */
+	z-index: 1;
+}
+/* vs-selector .menu button {
+	box-shadow: none;
+} */
+vs-selector.folded .menu {
+	/* no display:none so we keep width stable in folded state */
+	height: 0;
+	overflow: hidden;
+}
+vs-selector.text-left button {
+	justify-content: flex-start;
+}
+
+vs-selector[folds][direction='vertical'] .menu button .text {
+	/** is column */
+	align-items: flex-start ;
+}
+vs-selector[direction='horizontal']:not(.tabs) .menu button:last-of-type:not(:first-of-type) {
+	border-radius: 0 .33rem .33rem 0;
+}
+vs-selector[direction='horizontal'] :is(button.toggle, button.top-button) {
+	border-radius: .33rem 0 0 .33rem;
+}
+vs-selector[direction='horizontal'].folded button.toggle {
+	border-radius: .33rem .33rem 0 .33rem;
+}
+vs-selector[direction='vertical'] .menu button:last-of-type:not(:first-of-type) {
+	border-radius: 0 0 .33rem .33rem;
+}
+vs-selector[direction] .menu button:last-of-type:first-of-type {
+	border-radius: .33rem;
+}
+vs-selector[direction='horizontal'].tabs button:first-of-type {
+	border-radius: .33rem 0 0 0;
+}
+vs-selector[direction='horizontal'].tabs button:last-of-type {
+	border-radius: 0 .33rem 0 0 ;
+}
+vs-selector[direction='vertical']:not(.folded) :is( button.toggle, button.top-button){
+	border-radius: .33rem .33rem 0 0;
+}
+
+/** led-bar and no type (color) */
+
+vs-selector[direction='horizontal'].tabs .menu {
+	align-items: flex-end ;
+}
+vs-selector button span.text {
+	flex: 1 0 0;
+	white-space: nowrap;
+	margin: 0 auto;
+	max-width: 7rem;
+}
+vs-selector.small-caps button.led-bar span.text {
+	/* margin: .1rem auto -.1rem; */
+	margin-top: .2rem;
+}
+
+vs-selector[icon-position='right'] button .vs-icon {
+	order: 1;
+}
+
+vs-selector button.checkbox .vs-icon {
+	position: relative;
+	top: .18rem;
+}
+vs-selector[icon='none'] .vs-icon {
+	display: none
+}
+vs-selector button.folded {
+	opacity: .1;
+}
+vs-selector.folded button.selected {
+	border-radius: 0;
+}
+vs-selector button.toggle {
+	padding-right: .6ch;
+}
+vs-selector button.toggle .vs-icon {
+	/** chevron down icon */
+	color: hsl(var(--hue), 18%, 69%); /** 160 */
+	position: relative;
+	top:-.06rem;
+}
+vs-selector button.toggle.white svg {
+	color: #0002;
+	filter: none !important;
+}
+vs-selector button:not(.selected) .icon.checkbox { opacity: 35% }
+vs-selector button:not(.selected) .icon.radio { opacity: 60% }
+
+vs-selector.folded button.toggle,
+vs-selector button.simple-toggle {
+	border-radius: .33rem;
+}
+vs-selector .menu:not(.abs) {
+	display: inline-flex;
+	/* --min-width: 6rem; */
+}
+
+vs-selector[icon-position='bottom'] button .icon,
+vs-selector[icon-position='right'] button .icon {
+	order: 2;
+}
+vs-selector[icon-position='top'] button,
+vs-selector[icon-position='bottom'] button {
+	flex-direction: column;
+	align-items: center !important;
+	gap: 0;
+}
+vs-selector[icon-position='bottom'] button {
+	padding-bottom: .25rem;
+}
+vs-selector[icon-position='top'] button {
+	padding-top: .25rem;
+}
+
+/** OFF led */
+vs-selector button .led {
+	display: flex;
+	width: .75rem;
+	position: relative;
+	top: -.12em;
+	height: .45em;
+	width: .45em;
+	/* z-index: 1; */
+	border-radius: 50%;
+	background:
+		radial-gradient(at 56% 35%, hsl(var(--hue), 63%, 88%), transparent 50%),
+		radial-gradient(closest-side, hsl(var(--hue), 76%, 37%), hsl(var(--hue), 41%, 54%));
+	box-shadow: inset 0 1px 0px 1px hsla(var(--hue), 34%, 31%, 0.42);
+	/* filter:  brightness(.75) contrast(1.5) saturate(.6); */
+}
+
+#app[night-mode='1'] vs-selector button .led {
+	--lum: 76%;
+	filter: brightness(1.33) saturate(.42);
+}
+#app[night-mode='1'] vs-selector button.selected .led {
+	filter: none;
+}
+/* night-mode=1|2 -> hue=pink -> brighter led: bg --lum & filter */
+
+/*/ Glow /*/
+vs-selector button.selected .led {
+	background:
+		radial-gradient(at 56% 35%, #fffa, transparent 90%),
+		radial-gradient(closest-side,
+			hsl( var(--hue), 100%, var(--lum)),
+			hsl( var(--hue), 100%, calc(var(--lum) - 18%))
+		);
+	--color: hsla(var(--hue), 100%, 70%, 1); /** 166 */
+	box-shadow:
+		0 0 2px #fff,
+		0 0 .12em var(--color),
+		0 0 .35em var(--color),
+		0 0 .6em var(--color),
+		0 0 .75em var(--color);
+}
+
+.dark-components vs-selector button .led {
+	filter:  brightness(.75) contrast(1.5) saturate(.6);
+}
+.dark-components vs-selector button.selected .led {
+	filter: none;
+	/* mix-blend-mode: none; */
+	background:
+		radial-gradient(at 56% 35%, white, transparent 90%),
+		radial-gradient(closest-side, hsl(var(--hue), 100%, 51%), hsl(var(--hue), 100%, 63%));
+}
+#app[night-mode='1'].dark-components vs-selector button .led {
+	filter: brightness(1) contrast(1.25) saturate(.3);
+}
+#app[night-mode='1'].dark-components vs-selector button.selected .led {
+	filter:  brightness(.9) contrast(1.33);
+}
+
+vs-selector button .led.square {
+	height: .4em;
+	width: .4em;
+	top: -.15em;
+	border-radius: 0;
+}
+vs-selector button.underline {
+	text-decoration: none; /* reset default from vision-stage.css  */
+}
+vs-selector button.underline,
+vs-selector button.led-bar {
+	flex-direction: column;
+	/** counter-act baseline for others */
+	justify-content: center;
+	align-items: center !important;
+	text-align: center;
+	gap: 0;
+}
+vs-selector button span.led-bar {
+	display: block;
+	width: 2rem;
+	height: .16em;
+	border-radius: 1rem;
+	background: hsl(var(--hue), 41%, 80%);
+	border: 1px solid #0001;
+	/* position: relative; */
+	/* top: -.16rem; */
+	order: 2;
+	margin-bottom: .12rem;
+}
+vs-selector button.tiny-bar span.led-bar {
+	width: 1em;
+}
+vs-selector button.bare span.led-bar {
+	margin-bottom: 0;
+}
+
+vs-selector button.selected span.led-bar {
+	--color: hsl(var(--hue), 100%, 68%);
+	border: 1px solid #0002;
+	background: var(--color);
+	filter:
+		drop-shadow(0 0 .18rem var(--color))
+		drop-shadow(0 0 .35rem var(--color));
+}
+vs-selector button.selected span.led-bar.underline {
+	filter:
+		drop-shadow(0 0 .18rem var(--color));
+}
+vs-selector button:not(.selected) span.led-bar {
+	opacity: .6;
+}
+.has-dark-bg vs-selector button.bare:not(.selected) span.led-bar,
+:is(.dark-components vs-selector, vs-selector.dark-components) button:not(.selected) span.led-bar {
+	filter: brightness(.75);
+	opacity: 0.5;
+}
+vs-selector span.switch {
+	position: relative;
+	top: -.1em;
+	width: 1.6em;
+	height: .5em;
+	background: hsl(var(--hue), 27%, 85%);
+	border-radius: 1rem;
+	border: 1px solid hsl(var(--hue), 32%, 80%);
+	/* margin-right: .75rem; */
+}
+.dark-components vs-selector span.switch {
+	background: hsl(var(--hue), 27%, 85%, .33);
+	border: 1px solid hsl(var(--hue), 22%, 40%);
+}
+vs-selector span.switch::after {
+	content: '';
+	width: .8em;
+	height: .8em;
+	background: hsl(var(--hue), 41%, 66%); /** 155 */
+	border: 1px solid hsl(var(--hue), 67%, 61%);
+	position: absolute;
+	/* left: -2px; */
+	right: calc(100% - .8em + 2px);
+	border-radius: 50%;
+	transition: right .15s ease, background-color .15s ease;
+}
+vs-selector button.selected span.switch::after {
+	background: hsl(var(--hue), 80%, 70%);
+	right: -1px;
+}
+vs-selector button span.radio {
+	line-height: 1.2;
+}
+vs-selector .icon {
+	flex-shrink: 0;
+}
+vs-selector .details:empty {
+	display:none;
+}
+vs-selector .details {
+	font-size: .75rem;
+	white-space: normal;
+	line-height: 1.1;
+	margin: .06rem 0 .2rem;
+	opacity: .6;
+}
+
+vs-selector .disabled {
+	pointer-events: none;
+}
+vs-selector .disabled .text {
+	text-decoration: line-through;
+	font-style: italic;
+	opacity: .5;
+}
+vs-selector .disabled > .checkbox {
+	opacity: 17% !important;
+}
+vs-selector .disabled > .radio {
+	opacity: 33% !important;
+}
+
+vs-selector .stepper {
+	gap: .25em;
+	padding: 0;
+	justify-content: space-between;
+}
+vs-selector .stepper span:is(.left, .right) {
+	pointer-events: auto !important;
+	transform: scaleX(.76);
+	opacity: .6;
+	position: relative;
+	padding: 0 1ch;
+	/* height: 80%; */
+}
+
+vs-selector .stepper span:hover {
+	/* background: hsla(150, 70%, 20%, .5); */
+	opacity: 1;
+}
+vs-selector .stepper span.left {
+	left: -.25em;
+	/* border-radius: .33rem 0 0 .33rem; */
+}
+vs-selector .stepper span.right {
+	right: -.25em;
+	/* border-radius: 0 .33rem .33rem 0; */
+}

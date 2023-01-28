@@ -1,0 +1,142 @@
+fret-board {
+	position: relative;
+	row-gap: .25em;
+	/* background-color: #a598c9; */
+	background-image: repeating-linear-gradient(to right,
+		#83838388 0 .15em, #afafaf88 .2em 3.7em, #74747488, #c8c8c8 3.96em 4em),
+		url(./maple.webp);
+	background-position: .05em 0, 0 0;
+	padding: .5em;
+	border-radius: .5em;
+	box-shadow: .12rem .22rem 1rem #0005, inset 0 0 0 .18rem #0005;
+	margin: 2rem 1rem;
+}
+fret-board .string {
+	column-gap: 1em;
+	position: relative;
+	z-index: 0;
+}
+fret-board .string::before {
+	content: '';
+	position: absolute;
+	height: 0;
+	border-top: 1px solid #858585cc;
+	width: 104%;
+	z-index: -1;
+	box-shadow: 0 .22rem .15rem #3332;
+}
+fret-board .string:nth-child(2)::before { border-width: 2px }
+fret-board .string:nth-child(3)::before { border-width: 2px }
+fret-board .string:nth-child(4)::before { border-width: 2.5px }
+fret-board .string:nth-child(5)::before { border-width: 3.25px }
+fret-board .string:nth-child(6)::before { border-width: 4px  }
+
+fret-board .dot {
+
+	width: 2em;
+	margin: 0 .5em;
+	height: 2em;
+	border-radius: 50%;
+	/* padding-top: .12em; */
+	border: 2px solid transparent;
+}
+fret-board .dot.note {
+	font-family: PT serif, monospace;
+	background: #655886;
+	border-color: #fff2;
+	color: #fff6;
+	box-shadow: .12rem .2rem .22rem #3f394f55;
+	/* transition: all .1s ease-out; */
+}
+fret-board .dot span {
+	font-size: .8em;
+}
+fret-board {
+	--dark-blue: #493e67; /*#332f5b;*/
+
+}
+fret-board .dot.chord-tone {
+	background: var(--dark-blue);
+	border-color: #fff2;
+	color: #fff;
+	transition: none;
+}
+fret-board .dot.chord-root {
+	background: var(--dark-blue);
+	border-color: #fff2;
+	color: #fff;
+	position: relative;
+	/* padding: 0; */
+}
+fret-board.no-focus .dot.chord-root::after,
+fret-board .dot.chord-root.triad::after {
+	content: '';
+	position: absolute;
+	width: 90%;
+	height: 90%;
+	border-radius: 50%;
+	border: 2px solid #fff9;
+	/* margin-top: -.2em; */
+}
+fret-board .dot.triad,
+fret-board.no-focus .dot.chord-tone,
+fret-board.no-focus .dot.chord-root {
+	background: #3500b2;
+	transition: none;
+}
+#fret-ref {
+	height: 1.5rem;
+	width: 4rem;
+	background: #0002;
+	border-radius: .4rem;
+	top: calc(100% + .5rem);
+
+}
+#chords-list {
+	left: -12rem;
+	/* background: rgba(95, 255, 95, 0.091); */
+	columns: auto 2;
+	column-gap: 0;
+	break-inside: avoid;
+}
+#app[orientation='portrait'] fret-board {
+	margin-top: 9rem;
+}
+#app[orientation='portrait'] #chords-list {
+	left: auto;
+	top: 0;
+	transform: translateY(calc(-100% - 1rem));
+}
+#chords-list .item {
+	/* border: 1px solid red; */
+	padding: .2rem 0rem;
+	position: relative;
+	width: 5rem;
+}
+#chords-list .chord {
+	/* margin: .2rem .5rem; */
+	background: #0006;
+	border-radius: .25rem;
+	padding-top: .2rem;
+	/* padding-left: 1.2rem; */
+	min-width: 3rem;
+	/* text-align: right; */
+	/* padding-right: .4rem; */
+
+}
+#chords-list .roman {
+	/* position: absolute; */
+	/* left: -0rem; */
+	/* top:0; */
+	background: #4b515f;
+	background: #0006;
+
+	width: 1.25rem;
+	line-height: 1;
+	padding: .2rem 0 .2rem;
+	border-radius: 50%;
+	font-family: serif;
+	font-size: .85rem;
+	margin: 0 .2rem;
+
+}
