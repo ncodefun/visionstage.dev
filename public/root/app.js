@@ -276,7 +276,13 @@ App.properties = {
 }
 
 App.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
+	// Below the 'portrait' aspect ratio,
+	// the vertical space (rem) is extended
+	// as the content now scales to fit width
+	// unless limited by portrait_min,
+	// which will look weird, i.e. not recommended…
+
+	// portrait_min: 	.37,	// max vertical space in portrait
 	portrait: 		.6,		// min horizontal space in portrait
 	portrait_max: 	.6,		// max horizontal space in portrait
 	landscape: 		4/3,		// min horizontal space in landscape
