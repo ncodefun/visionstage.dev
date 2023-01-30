@@ -3,7 +3,7 @@
 
 Vision stage is what happens when you make a Web <q>*framework*</q> placing developer experience *above everything else*…
 
-You end up with a minimalist, ultra intuitive workflow that eliminates all the friction and frustration from Web development **(No. Build. Step. | No weird concepts | Natural Code Flow)**. You won't bang your head on the wall because you can't figure out how to make simple things; everything is pure JS+HTML, and lifecycle events are easy to follow (onConnected, onRendered, onFirstRendered, onResize, etc.).
+You end up with a minimalist, ultra intuitive workflow that eliminates all the friction and frustration from Web development **(No. Build. Step. | No weird concepts | Natural Code Flow)**. You won't bang your head on the wall because you can't figure out how to make simple things; everything is pure JS+HTML, and lifecycle events are easy to follow (onConnected, onRendered, onFirstRendered, onResize, etc.). ***IT JUST WORKS!***
 
 Surprisingly enough, the price to pay is not that much given that we have a framework that's lightweight, fast, and has the core features for modern Web development.
 
@@ -33,8 +33,15 @@ This uses <code>app.getPage( pageName)</code> to get the page object and then re
 ```html
 <a class='selected (if current)' href='${ page.path }'>${ page.title }</a>
 ```
-Instead of matching all paths and rewriting to a single page/app, we use a feature of Firebase - rewrite only if path doesn't exist - to instead rewrite nonexistent paths to a redirect.html file which contains a map of paths with regex to catch possible misspellings or variations and redirect if there's a match.
-This, in turn, give us the possibility to use normal pages / subdirectories...
+Here <code>app</code> is the <code>&lt;vision-stage></code> app element; you normally will use virtual page links in the app component itself, so you will use <code>this.pageLink()</code>. Otherwize the app component/element will have to be queried.
+
+
+## Server SPA behavior
+
+Since we use client-side hash navigation (#) to navigate in our app, we don't need special server config for rewriting all paths to a single page, and that means we can use multiple different apps or real pages normally.
+
+In addition, here, because we use Firebase hosting, we make use of its particular way to rewrite – it doesn't rewrite if the path exists – so we use rewrite like a SPA, to redirect all nonexistent paths to a single page: <code>redirect.html</code>
+This file contains a script with a map of paths + regex to catch possible misspellings or variations and redirect if there's a match. Note that because of this setup, redirects with the config file won't work, we have to all redirects within the redirect.html code.
 
 
 ## Let's do this!
