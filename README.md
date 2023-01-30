@@ -25,7 +25,7 @@ this.uses([ [compElem|selector,propA,propB…] ])
 There's a stage component which serves as the app container visually and logically for managing app specific / global properties and methods. The very unique particularity of this stage component is that it frames / constrain content inside user-specified aspect ratios, and virtually scales content by scaling the rem value (HTML font-size) so it continually fit the stage. This not only is superb for full-page apps, but also has the advantage of naturally adapt to small screens without or with minimal adjustments.
 
 ## Virtual pages (SPA)
-You can define virtual pages to simply render a different cached template with a smooth fade in transition. These use the link anchors (#). These virtual pages have localized titles, and are linked to as follows:
+You can define virtual pages (hash navigation: /#page) to simply render a different cached template with a smooth fade in transition. These virtual pages have localized titles, and are linked to as follows:
 ```js
 app.pageLink( pageName)
 ```
