@@ -869,10 +869,7 @@ export class VisionStage extends Component {
 		let pre = page.startsWith('/') ? '/' : './#'
 		let p = this.getPage( page)
 		if( pre === '/'){
-			// log('err', 'p.path:', p.path)
 			p.path = page.slice(1)
-
-
 		}
 		//let clss = btn ? ' button' : ''
 		return postfix ?
@@ -1067,7 +1064,6 @@ export class VisionStage extends Component {
 				//log('warn', 'skipped onResized', this)
 				comp.skipped_onResized = true
 				comp.skipped_params = [AR,ASPECT_RATIOS]
-
 			}
 		}
 
