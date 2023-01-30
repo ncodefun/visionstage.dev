@@ -94,4 +94,4 @@ This cannot be more straightforward:
 	define( tagname, class, [components paths]?)
 	```
 
-Next: [Utils – insert svg icons, array props methods](utils.md)
+[Next:](more.md) → Insert svg icons, array props methods and the universal vs-selector prebuild components.

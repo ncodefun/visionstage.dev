@@ -29,6 +29,12 @@ lit-html is using a very  simple and intuitive syntax for bindings:
 	```js
 	document.addEventListener('mousemove', this.onMouseMove.bind(this))
 	```
+	or we may store the bound copy if we need to remove the listener later:
+	```js
+	this._onMouseMove = this.onMouseMove.bind(this)
+	document.addEventListener('mousemove', this._onMouseMove)
+	document.removeEventListener('mousemove', this._onMouseMove)
+	```
 
 - Conditional attributes:
 	```jsx
