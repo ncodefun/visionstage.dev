@@ -1,10 +1,10 @@
 lit-html is using a very  simple and intuitive syntax for bindings:
 - Text:
-	```html
+	```jsx
 	<div>hello ${ name }</div>
 	```
 - Attribute values:
-	```html
+	```jsx
 	<div data-theme=${ this.theme }>hello ${ name }</div>
 	```
 - Props:
