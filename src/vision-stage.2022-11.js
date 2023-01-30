@@ -97,7 +97,7 @@ export class Component extends HTMLElement {
 		if( this.localName === 'vision-stage'){ // this runs after VisionStage contructor
 			app = this
 			this.id = 'app'
-			this.languages = ctor(this).languages || this.attributeList('languages', 'langs')
+			this.languages = ctor(this).languages //|| this.attributeList('languages', 'langs')
 			const path = decodeURI( location.pathname)
 			this.app_name =
 			this.ns = path.replace(/\//g, '') || 'home' //this.getAttribute('store')
