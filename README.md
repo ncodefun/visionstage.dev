@@ -41,7 +41,7 @@ Here <code>app</code> is the <code>&lt;vision-stage></code> app element; you nor
 Since we use client-side hash navigation (#) to navigate in our app, we don't need special server config for rewriting all paths to a single page, and that means we can use multiple different apps or real pages normally.
 
 In addition, here, because we use Firebase hosting, we make use of its particular way to rewrite – it doesn't rewrite if the path exists – so we use rewrite like a SPA, to redirect all nonexistent paths to a single page: <code>redirect.html</code>
-This file contains a script with a map of paths + regex to catch possible misspellings or variations and redirect if there's a match. Note that because of this setup, redirects with the config file won't work, we have to all redirects within the redirect.html code.
+This file contains a script with a map of paths + regexp to catch possible misspellings or variations and redirect either to a matching path or to 404.html. Note that because of this setup, redirects with the config file won't work, we have to do all redirects within the redirect.html code.
 
 
 ## Let's do this!
