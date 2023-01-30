@@ -46,12 +46,4 @@ This file contains a script with a map of paths + regexp to catch possible missp
 
 ## Let's do this!
 
-Let's explore the making of a Todo app.
-
-
-
-
----
-
-Todo:
-- check for the virtual keyboard vs stage resizing and text inputs...
+[Get started](get-started.md)

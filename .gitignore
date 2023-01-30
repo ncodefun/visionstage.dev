@@ -4,6 +4,7 @@
 /docs
 /node_modules
 /old_components
+/old_projects
 /package-lock.json
 /rollup.config.dev.js
 /rollup.config.prod.js
