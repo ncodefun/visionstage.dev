@@ -4,49 +4,80 @@
 
 This cannot be more straightforward:
 
-- <code>public/vision-stage/</code> contains the framework and css files;
+- `public/vision-stage/` contains the framework and css files;
 
-- <code>public/root/</code> contains the top-level Web app or Website (if you have configured a rewrite), or just put files directly in the <code>public</code> folder;
+- `public/root/` contains the top-level Web app or Website (if you have configured a rewrite), or just put files directly in the `public` folder;
 
-- <code>public/another-app</code> Use any other folder for each page you want.
+- `public/another-app` Use any other folder for each additional page or app you want.
 
-- <code>public/_components/</code> contains components to be shared, otherwise you put them directly in the app folder;
+- `public/_components/` contains components to be shared, otherwise you put them directly in the app folder;
 
-- <code>public/_assets/...</code> contains assets like images and fonts.
+- `public/_assets/...` contains assets like images and fonts.
 
-- Each app folder contains a standard <code>index.html</code> file along with a <code>app.js</code> and <code>app.css</code> files for our app component.
+- Each app folder contains a standard `index.html` file along with a `app.js` and `app.css` files for our app component.
 
-- Each component has an eponyme stylesheet companion, and both files are loaded automatically as required in the <code>define(tagname,class,[components paths])</code> function. They are referred without extension with either a relative path (./), an absolute path (/) or without prefix at all if they are in the <code>_components</code> folder.
-<code></code>
+- Each component has an eponyme stylesheet companion, and both files are loaded automatically as required in the `define(tagname,class,[components paths])` function. They are referred without extension with either a relative path (./), an absolute path (/) or without prefix at all if they are in the `_components` folder.
+``
 ---
 ## Structure of components and the app component
 
-- imports
+- imports<br>
+	For an app:
+	```js
+	import { VisionStage, html, cache, define, icon }
+		from '/vision-stage/vision-stage.min.js'
+	```
+	For a component:
+	```js
+	import { Component, html, define, icon }
+		from '/vision-stage/vision-stage.min.js'
+	```
+	With optional utils:
+	```js
+	import { sleep, strIf, cycleWithin }
+		from '/vision-stage/utils.js'
+	```
 
-- class definition
+- class definition<br>
+	```js
+	class App extends VisionStage {
+		…
+	}
+	```
 	- lifecycle hooks
-		- <code>onConnected()</code><br>
-		Typically you will do setup here (take care that you call it only once, if not already done; this callback may be called more than once), and call <code>this.render()</code>, which is not called automatically to prevent rendering before we had a chance to setup and aquired data if necessary.
-		- <code>onRendered()</code>, <code>onFirstRendered()</code>
-		- <code>onResized()</code>
-		- <code>onPageChanged()</code>
+		```js
+		onConnected(){
+			// if (!this.setup_done) …
+			this.render()
+		}
+		```
+		Typically you will do setup here (take care that you call it only once, if not already done; this callback may be called more than once), and call `this.render()`, which is not called automatically to prevent rendering before we had a chance to setup, reading props or attributes and fetch data if necessary.
 
-	- template(s)<br>
-		template() is called upon render and must return a lit-html template (<code>=> html\`&lt;div>&lt;/div>\`</code>); when we have multiple virtual pages, we can split each template with different methods and cache them in the main template() like so by naming template methods like their corresponding page name (here we set a default 'home' when no page / top level):
+		Other self-explanatory hooks:
+
+		- `onRendered()`
+		- `onFirstRendered()`
+		- `onResized()`
+		- `onPageChanged()`
+
+
+	- Template(s)<br>
+		The `template()` method is called upon render and must return a lit-html *tagged template string literal* (<code>=> html\`&lt;div>…&lt;/div>\`</code>); when we have multiple virtual pages, we can split each page template with different methods and run them (cached for reuse without recreating them every time we switch page) in the main template(). We just have to name each template method like their corresponding page name (here we set a default 'home' when no page / top level):
 		```html
 		<header>App header</header>
 		${ cache( this[(this.page||'home')]() ) }
-
 		```
-	- custom methods
+		[more on lit-html](lit-html.md)
+	- Custom methods<br>
+		Most app logic which needs to access the app state is set here as methods that can access `this`
 
 - Class static properties
 	- languages <sup>*(app only)*</sup>
 	- pages <sup>*(app only)*</sup>
 	- aspects <sup>*(app only)*</sup>
-	- strings <small><code>{ name:[strA, strB…] , }</code></small>
-		<br>→ *follows the <code>languages</code> order*
-	- properties <small><code>{ name:{…} , }</code></small>
+	- strings <small>`{ name:[strA, strB…] , }`</small>
+		<br>→ *follows the `languages` order*
+	- properties <small>`{ name:{…} , }`</small>
 		- value
 		- watcher( val) <small>// watch for prop changes</small>
 		- transformer( val) => val <small>// opportunity to validate and maybe return a changed value before it's set.</small>
@@ -55,6 +86,6 @@ This cannot be more straightforward:
 		- attribute :string|Array  ([name,'bool|auto']) <small>// can set an attribute of specified name with the value of a string property, we may set/unset a bool attribute with the format [name,'bool'] or we may use 'auto' to set to string value if exist and remove the attribute if value is falsy.</small>
 
 - Lastly, define / register the component as a custom element:<br>
-	<code>define( tagname, class, [components paths]?)</code>
+	`define( tagname, class, [components paths]?)`
 
 Next: [Utils – insert svg icons, array props methods](utils.md)
