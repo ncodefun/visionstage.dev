@@ -5,11 +5,15 @@ lit-html is using a very  simple and intuitive syntax for bindings:
 	```
 - Attribute values:
 	```jsx
-	<div data-theme=${ this.theme }>hello ${ name }</div>
+	<div data-theme=${ this.theme }>…</div>
+	```
+	or mixed static and dynamic values (inside quotes):
+	```jsx
+	<div class='blue ${ this.my_div_class }'>…</div>
 	```
 - Props:
 	```jsx
-	<my-comp .active=${ this.use_my_comp }>
+	<input .value=${ this.my_input_value }>
 	```
 - Events: <br>
 	```jsx
