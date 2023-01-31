@@ -1435,8 +1435,6 @@ export const P = {
 		else next = clamp( next, 0, values.length-1)
 		return this.prop_object[ this.prop_name] = values[ next]
 	},
-	// same shorter, and consistent name with the utils function...
-	cycleWithin: this.nextIn,
 }
 
 
