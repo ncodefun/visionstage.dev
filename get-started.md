@@ -87,6 +87,8 @@ This cannot be more straightforward:
 		- `init_watcher` :bool <small>// if the watcher should run when the component is initialized. will be called in the order of the property relative to others.</small>
 		- `class` :string <small>// set/unset a class on the element; **to use with a boolean property**</small>
 		- `attribute` :string|Array  ([name,'bool|auto']) <small>// can set an attribute of specified name with the value of a string property, or we may set/unset a bool attribute using the format [name,'bool'], or we may use [name,'auto'] to set to string value if it's not falsy and remove the attribute if it is.</small>
+		- reactive :bool <small>// set false to have a prop which doesn't trigger render. [todo: rename…]
+			Useful if we still want other prop functionalities, like storable.</small>
 
 <br>
 

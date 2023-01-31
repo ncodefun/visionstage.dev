@@ -18,7 +18,8 @@ Check the demo [here](/test-vs-selector) and play with the night modes and dark 
 - beforeRender  => doRender? true: false (abort)
 - beforeFirstRender
 
-- App.sounds + init
+- App.sounds + setupSounds, playSound(name), stopSound()<br>
+	<small>Basic sound playback (individual sounds volume is set on the global channel upon playback, so overlapping sounds of different volume will change volume suddenly…)</small>
 - props → getter() => for props representing a - computed / composed value
 - this.init_watcher==='onRendered' | 'deferred'
 - this.setState
@@ -26,3 +27,4 @@ Check the demo [here](/test-vs-selector) and play with the night modes and dark 
 - this.block_watcher
 - this.bypass_transformer
 - document latest version of &lt;vs-selector>
+- service worker
