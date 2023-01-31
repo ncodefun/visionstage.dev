@@ -37,7 +37,7 @@ export default class Selector extends Component {
 		this.folds = this.hasAttribute('folds')
 			if( this.folds){
 				this.folded = true
-				app.foldable_button_select_components.add( this)
+				app.foldable_components.add( this)
 			}
 
 		this.sel_color = this.getAttribute('selected-color') || ''
