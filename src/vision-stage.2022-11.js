@@ -82,30 +82,21 @@ const loaded_components = new Set()
 /// Component base class, to be extended by our components
 export class Component extends HTMLElement {
 
-	/** return an array for an attr value consisting of
-	 *  space or comma (w/ possible spaces around) separated strings */
-	attributeList( name, alt){
-		// log('pink', 'attr list from:', name)
-		return (this.getAttribute( name)||this.getAttribute( alt)).split(/\s*[,\s]\s*/)
-	}
-	stringList( str){
-		return str.split(/\s*[,\s]\s*/)
-	}
-
 	constructor(){
+		// Note: this (Component ctor) runs *after* VisionStage (app) ctor
 		super()
-		if( this.localName === 'vision-stage'){ // this runs after VisionStage contructor
+		if( this.localName === 'vision-stage'){
 			app = this
 			this.id = 'app'
-			this.languages = ctor(this).languages //|| this.attributeList('languages', 'langs')
+			this.languages = ctor(this).languages
 			const path = decodeURI( location.pathname)
 			this.app_name =
-			this.ns = path.replace(/\//g, '') || 'home' //this.getAttribute('store')
+			this.ns = path.replace(/\//g, '') || 'home'
 			// log('info', 'app_name (for props local storage key):', this.ns)
 			initStore( this.ns)
 			this.buildCSSForLangs()
 		}
-		this._init()
+		this.#init()
 
 		// default; changing lang updates ALL components
 		// && this.strings ! some comp may use string from a .target
@@ -117,33 +108,7 @@ export class Component extends HTMLElement {
 		this.onConnected && this.onConnected()
 	}
 
-	static get observedAttributes() {
-		// this === constructor
-		let arr = app && app.observed && app.observed[ this.name]
-		//return arr || []
-		if( arr && this.dynamicAttributes){
-			arr = arr.concat( this.dynamicAttributes)
-		}
-		else if( this.dynamicAttributes)
-			arr = this.dynamicAttributes
-		//log('err', 'returns:', arr || [])
-		return arr || []
-	}
-
-	attributeChangedCallback(name, prev, val){
-		if( this.setup_done){
-			//log('check', 'attributeChangedCallback:', name, val)
-			this[ name] = val
-			if( !val) this.removeAttribute( name) // auto remove
-			this.onAttributeChanged && this.onAttributeChanged( name, val, prev)
-		}
-	}
-
-	descriptor( prop){
-		return Object.getOwnPropertyDescriptor( this, prop)
-	}
-
-	_init(){
+	#init(){
 
 		const _ctor = ctor( this)
 		this.is_component = true
@@ -220,19 +185,16 @@ export class Component extends HTMLElement {
 
 			Object.defineProperty( this, prop, {
 				get(){
-					//log('info','GET', prop, '=>', this._state[ prop] )
-					//// can use a getter on desc for computed prop
+					// log('info','GET', prop, '=>', this._state[ prop] )
+					// can use a getter on desc for computed prop
 					return desc.getter ? desc.getter.call( this, this._state[ prop]) : this._state[ prop]
 				},
 				set( val){ /// SET:
-
 					// log('pink', 'SET prop:', this.id, prop, val)
-
-					let store_id = this.id//||this.localName
-					if( desc.storable && !store_id){
+					let store_id = this.id
+					if( desc.storable && !store_id)
 						log('err', 'no store id for prop:', prop, this)
-						// debugger
-					}
+
 
 					if( prop in properties){ //// in? ==> is a reactive prop
 						let no_render = false
@@ -241,27 +203,26 @@ export class Component extends HTMLElement {
 						if( desc.transformer && !this.bypass_transformer)
 							t_val = desc.transformer.call( this, val, prev_val, desc.value, stored_val)
 
-						let force_render = desc.force_render //|| Array.isArray( val)
-						if( val===prev_val && !force_render || t_val === 'cancel'){
-							// if( val===prev_val && desc.reactive!==false)
-								//log('err', 'SET; NO RENDER (same value)', prop, this.id, 'desc.force_render:',desc.force_render)
+						let force_render = desc.force_render
 
-							//! no return -> WE MAY STILL NEED WATCHER FOR SIDE EFFECTS
+						// do not return -> WE MAY STILL NEED WATCHER FOR SIDE EFFECTS
+						if( val===prev_val && !force_render || t_val === 'cancel' /* MAGIC WORD :| */)
 							no_render = true
-						}
-						if( t_val !== undefined){
-							// log('err', 'GOT Transformed val:', t_val)
+
+
+						if( t_val !== undefined)
 							val = t_val
-						}
 
 						if( desc.storable){
-							//log('pink', 'SET; storing:', store_id, prop, val)
-							/// throttled_saveStore will only be fired once – though it may be called with different params...
-							/// like rx and ry during a continuous dragging, then only one of them would be stored in the end
-							//+ so store value directly and leave the global localstorage saving for the throttled callback
-							store[ store_id] = store[ store_id] || {}
+							// throttled_saveStore will only be fired once –
+							// though it may be called again with different params...
+							// like rx and ry during a continuous dragging,
+							// then only one of them would be stored in the end
+							// so store value here directly and leave the global
+							// localstorage saving for the throttled callback
+							store[ store_id] ||= {}
 							store[ store_id][ prop] = val
-							throttled_saveStore() /// global store (will be called at least once after multiple)
+							throttled_saveStore() /// global store (will be called at least once after multiple set)
 						}
 
 						this._state[ prop] = val
@@ -297,14 +258,12 @@ export class Component extends HTMLElement {
 							}
 						}
 
-						if( desc.class){
+						if( desc.class)
 							this.classList.toggle( desc.class, !!val)
-						}
 
-						if( desc.reactive !== false && !no_render){
-							// log('pink', 'SET & render; id, prop:', this.id, prop, val)
+						if( desc.reactive !== false && !no_render)
 							this.render()
-						}
+
 
 						//if( debug.renders && this.renders) log('err','this, renders:', prop, this.renders, this.renders.get( prop))
 
@@ -345,71 +304,22 @@ export class Component extends HTMLElement {
 			}
 		}
 
-
-		// combine attribs and static strings
 		//! We should only clone once and store on another static prop...
+		//! in case there's many instances...
 		const strings = (_ctor.strings ? clone( _ctor.strings) : {})
 
-		if( _ctor._strings){ // predefined strings
+		if( _ctor._strings)
 			Object.assign( strings, _ctor._strings)
-		}
 
-		let no_strings = !_ctor.strings
+		// removed : attribute strings
 
-		for( let name of this.getAttributeNames()){
-			if( name.startsWith('strings:') || name === 'strings'){ /// strings:en=""
-				no_strings = false
-				let lang = name.includes(':') ? name.split(':')[1] : undefined
-				let values = objectFromString( this.getAttribute( name))
-
-				if( lang==='*' || !lang){
-					// * all : define first if others; need to be overriden with specific languages
-					// values -> { title: 'allo', }
-					// Assign same value to all languages
-					for( let k in values){
-						strings[ k] = [].fill( values[k], 0, app.languages.length)
-					}
-				}
-				else { // this is values for one language only
-					let l_index = app.languages.indexOf( lang)
-					for( let k in values){
-						strings[ k] = strings[ k] || []
-						strings[ k][ l_index] = values[ k]
-					}
-				}
-				this.removeAttribute( name)
-			}
-			// single string definition -> // string:hello="fr: Allô le monde, en: Hello world"
-			else if( name.startsWith('string:')){
-				let str_name = name.split(':')[1]
-				let val = this.getAttribute( name)
-				//log('check', 'str_name:', str_name, val)
-				try {
-					val = objectFromString( val)
-				}
-				catch {
-					log('err', 'problem with string:name="val":\nformat should be object-like, each key a lang code.\nNow:', this.getAttribute( name))
-				}
-
-				for( let lang in val){
-					let str = val[ lang]
-					let l_index = app.languages.indexOf( lang)
-					strings[ str_name] = strings[ str_name] || []
-					strings[ str_name][ l_index] = str
-				}
-				this.removeAttribute( name)
-			}
-		}
-
-		if( !no_strings){
-
-			if( !app.languages){
+		if( _ctor.strings){
+			if( !app.languages)
 				log('err', 'no app languages yet', this)
-			}
 
 			this.strings = strings
 
-			// this.$name -> getter for strings
+			// this.$name -> getters for strings
 			for( let name in strings){
 				Object.defineProperty( this, '$'+name, {
 					get(){ return this.getString( name) },
@@ -433,10 +343,10 @@ export class Component extends HTMLElement {
 			app.sounds_list = _ctor.sounds
 	}
 
-
-	// Bind components to render together
-	//  -> says: When these [[comp, ...props]] changes, also render me.
-	// (because I use this foreign prop which is not of an ancestor (that would auto render me))
+	/**
+	 * Declares that a component uses one or more props from another component
+	 * and must also be rendered when this other component's prop changes.
+	 */
 	uses( entries){
 		//log('pink', 'this, uses:', this, entries)
 		//
@@ -480,11 +390,15 @@ export class Component extends HTMLElement {
 	setState( name, value){ this._state[ name] = value }
 
 	/** set an attribute and render this */
-	attr( name, value){
+	setAttr( name, value){
 		this.setAttribute( name, value)
 		this.render()
 	}
 
+	/**
+	 * Component render function
+	 * @param evt_ctx {Component} We may use another component as the events context (so `this` will refer to this other component instead of the one where the handler is defined).
+	 */
 	async render( evt_ctx){
 		if( !this.template){
 			if( this.localName !== 'vision-stage')
@@ -497,8 +411,7 @@ export class Component extends HTMLElement {
 
 		if( !this.needsRender){
 			this.needsRender = true
-			//debugging &&
-			//log('warn', 'needsd render:', this.id)
+			// debugging && log('warn', 'needsd render:', this.id)
 
 			await nextFrame()
 
@@ -518,11 +431,10 @@ export class Component extends HTMLElement {
 				return
 			}
 
-
 			if( debugging)
 				log('gold','--GOT TMPL, RENDER ', (this.id||this.classList[0]))
 
-			//log('warn', 'eventContext: this:', this)
+			// log('warn', 'eventContext: this:', this)
 			// log('info', 'rendering…', this.id || this.localName)
 			litRender( tmpl, this, {
 				scopeName: this.localName,
@@ -554,19 +466,31 @@ export class Component extends HTMLElement {
 			log('gold','already needsRender, waiting:', (this.id||this.classList[0]))
 	}
 
+	/**
+	 * this.querySelector shorthand.
+	 * @param sel {string} CSS selector string
+	 * @return {Array<HTMLElement>}
+	 */
 	q( sel){
 		return this.querySelector( sel)
 	}
-	/** query elements and transform to an array */
+
+	/**
+	 * this.querySelectorAll shorthand – Query elements and transform to an array.
+	 * @param sel {string} CSS selector string
+	 * @return {HTMLElement}
+	 */
 	qAll( sel){
 		return Array.from( this.querySelectorAll( sel))
 	}
 
-	/** Method automatically called by generated string getters using the syntax: this.$welcome
+	/**
+	 * Method automatically called by generated string getters using the syntax: this.$welcome
 	 * ! warning: will return result of unsafeHTML if contains HTML (looks for <tag> or HTML entity),
-	 * ! use raw=true argument if we need raw string to use outside a lit-html template
-	 * ! like in a prop binding <div .prop=${ getString(…) } or when directly setting .innerHTML
-	 * @str_name the key for the requested string
+	 * ! use raw=true argument if we need the raw HTML string to use outside a lit-html template,
+	 * ! like in a prop binding: <div .html_str=${ getString(…) } or when directly setting .innerHTML
+	 * @param str_name {string} The name for the requested string.
+	 * @param raw {bool} If we should return the raw string for a string containing HTML instead of the result of unsafeHTML.
 	 * @return the string corresponding to the actual language
 	 */
 	getString( str_name, raw=false){
@@ -584,52 +508,42 @@ export class Component extends HTMLElement {
 			str // as is
 	}
 
-	createUpdater( prop, binded_prop){
-		this.updatables = this.updatables || new Map()
-		let target = this
-		return {
-			/// we should first get() once comp is connected
-			/// so all instances are registered to be updated
-			get(){ // .call( this) -> component
-				// add this to updatables if not already
-				if( !target.updatables.has( prop))
-					target.updatables.set( prop, new Set([this]) )
-				else if( !target.updatables.get( prop).has( this))
-					target.updatables.get( prop).add( this)
-
-				return target._state[ prop]
-			},
-			set(val){
-				target[ prop] = val
-				// Update all comp instances
-				target.updatables.get( prop).forEach( comp => comp[ binded_prop] = val )
-			}
-		}
-	}
-
-	/**
-	 * Auto create binding object (createUpdater) if not exist and store for reuse
-	 * @return an already existing or new updater
-	//  */
-	// binding( target_prop, comp_prop='selected'){
-	// 	this.bindings = this.bindings || new Map()
-	// 	let b = this.bindings.get( target_prop)
-	// 	if( b) return b
-	// 	// create new binding
-	// 	b = this.createUpdater( target_prop, comp_prop)
-	// 	this.bindings.set( target_prop, b)
-	// 	return b
-	// }
-
+	/** Toggle between two classes based on a condition */
 	switchClasses( a, b, condition){
 		this.classList.toggle(a, condition)
 		this.classList.toggle(b, !condition)
 	}
 
-	// static has( file_path){
-	// 	return loaded_components.has( file_path)
-	// }
+	/**
+	 * Returns an array from an attribute value consisting of
+	 * space or comma (w/ possible spaces around) separated strings.
+	 * @param name {string} Name of the attribute whose value is to parse.
+	 * @param alt {string} A possible alternate attribute name if first is not declared.
+	 * @return {array<string>}
+	 */
+	getAttributeList( name, alt){
+		// log('pink', 'attr list from:', name)
+		return (this.getAttribute( name)||this.getAttribute( alt)).split(/\s*[,\s]\s*/)
+	}
 
+	/**
+	 * Returns an array for a string consisting of
+	 * space or comma (w/ possible spaces around) separated strings.
+	 * @param str {string} The string to parse.
+	 * @return {array<string>}
+	 */
+	getStringList( str){
+		return str.split(/\s*[,\s]\s*/)
+	}
+
+	/**
+	 * Load a component JS and CSS files dynamically,
+	 * either from the `/_components/` dir if bare path,
+	 * or relative to app dir if path starts with `./`
+	 * or absolutely if path starts with `/`
+	 * @param file_path {string} Path for component
+	 * @return {Promise<ModuleNamespaceObject>} an object that describes all exports from a module
+	 */
 	static async load( file_path, scripts){
 		if( debug.load)
 			log('ok','load() file_path:', file_path)
@@ -658,7 +572,7 @@ export class Component extends HTMLElement {
 		}
 		else { // normal: extensionless => same for both
 			js = file_path + '.js'
-			css = file_path.replace('.min','') + '.css'
+			css = file_path/* .replace('.min','') */ + '.css'
 		}
 
 		// if starts with ./ -> remove and use pathname, else assume is in /_components/
@@ -673,7 +587,8 @@ export class Component extends HTMLElement {
 		else
 			js = `${ DIRECTORY + COMPONENTS_DIR }${ js }`
 
-		log('purple', 'load js, css :', js, css)
+		if (debug.load)
+			log('purple', 'load js, css :', js, css)
 		// make sure CSS is loaded before we import js so no flash of unstyled components
 		css && await loadStyleSheetAsync( css)
 		return import( js)
@@ -1110,7 +1025,10 @@ export class VisionStage extends Component {
 		this.resize()
 	}
 
-	// build CSS to hide elements with a lang attribute not matching the app's
+	/**
+	 * Build CSS to hide elements with a lang attribute not matching the app's
+	 *
+	 */
 	buildCSSForLangs(){
 		let str = ''
 		for( let lang of this.languages)
