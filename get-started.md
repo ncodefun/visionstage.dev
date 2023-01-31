@@ -81,6 +81,7 @@ This cannot be more straightforward:
 		<br>→ *follows the `languages` order*
 	- `App.properties` <small>`{ name:{…} , }`</small>
 		- `value`
+		- `storable` :bool
 		- `watcher( val)` <small>// watch for prop changes</small>
 		- `transformer( val) => val` <small>// opportunity to validate and maybe return a changed value before it's set.</small>
 		- `init_watcher` :bool <small>// if the watcher should run when the component is initialized. will be called in the order of the property relative to others.</small>
