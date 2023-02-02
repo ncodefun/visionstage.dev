@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+    "target": "esnext",
+		"module":"esnext",
+		"checkJs": false,
+		"allowSyntheticDefaultImports": true,
+		"baseUrl": ".",
+		"paths": {
+			"/*": ["public/*"],
+			"/vision-stage/vision-stage.js": ["src/vision-stage.beta-a.js"],
+		},
+  },
+	"exclude": [
+		"node_modules"
+	],
+	"lib": ["dom", "esnext"]
+}
