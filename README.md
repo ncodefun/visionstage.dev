@@ -27,13 +27,13 @@ There's a stage component which serves as the app container visually and logical
 ## Virtual pages (SPA)
 You can define virtual pages (hash navigation: /#page) to simply render a different cached template with a smooth fade in transition. These virtual pages have localized titles, and are linked to as follows:
 ```js
-app.pageLink( pageName)
+app.getPageLink( pageName)
 ```
 This uses <code>app.getPage( pageName)</code> to get the page object and then return a link :
 ```html
 <a class='selected (if current)' href='${ page.path }'>${ page.title }</a>
 ```
-Here <code>app</code> is the <code>&lt;vision-stage></code> app element; you normally will use virtual page links in the app component itself, so you will use <code>this.pageLink()</code>. Otherwize the app component/element will have to be queried.
+Here <code>app</code> is the <code>&lt;vision-stage></code> app element; you normally will use virtual page links in the app component itself, so you will use <code>this.getPageLink()</code>. Otherwize the app component/element will have to be queried.
 
 
 ## Server SPA behavior
