@@ -28,6 +28,15 @@
         ]
       },
       {
+        "source": "/**/sw.js",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=60"
+          }
+        ]
+      },
+      {
         "source": "**/*.@(woff|woff2|js|css)",
         "headers": [ {
           "key": "Access-Control-Allow-Origin",
