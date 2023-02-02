@@ -1,29 +1,69 @@
-const VERSION = '2023.01.09'
-const COMPONENTS_DIR = '/_components/'
-const CLEAR_STORE = false  //! Warning: erase all app data...
+/// --- Vision Stage Framework --- ///
 
-//no-delay-fade-out
+const VERSION = 'Beta-A'
 
-/**
- * Vision Stage Framework
- * Stage to control aspect + rem scaling => total control of presentation / art direction
- * Native Web components
- * 	-> no build step! [lit-html template, easy insert locale strings, svg icons]
- * 	-> explicit render dependencies: this.uses([[comp, 'propX'], [comp, 'propY', 'propZ']])
- *  -> component instances are directly accessed / queried and modified without any limitations.
- *	-> smart properties: self-renders on change: stored:true (for stringifyable values),
- *	   watcher(val,prev){}, transformer(val,prev){return val}, class:'' (for bool - auto add/remove), attribute:'name' (mirrors value)
- * Old school: unscoped CSS & full reload (no hot module reloading…)
- *
- */
-
-const FONT_SIZE_DECIMALS = 0
-const UPDATE_CHECK_MIN = 30
-// if = 1 : only one decimal => makes total rem space vary a bit,
+// → if = 1 : only one decimal => makes total rem space vary a bit,
 // but we get a more even layout spacing (Browsers are BAD at this…)
 
+// z-console is kept out of the bundle by rollup externals option;
+// we need to set it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
+import log from './z-console.js'
+
+log('info','•• Vision Stage ••', VERSION, '(w/ lit-html 1.4.1)')
+const stores = {}
+/**
+ *
+ * @prop {string} config_object.components_dir - Path of the components directory
+ * @prop {number} config_object.update_check_min  - Number of minutes for checking sw.js update
+ * @prop {number} config_object.font_size_decimals - Integer -
+ * How many decimal places to use when setting html font-size.
+ * Decimals allow for more precise scaling of content compare to stage:
+ * - 0 or 1 means that when resizing the window, content may not be sized or positioned exactly the same in relation to stage (which doesn't rounds its dimensions)
+ * - But fractional font-size may sometimes results in artifacts in rendering, like uneven, blurry lines.
+ * @prop {string} config_object.icons_file_path
+ * @prop {Object} config_object.icons_mappings
+ * 	maps alternative (reprensentative rather than descriptive)
+ * 	icon names to the real svg ids
+ * @prop {Object} config_object.icons_mappings_vb
+ */
+const config = {
+	components_dir: '/_components/',
+	update_check_min: 30,
+	font_size_decimals: 0,
+	icons_file_path: '',
+	icons_mappings: {
+		delete: 'trash',
+		remove: 'cross',
+		add: 'plus',
+		// signs
+		'+': 'plus',
+		'x': 'cross'
+	},
+	icons_mappings_vb: {
+		'double-chevron-right': '0 0 1024 1024',
+		'arrow-right-rounded': '0 0 45.6 45.6',
+		'fanion': '0 -11 100 120',
+	},
+	night_modes: [0,1,2] // CSS [night-mode='1|2'] styles are pre-defined
+}
+
+/**
+ * Allow setting customized value on the config object
+ * @param {object} config_object User config object to merge with the default config
+ * @param {string} config_object.components_dir
+ * @param {number} config_object.update_check_min
+ * @param {number} config_object.font_size_decimals
+ * @param {string} config_object.icons_file_path
+ * @param {object} config_object.icons_mappings
+ * @param {object} config_object.icons_mappings_vb
+ * @param {number[]} config_object.night_modes
+ */
+export function setConfig( config_object){
+	Object.assign(config, config_object)
+}
+
 /// lit-html 1.4.1
-//! Bare imports: this is intended to be bundled w/ rollup (from node_modules)
+// Bare imports: this file is intended to be bundled w/ rollup from node_modules
 import { html, svg, render as litRender }
 	from 'lit-html/lit-html.js'
 import { unsafeHTML }
@@ -36,45 +76,22 @@ import { live }
 	from 'lit-html/directives/live.js'
 import { guard }
 	from 'lit-html/directives/guard.js'
-
 import { cache }
 	from 'lit-html/directives/cache.js'
-import { templateContent }
-	from 'lit-html/directives/template-content.js'
+// import { templateContent }
+// 	from 'lit-html/directives/template-content.js'
 
-// z-console is kept out of the bundle by rollup externals option;
-// we need to import it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
-import log from './z-console.js'
-log('info','•• Vision Stage ••', VERSION, '(w/ lit-html 1.4.1)')
-
-import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, objectFromString, containsHTML, nextFrame, cleanNum, is_iOS, is_safari, clamp, strIf  } from './utils-core.js'
-
-// Share with other components
-// export { log, q, qAll, html, svg, unsafeHTML, ifDefined, repeat, live, guard, templateContent, nextFrame, sleep, ctor, range, cache, tempClass, debounce, clamp, strIf, containsHTML }
+import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, nextFrame, cleanNum, is_iOS, is_safari, clamp, strIf  }
+	from './utils-core.js'
 
 export { log, html, svg, unsafeHTML, ifDefined, repeat, live, guard, cache }
 
-const debug = {}
-let app, store, store_namespace, after_resize_timeout, ASPECT_RATIOS
+const debug = { /* load:true */ }
+let app, after_resize_timeout, aspect_ratios
 
 // Will reference all components having an onResized method
 // to call them after window is resized
 const resize_watchers = new Set()
-
-const icons_mappings = {
-	delete: 'trash',
-	remove: 'cross',
-	add: 'plus',
-	// signs
-	'+': 'plus',
-	'x': 'cross'
-
-}
-const icons_mappings_vb = {
-	'double-chevron-right': '0 0 1024 1024',
-	'arrow-right-rounded': '0 0 45.6 45.6',
-	'fanion': '0 -11 100 120',
-}
 
 // keep track of the loaded ones, so we don't load the same component Class multiple times
 const loaded_components = new Set()
@@ -91,9 +108,10 @@ export class Component extends HTMLElement {
 			this.languages = ctor(this).languages
 			const path = decodeURI( location.pathname)
 			this.app_name =
-			this.ns = path.replace(/\//g, '') || 'home'
-			// log('info', 'app_name (for props local storage key):', this.ns)
-			initStore( this.ns)
+			this.ns = path.slice(1,-1).replace(/\//g, '-') || 'home'
+			// log('err', 'app_name (for props local storage key):', this.ns)
+			initStore(this.ns)
+
 			this.buildCSSForLangs()
 		}
 		this.#init()
@@ -109,13 +127,12 @@ export class Component extends HTMLElement {
 	}
 
 	#init(){
-
 		const _ctor = ctor( this)
 		this.is_component = true
 		this._state = {}
 
 		let properties
-		if( _ctor.properties && _ctor._properties)
+		if (_ctor.properties && _ctor._properties)
 			properties = Object.assign( {}, _ctor._properties, _ctor.properties)
 		else
 			properties = _ctor.properties || _ctor._properties
@@ -123,7 +140,7 @@ export class Component extends HTMLElement {
 		// to array of [key,val]
 		let flat_properties = properties ? Object.entries( properties) : []
 
-		for( let [prop, desc] of flat_properties) {
+		for (let [prop, desc] of flat_properties) {
 
 			if (!isObject( desc)) // wrap if primitive value
 				desc = { value: desc }
@@ -134,21 +151,44 @@ export class Component extends HTMLElement {
 				// throw Error('an element needs an id to be stored, tag:' + this.tagName)
 			}
 			let store_id = this.id
-			let stored_val = !!store_id ? storedValue( store_id, prop) : undefined
+			let ns = typeof desc.storable === 'string' ? desc.storable : this.ns
+			//log('err', 'Got ns:', ns, prop)
+			let stored_val = !!store_id ? storedValue(ns, store_id, prop) : undefined
 			let use_value = stored_val !== undefined ? stored_val : desc.value
-			if( stored_val !== undefined){
-				if( desc.storable)
-					this._state[ prop] = stored_val
-				else //! DELETE / CLEAN UP
-					saveStore( store_id, prop, null, true)
-			}
-			else if( desc.storable) // store initial value
-				saveStore( store_id, prop, desc.value)
 
-			if( desc.class)
+			if (stored_val !== undefined){
+
+				if (desc.delete_storable){
+					saveStore(ns, store_id, prop, null, true)
+				}
+				else if (desc.storable /* && !this.params?.find(p=>p[0]===prop) */){
+					//log('err', 'set stored value for prop:', prop, stored_val, this.params)
+					this._state[prop] = stored_val
+
+					//! not sure it is needed here…
+					if (typeof desc.storable === 'string' && !stores[ns]){
+						//log('err', 'init global store:', ns, 'stored_val:', stored_val)
+						initStore(ns)
+					}
+				}
+				else //! DELETE / CLEAN UP
+					saveStore(this.ns, store_id, prop, null, true)
+			}
+			else if (desc.storable){ // store initial value
+				if (typeof desc.storable === 'string' && !stores[ns]){
+					initStore(ns)
+				}
+				// log('err', 'Comp init; saveStore:', ns, store_id, prop, desc.value)
+				saveStore(ns, store_id, prop, desc.value)
+			}
+
+			if (desc.sync_to_url_param)
+				this.sync_props_to_params ||= true
+
+			if (desc.class)
 				this.classList.toggle( desc.class, !!use_value)
 
-			if( desc.attribute){ // ['open', 'bool']
+			if (desc.attribute){ // ['open', 'bool']
 				//! wait for ctor to finish, else attr will be set to prop initial value before we read initial attr value
 				requestAnimationFrame( t => {
 
@@ -187,44 +227,58 @@ export class Component extends HTMLElement {
 				set( val){ /// SET:
 					// log('pink', 'SET prop:', this.id, prop, val)
 					let store_id = this.id
-					if( desc.storable && !store_id)
+					if (desc.storable && !store_id)
 						log('err', 'no store id for prop:', prop, this)
 
-
-					if( prop in properties){ //// in? ==> is a reactive prop
+					if (prop in properties){ //// in? ==> is a reactive prop
 						let no_render = false
-						let prev_val = this._state[ prop]
+						let prev_val = this._state[prop]
 						let t_val
-						if( desc.transformer && !this.bypass_transformer)
+						if (desc.transformer && !this.bypass_transformer)
 							t_val = desc.transformer.call( this, val, prev_val, desc.value, stored_val)
 
 						let force_render = desc.force_render
 
 						// do not return -> WE MAY STILL NEED WATCHER FOR SIDE EFFECTS
-						if( val===prev_val && !force_render || t_val === 'cancel' /* MAGIC WORD :| */)
+						if (val===prev_val && !force_render || t_val === 'cancel' /* MAGIC WORD :| */)
 							no_render = true
 
-
-						if( t_val !== undefined)
+						if (t_val !== undefined)
 							val = t_val
 
-						if( desc.storable){
-							// throttled_saveStore will only be fired once –
+						if (desc.storable){
+							// throttled_saveStores will only be fired once –
 							// though it may be called again with different params...
-							// like rx and ry during a continuous dragging,
+							// like for rx and ry during a continuous dragging,
 							// then only one of them would be stored in the end
-							// so store value here directly and leave the global
-							// localstorage saving for the throttled callback
-							store[ store_id] ||= {}
-							store[ store_id][ prop] = val
-							throttled_saveStore() /// global store (will be called at least once after multiple set)
+							// so store value here directly on state and leave the global
+							// localstorage saving the state for the throttled callback
+							const ns = typeof desc.storable === 'string' ? desc.storable : this.ns
+							stores[ns][store_id] ||= {}
+							stores[ns][store_id][prop] = val
+
+							// global store (will be called at least once after multiple set)
+							throttled_saveStores()
+							// setTimeout( e => saveStore(ns), 200)
 						}
 
-						this._state[ prop] = val
+						this._state[prop] = val
 
-						if( !this.block_watcher){
-							//this.id==='app' && log('pink', 'calling watcher...')
+						if (!this.block_watcher)
 							desc.watcher && desc.watcher.call( this, val, prev_val)
+
+						if (desc.sync_to_url_param){
+							// Update param - find param w/ name matching prop, sync it's val [1]
+
+							// this prop may be global and app doesn't use or have params
+							if (this.params){
+								this.params[this.params.findIndex(p => p[0]===prop)][1] = val
+								// Update hash
+								let page = this.getPage().path.split('/')[0] // remove possible params
+								let hash = page + '/' +
+									this.params.map( p => p.map(seg=>seg.toString()).join('=')).join('/')
+								location.hash = hash
+							}
 						}
 
 						if( desc.attribute){ /// ['open', 'bool']
@@ -540,6 +594,7 @@ export class Component extends HTMLElement {
 	 * @return {Promise<ModuleNamespaceObject>} an object that describes all exports from a module
 	 */
 	static async load( file_path, scripts){
+		// log('err', 'config.components_dir:', config.components_dir)
 		if( debug.load)
 			log('ok','load() file_path:', file_path)
 
@@ -575,12 +630,12 @@ export class Component extends HTMLElement {
 		if (/^\./.test( css))
 			css = location.pathname + css.replace(/^\.\//,'') // if starts with dot, remove it
 		else if (! /^\./.test( css))
-			css = `${ DIRECTORY + COMPONENTS_DIR }${ css }`
+			css = `${ DIRECTORY + config.components_dir }${ css }`
 
 		if (/^\./.test( js))
 			js = location.pathname + js.replace(/^\.\//,'') // if starts with dot, remove it
 		else
-			js = `${ DIRECTORY + COMPONENTS_DIR }${ js }`
+			js = `${ DIRECTORY + config.components_dir }${ js }`
 
 		if (debug.load)
 			log('purple', 'load js, css :', js, css)
@@ -612,9 +667,9 @@ export class VisionStage extends Component {
 		this.scrolls = this.classList.contains('scroll')
 
 		// Save store to localStorage on pagehide / unload
-		if( !CLEAR_STORE){
+		if (!window.do_not_store){
 			const termination_event = 'onpagehide' in self ? 'pagehide' : 'unload';
-			window.addEventListener( termination_event, e => saveStore())
+			window.addEventListener(termination_event, e => saveStores())
 		}
 
 		// auto filled by each component
@@ -642,16 +697,46 @@ export class VisionStage extends Component {
 		})
 
 		window.addEventListener('hashchange', this.#onHashChanged.bind( this))
-		this.updateAspect( ctor( this).aspects)
+		this.#updateAspect( ctor( this).aspects)
 
-		this._onInstallable = this.onInstallable.bind( this)
-		this._onInstalled = this.onInstalled.bind( this)
+		this._onInstallable = this.#onInstallable.bind( this)
+		this._onInstalled = this.#onInstalled.bind( this)
 
 		window.addEventListener('beforeinstallprompt', this._onInstallable)
 		window.addEventListener('appinstalled', () => this._onInstalled)
 	}
 
-	async onInstallable (e){
+	connectedCallback(){
+		this.onConnected && this.onConnected()
+		// no pages yet
+		if( this.$doc_title)
+			document.title = this.$doc_title + ' • ' + decodeURI( location.hash.slice(1))
+		// else: title remain as defined in the <title> tag
+
+		if( ctor( this).sounds)
+			this.setupSounds() // playSound( name), stopSound( name)
+
+		if (this.sw){
+			this.getActiveSW().then( SW => {
+				active_sw = SW || null
+
+				this.registerSW()
+			})
+		}
+	}
+
+	async getActiveSW(){
+		//log('check', 'getActiceSW()')
+		if( 'serviceWorker' in navigator){
+			const registrations = await navigator.serviceWorker.getRegistrations()
+			for (let registration of registrations){
+				// registration.unregister()
+				return registration.active // only first, should not be more
+			}
+		}
+	}
+
+	async #onInstallable(e){
 		// Prevent the mini-infobar from appearing on mobile
 		e.preventDefault()
 		// Stash the event so it can be triggered later.
@@ -662,8 +747,15 @@ export class VisionStage extends Component {
 		this.classList.add('installable') /// use to show install shortcut/standalone button
 	}
 
+	#onInstalled(e){
+		log('ok', 'App installed')
+		this.deferredPrompt = null
+		this.classList.remove('installable')
+		// Note: app only mount once, thus classes can be managed procedurally
+	}
+
 	/** user want to "install" a shortcut, trigger native prompt */
-	install (e){
+	install(e){
 		if( !this.deferredPrompt){
 			log('err','no deferredPrompt', this)
 			return
@@ -680,38 +772,17 @@ export class VisionStage extends Component {
 		// 	})
 	}
 
-	onInstalled (e){
-		log('ok', 'App installed')
-		this.deferredPrompt = null
-		this.classList.remove('installable')
-		// Note: app only mount once, thus classes can be managed procedurally
-	}
-
-	connectedCallback (){
-
-		// this.classList.add('fade-in')
-		this.onConnected && this.onConnected()
-		// no pages yet
-		if( this.$doc_title){
-			document.title = this.$doc_title + ' • ' + decodeURI( location.hash.slice(1))
-		}
-		// else: title remain as defined in the <title> tag
-
-		if( ctor( this).sounds)
-			this.setupSounds() // playSound( name), stopSound( name)
-
-		// this.registerSW()
-	}
-
-	#onHashChanged (e){
+	#onHashChanged(e){
 		this.#setPageFromHash()
 	}
 
-	#setPageFromHash (){ // sets this.page name (coresp to [page] attribute)
+	#setPageFromHash(){ // sets this.page name (coresp to [page] attribute)
 		let h = decodeURI( location.hash.slice(1))
 		if (!h){
-			if( this.page !== '')
+			if( this.page !== ''){
+				//log('err', 'set page empty')
 				this.page = ''
+			}
 			if( this.$doc_title)
 				document.title = this.$doc_title
 			return
@@ -722,12 +793,14 @@ export class VisionStage extends Component {
 		this.params = !params ? [] : params
 			.map( p => p.split('='))
 			.map( ([k,v]) => [k, v==='true'?true : v==='false'?false : !isNaN(v)?parseFloat(v) : v])
-
+		log('pink', 'Got params from hash:', h)
 		let page_name = ''
+		//log('info', 'match page, in pages:', page, this.pages)
 		outer:
 		for (let [name, data] of this.pages){
 			for (let lang in data){
-				if (data[ lang].path === page){
+				let path = data[ lang].path.split('/')[0]
+				if (path === page){
 					page_name = name
 					break outer
 				}
@@ -759,13 +832,17 @@ export class VisionStage extends Component {
 		let p_name = (page_name===null ? this.page : page_name)
 		let page = this.pages.find( ([name]) => p_name === name)
 		let lang = this.lang
+		if( page && !page[1][lang]){
+			//log('warn', 'Missing string for page with current lang: ' + p_name + ' -> ' + lang, 'Using default lang (en).')
+			lang = 'en'
+		}
 		if( page && !page[1][lang])
-			throw 'Missing string for page with current lang: ' + p_name + ' -> ' + lang
+			throw 'Missing string for page with default (en) lang: ' + p_name + ' -> ' + lang
 
 		return page ? page[1][lang] : {} // [1] == data
 	}
 
-	pageLink( page, postfix='', clss=''){
+	getPageLink (page, postfix='', clss=''){
 		if( !this.pages) return ''
 		//log('check', 'page link:', page)
 		let pre = page.startsWith('/') ? '/' : './#'
@@ -788,11 +865,17 @@ export class VisionStage extends Component {
 		if (pages){
 			// map each title to {title, path} (path is title with spaces replaced by -)
 			this.pages = Object.entries( pages).map(([name, titles]) => {
+				let path
+				// titles may be an object with titles and path
+				if (isObject(titles)){
+					path = titles.path
+					titles = titles.titles
+				}
 				let obj = {}
 				let lang_index = 0
 				for( let title of titles){
 					let lang = this.languages[ lang_index++]
-					obj[ lang] = { title, path: title.replace(/\s/g, '-') }
+					obj[ lang] = { title, path: path||title.replace(/\s/g, '-') }
 				}
 				return [name, obj]
 			})
@@ -805,70 +888,69 @@ export class VisionStage extends Component {
 	// 	this.classList.toggle('scrolled', main.scrollTop > 10)
 	// }
 
-	afterResize (e){
+	// delayed
+	afterResize(e){
 		app.resizing = false
 		app.updateScrollbarClass()
 	}
 
-	_onRendered (){
+	_onRendered(){
 		let main = this.q('main')
 		if( main) this.main = main
 		this.updateScrollbarClass()
 	}
 
-	//!! unreliable: this.main.scrollHeight > this.main.offsetHeight is often true when no scrollbar
+	//! this.main.scrollHeight > this.main.offsetHeight may be true even when no scrollbar
+	//! some styles can mess this up ??
 	/** sets .main-has-scrollbar for app-header/footer shadows */
-	updateScrollbarClass (){
+	updateScrollbarClass(){
 		// log('pink', 'update scrollbar class')
-		if( this.main && this.main.classList.contains('scroll')){
+		if (this.main && this.main.classList.contains('scroll')){
 			let has = this.main.scrollHeight > this.main.offsetHeight
 			this.classList.toggle('main-has-scrollbar', has)
 			//if( has) log('check', 'main has scrollbar; scroll height, main height:', this.main.scrollHeight, this.main.offsetHeight)
 		}
-		// else {
-		// 	log('err', 'no main')
-		// }
 	}
 
-	resize (){
-		if( this.resize_locked)
+	resize(){
+		if (this.resize_locked)
 			return // mobile + menu auth open -> prevent resize by onscreen keyboard
 
 		this.resizing = true
 		clearTimeout( after_resize_timeout)
-		after_resize_timeout = setTimeout( this.afterResize, 1000)
+		after_resize_timeout = setTimeout( this.afterResize, 200)
 
 		//tempClass( this, 'resizing', 1) //! tempClass doesn't reset its timeout...
-		const threshold = ASPECT_RATIOS.threshold
+		const threshold = aspect_ratios.threshold
 		const root = document.documentElement
-		const FSD = this.font_size_decimals || FONT_SIZE_DECIMALS
+		const FSD = config.font_size_decimals
 		//log('check', 'FSD:', FSD)
 		let w = window.innerWidth,
 			 h = window.innerHeight
 		const AR = { now: parseFloat( cleanNum( w / h)), min: 0 }
 
 		// true also if we specify only portrait
-		const is_portrait = (ASPECT_RATIOS.portrait && AR.now < threshold) || !ASPECT_RATIOS.landscape
+		const is_portrait = (aspect_ratios.portrait && AR.now < threshold) || !aspect_ratios.landscape
 
-		//if( this.is_portrait !== is_portrait)
-		this.is_portrait = is_portrait
+		if( this.is_portrait !== is_portrait) // is reactive
+			this.is_portrait = is_portrait
 
 		// defines what relative height we want (in rem)
-		let height_rem = // ASPECT_RATIOS.height ||
+		let height_rem = // aspect_ratios.height ||
 			this.is_portrait
-				? (ASPECT_RATIOS.portrait_height || ASPECT_RATIOS.height || 40)
-				: (ASPECT_RATIOS.landscape_height || ASPECT_RATIOS.height || 40)
+				? (aspect_ratios.portrait_height || aspect_ratios.height || 40)
+				: (aspect_ratios.landscape_height || aspect_ratios.height || 40)
 		// log('warn', 'rem height:', height_rem)
 		if( this.is_portrait){
-			AR.min = ASPECT_RATIOS.portrait_min
-			AR.base = ASPECT_RATIOS.portrait
-			AR.max = ASPECT_RATIOS.portrait_max
+			AR.min = aspect_ratios.portrait_min
+			AR.base = aspect_ratios.portrait
+			AR.max = aspect_ratios.portrait_max
 			AR.tall = AR.base
 		}
 		else {
 			AR.min =
-			AR.base = ASPECT_RATIOS.landscape||1.6
-			AR.max = ASPECT_RATIOS.landscape_max||11 	// 0 = 11 => virtually no limit
+			AR.base = aspect_ratios.landscape||1.6
+			AR.max = aspect_ratios.landscape_max||11 	// 0 = 11 => virtually no limit
 			AR.wide = AR.base
 		}
 
@@ -876,7 +958,7 @@ export class VisionStage extends Component {
 			above_landscape_max = AR.now > AR.max,
 			below_landscape = AR.now < AR.base
 
-		const cm = ASPECT_RATIOS.cross_margin
+		const cm = aspect_ratios.cross_margin
 
 		if( !this.is_portrait)
 			margin = (above_landscape_max || below_landscape) ? cm : 0
@@ -887,11 +969,11 @@ export class VisionStage extends Component {
 		this.setAttribute('orientation', this.is_portrait ? 'portrait' : 'landscape')
 		let ar = AR.now
 		let asp =
-			ar < ASPECT_RATIOS.portrait 		? 'portrait-min'	: // below portrait
-			ar < ASPECT_RATIOS.portrait_max 	? 'portrait-mid'	: // between portrait & portrait_max
-			ar < ASPECT_RATIOS.threshold 		? 'portrait-max'	: // between portrait_max & threshold
-			ar < ASPECT_RATIOS.landscape 		? 'landscape-min'	: // between threshold & landscape
-			ar < ASPECT_RATIOS.landscape_max ? 'landscape-mid'	: // between landscape and landscape_max
+			ar < aspect_ratios.portrait 		? 'portrait-min'	: // below portrait
+			ar < aspect_ratios.portrait_max 	? 'portrait-mid'	: // between portrait & portrait_max
+			ar < aspect_ratios.threshold 		? 'portrait-max'	: // between portrait_max & threshold
+			ar < aspect_ratios.landscape 		? 'landscape-min'	: // between threshold & landscape
+			ar < aspect_ratios.landscape_max ? 'landscape-mid'	: // between landscape and landscape_max
 			'landscape-max' // above landscape_max
 		this.setAttribute('aspect-range', asp)
 
@@ -954,12 +1036,12 @@ export class VisionStage extends Component {
 		for( let comp of resize_watchers){ // components with onResized method
 			//log('check', 'call resize for comp?, rendered? :', comp.rendered, comp)
 			if( comp.rendered){
-				comp.onResized( AR, ASPECT_RATIOS)
+				comp.onResized( AR, aspect_ratios)
 			}
 			else {
 				//log('warn', 'skipped onResized', this)
 				comp.skipped_onResized = true
-				comp.skipped_params = [AR,ASPECT_RATIOS]
+				comp.skipped_params = [AR,aspect_ratios]
 			}
 		}
 
@@ -976,28 +1058,28 @@ export class VisionStage extends Component {
 		this.style.setProperty('--extra', xtra===null ? 0 : xtra) //[0,1]
 	}
 
-	updateAspect (ratios){
+	#updateAspect (ratios){
 
 		if(!this.initial_ratios)
 			this.initial_ratios = ratios
 
-		if( ASPECT_RATIOS)
-			Object.assign( ASPECT_RATIOS, ratios)
+		if( aspect_ratios)
+			Object.assign( aspect_ratios, ratios)
 		else
-			ASPECT_RATIOS = ratios
+			aspect_ratios = ratios
 
-		if( ASPECT_RATIOS.portrait){
-			if( !ASPECT_RATIOS.portrait_min)
-				ASPECT_RATIOS.portrait_min = .01 /// can't be 0...
-			if( !ASPECT_RATIOS.portrait_max)
-				ASPECT_RATIOS.portrait_max = ASPECT_RATIOS.portrait
+		if( aspect_ratios.portrait){
+			if( !aspect_ratios.portrait_min)
+				aspect_ratios.portrait_min = .01 /// can't be 0...
+			if( !aspect_ratios.portrait_max)
+				aspect_ratios.portrait_max = aspect_ratios.portrait
 		}
 
-		if( !ASPECT_RATIOS.threshold)
-			ASPECT_RATIOS.threshold = 1
+		if( !aspect_ratios.threshold)
+			aspect_ratios.threshold = 1
 
-		if( !ASPECT_RATIOS.cross_margin)
-			ASPECT_RATIOS.cross_margin = 0
+		if( !aspect_ratios.cross_margin)
+			aspect_ratios.cross_margin = 0
 
 		this.resize()
 	}
@@ -1006,7 +1088,7 @@ export class VisionStage extends Component {
 	 * Build CSS to hide elements with a lang attribute not matching the app's
 	 *
 	 */
-	buildCSSForLangs (){
+	buildCSSForLangs(){
 		let str = ''
 		for( let lang of this.languages)
 			str += `vision-stage[lang='${lang}'] [lang]:not([lang='${lang}']) { display: none !important }\n`
@@ -1015,65 +1097,10 @@ export class VisionStage extends Component {
 	  document.head.appendChild( stylesheet)
 	}
 
-	/*buildPagesData(){
-		this.pages = []
-		for( let p of this.qAll('[page]')){
-			let name = p.getAttribute('page')
-			if( name === 'any')
-				continue
-			// comma separated, values can contain commas but keys can't; and no space either
-
-			let key = p.getAttribute('page')
-			let titles = p.getAttribute('titles')
-			if( !titles){
-				throw "[page] elements must have [titles] attribute for langs…"
-			}
-			else if( !titles.includes(':')){
-				// set the same path & title for each lang
-				let page_obj = {}
-				let path = key ? titles.replace(/\s/g, '-') : ''
-				for( let lang of this.languages){
-					page_obj[ lang] = { path, title:titles }
-				}
-				this.pages.push( [ key, page_obj])
-			}
-			else {
-				let strings = titles.match(/[^:,\s]+\:[^:]+((?=\s*,\s*)|$)/g)
-				let page_obj = {}
-				for( let str of strings){
-					let [lang, title] = str.split(/\s*:\s*REMOVETHIS/)
-					let path = key ? title.replace(/\s/g, '-') : ''
-					page_obj[ lang] = { path, title }
-				}
-				this.pages.push( [ key, page_obj])
-			}
-		}
-
-		let str = []
-		/// All conditions to hide an element
-		// hide all other than show-for='none' when no page
-		str.push(`#app[active-page=''] [page]:not([page=''])`)
-		str.push(`#app[active-page=''] [show-for\\:page]:not([show-for\\:page=''])`)
-
-		for( let [page, data] of this.pages){
-			if( !page) continue // home
-
-			// hide all [page] unless it matches #app[active-page] or is 'any'
-			str.push(`#app[active-page='${page}'] [page]:not([page~='${page}']):not([page='any'])`)
-			str.push(`#app[active-page='${page}'] [show-for\\:page]:not([show-for\\:page~='${page}']):not([show-for\\:page='any'])`)
-		}
-		str = str.join(',\n') + '{ display: none }'
-		// -> for transition: visibility: hidden ; opacity: 0
-		const stylesheet = document.createElement('style')
-		stylesheet.classList.add('show-for-styles')
-		stylesheet.textContent = str
-		document.head.appendChild( stylesheet)
-	}*/
-
 	// must be called from the app after user event, or onConnected but then the first time it won't play on iOS
 	/**
 	 * Basic audio playback with Web Audio. No lib! ;)
-	 * the main limitation is that the volume, althought it can be adjusted by individual sounds, is global, so if two sounds with different volume option||default are overlapping, the volume will sharply change; the ideal is to have sounds prerendered at the right volume. This does not concern this.global_volume which is another layer (fract. multiplier) that the user can adjust.
+	 * the main limitation is that the volume, althought it can be adjusted by individual sounds, is global, so if two sounds with different volume option||default are overlapping, the volume will sharply change; the ideal is to have sounds prerendered at the right volume. This does not concern this.global_volume which is another layer (a fract. multiplier) that the user can adjust.
 	 * Sounds are fetched and stored: this.sounds[ name] = { audio_buffer, options }
 	 * @return {Promise}
 	 */
@@ -1172,38 +1199,23 @@ export class VisionStage extends Component {
 	}
 
 	/**
-	 * (1) take an object as input,
-	 * (2) validate it for some conditions,
-	 * (3) calculate a return value from it.
+	 * Utility to get a value / validate it and compute a new value from it to return
 	 * Will render right after returning;
-	 * @return the result of modifier||original if validator returns true, otherwise returns null
+	 * @return the result of computer if validator returns true, otherwise returns null
 	 */
-	valueFromObject( input, validator, calc){
+	validateAndCompute( value, validator, computer){
 		setTimeout( t => this.render())
-		return validator( input) ? calc( input) : null
+		return validator( value) ? computer( value) : null
 	}
 
-	/** takes a nested prop path for this (as string with dot notation),
-	 * and returns the object (@ before last key), the last key and the first key
-	 */
-	// resolveProp( path){
-	// 	let obj = this
-	// 	let keys = path.split('.')
-	// 	let last_key = keys.pop()
-	// 	for( let k of keys){
-	// 		obj = obj[ k]
-	// 	}
-	// 	// log('info', 'obj:', obj, last_key)
-	// 	return [obj, last_key, keys[0]]
-	// }
 	registerSW(){
-		//log('info', 'this.registerSW()')
+		log('info', 'registerSW()', this.sw)
 		if ('serviceWorker' in navigator)
-		navigator.serviceWorker.register('/sw.js')
+		navigator.serviceWorker.register( this.sw)
 			.then( reg => {
 				log('info',"Service Worker Registered")
 				reg.onupdatefound = () => {
-					//log('ok', 'SW update found')
+					log('ok', 'SW update found')
 					let installing_worker = reg.installing
 					installing_worker.onstatechange = async () => {
 						log('ok', 'SW State: ', installing_worker.state)
@@ -1224,7 +1236,8 @@ export class VisionStage extends Component {
 										// 	})
 									}
 									else {
-										/// LONG RUNNING NETWORK CONNECTION (LIKE FIREBASE FIRESTORE) MAY PREVENT ACTIVATION FOR A WHILE; LOG TO KNOW
+										// LONG RUNNING NETWORK CONNECTION (LIKE FIREBASE FIRESTORE)
+										// MAY PREVENT ACTIVATION FOR A WHILE; LOG TO KNOW
 										log('info', 'SW Update is available, waiting for activation…')
 									}
 								}, 200)
@@ -1233,6 +1246,7 @@ export class VisionStage extends Component {
 							case 'activated':
 								/// IF NOT FIRST INSTALL, SHOW UPDATE READY: PLEASE REFRESH | LATER
 								if( active_sw || redundant)
+									this.onCacheUpdated && this.onCacheUpdated()
 									// this.toast.setMessage( this.$update_ready, [this.$later, this.$refresh])
 									// 	.then( answer => {
 									// 		if( answer === 0)
@@ -1249,22 +1263,29 @@ export class VisionStage extends Component {
 					}
 				}
 
-				/// CHECK FOR UPDATE ONCE IN A WHILE TO NOTIFY A USER USING THE APP FOR A LONG TIME
-				/// (OR WHO KEEP THE TAB OPEN, NEVER REFRESHING)
+				setTimeout( e => {
+					let btn = q('#test-update-btn')
+					if (btn)
+					btn.onclick = () => {
+						reg.update()
+					}
+				}, 100)
+
+				// check for sw.js update once in a while to notify a user using the app for a long time
+				// We can just change the const VERSION in sw.js and user will be notified of a new update available when cache has been updated
 				setInterval( () => {
 					log('ok', 'checking for service worker update...')
 					reg.update()
-				}, 1000 * 60 * UPDATE_CHECK_MIN)
+				}, 1000 * 60 * config.update_check_min)
 			})
-		// else if( is_IOS)
-		// 	alert ('Offline service unsupported… 🥺  — Apple wants you to use Safari, for your own good! 😩')
 	}
 }
 
-// these static properties are underscore prefixed
+// these next static properties are underscore prefixed
 // so they are merged instead of overriden next by > MyApp.properties
 
 VisionStage._properties = {
+	is_portrait: null,
 	title: '',
 	resizing: {
 		value: false,
@@ -1273,12 +1294,12 @@ VisionStage._properties = {
 	},
 	global_volume: {
 		value: .6,
-		storable: true,
+		storable: '/', // shared accross all apps
 		reactive: false
 	},
 	lang: {
 		value: navigator.language.slice(0,2),
-		storable: true,
+		storable: '/', // shared accross all apps
 		force_render: true,
 		watcher( val, prev){
 			//log('pink', 'lang:', val)
@@ -1294,20 +1315,24 @@ VisionStage._properties = {
 			// update hash and doc title
 
 			if( this.pages && this.page){
-				/// update hash / page title for current lang
+				// update hash / page title for current lang
 				let {path, title} = this.getPage()
-				location.hash = path
+				let new_page = path.split('/')[0]
+				let h = decodeURI( location.hash.slice(1))
+				let [old_page, ...params] = h.split('/')
+				location.hash = new_page + '/' + params.join('/')
 				if( this.$doc_title)
-					document.title = this.$doc_title + ' • ' + title // decodeURI( location.hash.slice(1))
+					document.title = this.$doc_title + ' • ' + title
 			}
 			log('info', 'lang, country:', lang, country)
 		},
 		//init_watcher: true // causes render (SET lang), maybe too soon, keep manual
-		// -> instead just re-trigger after this is rendered (lang = lang)
+		// -> instead just re-trigger after this is rendered (this.lang = this.lang)
 	},
 	night_mode: {
 		value: 0,
-		storable: true,
+		sync_to_url_param: true, //! what happens with stored value??
+		storable: '/', // shared accross all apps
 		attribute: ['night-mode', 'auto'], // auto -> remove if falsy, otherwise use value
 		init_watcher: true,
 		watcher( val){
@@ -1317,21 +1342,26 @@ VisionStage._properties = {
 			//this.switchClasses('has-bright-bg', 'has-dark-bg', val==='whitish')
 		}
 	},
-	menu_open: { value: false, class: 'menu-open'},
-
-	// bool props defining CSS classes when true
-	// faded: {
-	// 	value: true,
-	// 	class: 'faded',
-	// 	reactive: false
-	// },
+	menu_open: {
+		value: false,
+		class: 'menu-open'
+	},
 	page: {
 		value: null,
 		attribute: 'page',
 		watcher( val, prev){
+
 			// remove trailing #
 			if( !val && location.href.endsWith('#') && window.self === window.top)
 				history.replaceState( null, '', location.pathname)
+
+			if (this.params && this.sync_props_to_params){ // skip if no props are syncable
+				for (let [p,val] of this.params){
+					if (p in this){
+						this[p] = val
+					}
+				}
+			}
 
 			this.onPageChanged && this.onPageChanged( val, prev)
 		}
@@ -1437,14 +1467,8 @@ export const P = {
 	},
 }
 
-
-// shorthand version of
-// this.prop( prop).toggleSelect( item)
-// instead import this and bind it, then use like:
-// togSel('prop', item)
-// export function toggleSelect(prop,item){ this.prop(prop).toggleSelect(item) }
-
 let DIRECTORY = ''
+
 /**
  * Defines a custom element (window.customElements.define) and return whenDefined promise
  * @param components wait and load required components before define
@@ -1483,176 +1507,161 @@ export async function define( tag_name, clss, components, directory=''){
 export function useSVG( id, clss, ar){
 	let src = app.icons_path || DIRECTORY + '/_assets/images/icons.svg'
 	// proxy names
-	if( icons_mappings[id])
+	if( config.icons_mappings[id])
 		id = icons_mappings[id]
-	let vb = icons_mappings_vb[id] || '0 0 32 32'
+	let vb = config.icons_mappings_vb[id] || '0 0 32 32'
 
 	return html`<svg class=${clss ? 'icon '+clss : 'icon'} viewBox=${vb} preserveAspectRatio=${ ifDefined( ar) }>
 		<use href='${src}#${id}'/>
 	</svg>`
 }
 /** wraps useSVG symbol inside a span.vs-icon */
-export function icon( svg_id, clss='', opts={}){
-	return html`<span class='vs-icon ${clss}'>${ useSVG( svg_id, opts.svg_class||'', opts.ar) }</span>`
-}
-
-export function maybe( thing){
-	return thing || {}
-}
-/** [ option (label || [label,value]) ] */
-export function Options( opts){
-	const details = []
-	const labels = opts.map( o => Array.isArray(o) ? o[0] : o)
-		// labels might have details ( "label | more details..." )
-		.map( (label,i) => typeof label === 'string' ?
-			parseLabel( label, details, i) :
-			parseLabels( label, details, i))
-	// Copy label for value:
-	// option not array / is string -> take it for value
-	// option is array : // [[label_en, label_fr], v?]
-	// if value ([1]), take it
-	// else, [0] is labels, take first label [0], default lang
-	// (if no val and single label, option would not be an array...)
-	/// if we copy label b/c no value, use the parsed one from above...
-	const values = opts.map( (o,i) => Array.isArray(o) ? o[1]!==undefined ? o[1] :
-		parseLabel(o[0][0]) : labels[i])
-	//log('info', 'labels, values',labels, values)
-	return { labels, values, details, classes: opts.map( o => o[2]) }
-}
-function parseLabel( label, details, index){
-	let [l,d] = label.split(' | ')
-	if( details) details[ index] = d
-	return l
-}
-function parseLabels( labels, details, index){
-	let [l,d] = explodeArray( labels.map( str => str.split(' | ')))
-	details[ index] = d
-	return l // arrays of only locale labels
-}
-
-const explodeArray = (arr) => arr.reduce( (cumul,val) =>
-	cumul.forEach((a,i) => a.push( val[ i])) || cumul
-, Array.from( Array(arr[0].length), () => []) )
-
+export const icon = (svg_id, clss='', opts={}) =>
+	html`<span class='vs-icon ${clss}'>${ useSVG( svg_id, opts.svg_class||'', opts.ar) }</span>`
+export const maybe = thing => thing || {}
 export const classes = (...classes) => classes.filter( c => c).join(' ')
-export const labelAsClassMapper = o =>
-	typeof o === 'string' ? {label:o, class:o} : {...o, class:o.label}
 
-export const createOptions = opts => ({
-	labels: opts.map( o =>
-		typeof o === 'string' ? o :
-		o.label !== undefined ? o.label :
-		opts[0].label), // default to first option's label (required, unless .icon prop)
-	details: opts.map( o => o.detail),
-	values: opts.map( o =>
-		o.value !== undefined ? o.value :
-		Array.isArray(o.label) ? o.label[0] : o.label||o
-	),
-	classes: opts.map( o => o.class !== undefined ? o.class :
-		!o.label ? opts[0].class : undefined),
-	selected_class: opts.map( o =>
-		o.selected_class !== undefined ? o.selected_class :
-		o.label === undefined ? opts[0].selected_class : undefined
-	),
-	icons: opts.map( o => o.icon)
-})
+
 ///  STORE  ///
 
+/**
+ * Global localStorage key is the path for the app (/ => -)
+ * Other components must have an id as sub-key to use storable on a property.
+ */
+
 /** Parse store from localStorge or init a new one */
-function initStore( ns){
-	//log('check', 'init store:', ns)
-	store_namespace = ns
-	if( !ns){
+function initStore(ns){
+	//log('purple', 'init store:', ns)
+	// debugger
+	//store_namespace = ns
+	if (!ns){
 		log('err', 'no store namespace');
 		return
 	}
 
-	if( CLEAR_STORE){
-		log('err','--CLEAR_STORE')
-		store = {}
-		localStorage.setItem( store_namespace, "{}")
-		return
-	}
+	const stored_data = localStorage.getItem(ns)
 
-	let stored_data = localStorage.getItem( ns)
-	log('ok','RAW:', stored_data)
-	if( stored_data){
-		try { store = JSON.parse( stored_data); }
-		catch( err){
+	if (stored_data){ // set stored_data in stores[ns]
+		log('purple','initStore(); ns, stored_data:', ns)
+		log(stored_data)
+		try { stores[ns] = JSON.parse(stored_data) }
+		catch (err) {
 			log('err','JSON parse error')
 			log('warn', 'stored_data:', stored_data)
 		}
 	}
-
-	if( ! store || ! isObject( store)){
-		if( debug.store) log('notok', 'NO STORE, CREATING ONE')
-		store = {}
+	// no stored_data or failed to parse
+	if (! stores[ns] || ! isObject(stores[ns])){
+		//if (debug.store) log('notok', 'no stored_data or failed to parse, set a new one empty')
+		log('purple', 'initStore(); no stored data; set new empty store', ns)
+		stores[ns] = {}
 	}
-	else if( debug.store) {
+	else if (debug.store) {
 		log('ok', 'GOT store:')
+		log( stores[ns])
 		//log(JSON.stringify(store,null,2))
-		log( store)
 	}
 }
 /** Get a possibly stored value || undefined */
-function storedValue( elem_id, prop){
-	let s = store[ elem_id]
-	//if( debug.store)
-	//log('purple', 'get stored:', s, 'elem_id:', elem_id)
-	return s ? s[ prop] : undefined
+function storedValue(ns, elem_id, prop){
+	if (!ns) return undefined
+	let s = stores[ns]?.[elem_id]
+	if( !stores[ns]){
+		// store not initialized
+		initStore(ns)
+		s = stores[ns]?.[elem_id]
+	}
+	s?.[prop]!==undefined && log('purple', 'Got storedValue:', prop, s[prop])
+	return s ? s[prop] : undefined
 }
-/** either save after setting a prop on elem, or just save */
-export function saveStore( elem_id, prop, val, remove=false){
-
-	if( app && app.do_not_store) return
-
+/** either save to localStorage after setting a prop on elem, or just save */
+export function saveStore(ns, elem_id, prop, val, remove=false){
+	// log('check', 'saveStore(ns, elem_id, prop, val):', {ns, elem_id, prop, val})
+	if (window.do_not_store){
+		return
+	}
 	//! was async: problem if used on unload event... cannot block
 	//!  => should make async + another sync version for unload
 
-	if( !store) return null //|| CLEAR_STORE
+	const store = stores[ns]
+
+	if (!store) return null
 
 	//log('err', '--save to store, elem id:', elem_id)
 
-	if( elem_id){ //// WE WANT TO SET A STORE VALUE BEFORE SAVING
+	if (elem_id){ /// WE WANT TO SET A STORE VALUE BEFORE SAVING
 
-		if( remove){
+		if (remove){
 			log('err', 'DELETE:', elem_id, prop)
-			if( store[ elem_id]){
-				delete store[ elem_id][ prop]
+			if( store[elem_id]){
+				delete store[elem_id][ prop]
 				/// if this elem has no more stored props, delete its store
-				if( ! Object.keys( store[ elem_id]).length)
-					delete store[ elem_id]
+				if( ! Object.keys(store[elem_id]).length)
+					delete store[elem_id]
 			}
 		}
 		else {
 			//if( debug.store)
-			log('pink', 'STORING:', elem_id, prop, val)
-			if( store[ elem_id] === undefined)
-				store[ elem_id] = {}
-			store[ elem_id][ prop] = val
+			log('check', 'STORING:', ns, elem_id, prop, val)
+			if( store[elem_id] === undefined)
+				store[elem_id] = {}
+			store[elem_id][prop] = val
 		}
 	}
 
-	// if( !willSave){ //// BATCH CALLS
-	// willSave = true
-	// await 0;
-	// willSave = false
-	const str = JSON.stringify( store)
-	if( debug.store){
+	const str = JSON.stringify(store)
+	if (debug.store)
 		log('pink', '--will store string:', str)
-	}
-	localStorage.setItem( store_namespace, str)
+
+	// log('purple', 'set localstorage:', ns, str)
+	localStorage.setItem(ns, str)
 }
-export function clearStore( e){
-	log('err', 'clear store')
-	app.do_not_store = true // prevent storing on before reload
-	localStorage.removeItem( store_namespace)
+function saveStores(){
+	// log('purple', 'saveStores()', )
+	for (let ns in stores)
+		saveStore(ns)
+}
+export function clearStore(ns){
+
+	if(!ns){ // recreate this.ns
+		const path = decodeURI(location.pathname);
+		ns = path.slice(1,-1).replace(/\//g, '-') || 'home';
+	}
+
+	if (localStorage.getItem('store_cleared') === 'true'){
+		// log('warn', 'store_cleared value', localStorage.getItem('store_cleared'))
+		localStorage.removeItem('store_cleared')
+		//log('warn', 'store_cleared value', localStorage.getItem('store_cleared'))
+		return
+	}
+
+	log('err', 'clear store:', ns)
+	localStorage.removeItem(ns)
 	log('err', 'Store cleared')
+	localStorage.setItem('store_cleared', 'true')
+	window.do_not_store = true // prevent storing on before reload
+	location.reload()
+}
+/** clear all stores for current app */
+export function clearStores(){
+	if (localStorage.getItem('store_cleared') === 'true'){
+		log('err', 'stores all cleared; return:', )
+		localStorage.removeItem('store_cleared')
+		return
+	}
+	log('err', 'clearStores()', JSON.stringify(stores))
+	for (let ns in stores){
+		log('err', 'clear store:', ns)
+		localStorage.removeItem(ns)
+		log('err', 'Store cleared')
+	}
+	localStorage.setItem('store_cleared', 'true')
+	window.do_not_store = true // prevent storing on before reload
 	location.reload()
 }
 //  Setting many props at once with storable:true, each will call saveStore (writes to LS),
 //  so use a throttled "version" instead
-const throttled_saveStore = debounce( saveStore, 200)
+const throttled_saveStores = debounce( saveStores, 200)
 
 // screenfull.min.js
 !function(){"use strict";var e=window.document,n=function(){for(var n,r=[["requestFullscreen","exitFullscreen","fullscreenElement","fullscreenEnabled","fullscreenchange","fullscreenerror"],["webkitRequestFullscreen","webkitExitFullscreen","webkitFullscreenElement","webkitFullscreenEnabled","webkitfullscreenchange","webkitfullscreenerror"],["webkitRequestFullScreen","webkitCancelFullScreen","webkitCurrentFullScreenElement","webkitCancelFullScreen","webkitfullscreenchange","webkitfullscreenerror"],["mozRequestFullScreen","mozCancelFullScreen","mozFullScreenElement","mozFullScreenEnabled","mozfullscreenchange","mozfullscreenerror"],["msRequestFullscreen","msExitFullscreen","msFullscreenElement","msFullscreenEnabled","MSFullscreenChange","MSFullscreenError"]],l=0,t=r.length,c={};l<t;l++)if((n=r[l])&&n[1]in e){for(l=0;l<n.length;l++)c[r[0][l]]=n[l];return c}return!1}(),r={change:n.fullscreenchange,error:n.fullscreenerror},l={request:function(r,l){return new Promise(function(t,c){var u=function(){this.off("change",u),t()}.bind(this);this.on("change",u);var s=(r=r||e.documentElement)[n.requestFullscreen](l);s instanceof Promise&&s.then(u).catch(c)}.bind(this))},exit:function(){return new Promise(function(r,l){if(this.isFullscreen){var t=function(){this.off("change",t),r()}.bind(this);this.on("change",t);var c=e[n.exitFullscreen]();c instanceof Promise&&c.then(t).catch(l)}else r()}.bind(this))},toggle:function(e,n){return this.isFullscreen?this.exit():this.request(e,n)},onchange:function(e){this.on("change",e)},onerror:function(e){this.on("error",e)},on:function(n,l){var t=r[n];t&&e.addEventListener(t,l,!1)},off:function(n,l){var t=r[n];t&&e.removeEventListener(t,l,!1)},raw:n};n?(Object.defineProperties(l,{isFullscreen:{get:function(){return Boolean(e[n.fullscreenElement])}},element:{enumerable:!0,get:function(){return e[n.fullscreenElement]}},isEnabled:{enumerable:!0,get:function(){return Boolean(e[n.fullscreenEnabled])}}}),window.screenfull=l):window.screenfull={isEnabled:!1}}();
@@ -1665,9 +1674,7 @@ const throttled_saveStore = debounce( saveStore, 200)
 /*
 		CTOR:
 
-		// this.getActiveSW().then( SW => {
-		// 	active_sw = SW || null
-		// })
+
 
 		// let icons_path = this.getAttribute('icons')
 		// if( icons_path)

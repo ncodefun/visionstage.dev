@@ -79,6 +79,7 @@ vision-stage.has-margins {
 	mix-blend-mode: darken;
 }
 .scroll.shadow::before {
+	/* top:  */
 	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
 	/* mix-blend-mode: color-burn; */
 }
@@ -116,12 +117,18 @@ vision-stage.has-margins {
 			width: .67rem;
 			overflow: hidden;
 		}
+		#app.main-has-scrollbar main.scroll {
+			padding-left: .67rem;
+		}
 		.scroll.scroll-hidden::-webkit-scrollbar {
 			width: 0 !important;
 		}
 
 		.scroll.tiny::-webkit-scrollbar {
 			width: .2rem;
+		}
+		#app.main-has-scrollbar main.scroll.tiny {
+			padding-left: .2rem;
 		}
 		.scroll::-webkit-scrollbar-track {
 			background-color: var(--scrollbar-bg-color);
@@ -156,12 +163,15 @@ hr.split {
   visibility: hidden;
 }
 .no-events { pointer-events: none }
+.events { pointer-events: auto !important }
 .nowrap { white-space: nowrap }
 .pre { white-space: pre }
 .text-center {text-align: center}
 .text-left {text-align: left}
 .text-right {text-align: right}
 .text-justify {text-align: justify}
+.no-margin { margin: 0 }
+
 .transparent {
 	opacity: 0;
 	pointer-events: none;
@@ -347,12 +357,12 @@ span.vs-icon.xxx-large { font-size: 1.75em }
 
 /** MY STYLE **/
 
-@font-face {
+/* @font-face {
 	font-family: 'Open Sans';
 	font-style: normal;
 	font-weight: 400;
 	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-regular.woff2) format('woff2');
-}
+} */
 
 /* josefin-sans-300 - latin */
 @font-face {
@@ -389,13 +399,29 @@ span.vs-icon.xxx-large { font-size: 1.75em }
   font-weight: 600;
   src: url('/_assets/fonts/josefin-sans/josefin-sans-v24-latin-600.woff2') format('woff2');
 }
+/* Font for buttons / text inputs */
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/_assets/fonts/inter/inter-v12-latin-300.woff2') format('woff2');
+}
+@font-face {
+  font-display: swap;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/inter/inter-v12-latin-regular.woff2') format('woff2');
+}
+
 
 html {
 	--scrollbar-handle-color: hsl(247, 70%, 67%);
 	--sea-green: hsl(150, 100%, 83%);
 	--sea-green-white: hsl(150, 65%, 82%) }
-#app[night-mode='2'] {
-	--scrollbar-handle-color: hsl(252, 4%, 56%);
+#app[night-mode] {
+	--scrollbar-handle-color: hsl(252, 25%, 44%);
 }
 body {
 	background: hsl(194, 18%, 52%) }
@@ -480,10 +506,11 @@ main:not(.no-fade-in) {
 /** .main-has-scrollbar is toggled automatically in app.js */
 
 #app[night-mode].main-has-scrollbar #app-header {
-	box-shadow: 0 .25rem .5rem hsla(0, 0%, 0%, .15);
+	box-shadow: 0 .25rem .33rem hsl(256 20% 25% / 75%);
+	/* hsla(0, 0%, 0%, .5); */
 }
 #app[night-mode].main-has-scrollbar #app-footer {
-	box-shadow: 0 -.25rem .5rem hsla(0, 0%, 0%, 0.15);
+	box-shadow: 0 -.25rem .33rem hsl(256 20% 25% / 75%);
 }
 #app:not([night-mode]).main-has-scrollbar #app-header {
 	background: var(--scrolls-header-background);
@@ -494,14 +521,12 @@ main:not(.no-fade-in) {
 	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
 }
 #app {
-	--main-hue: 256deg; /* with mix blenmode... */
-
-	--scrolls-over-shadow-top-color: hsl(var(--main-hue) 88% 40% / 75%);
-	--scrolls-over-shadow-bottom-color: hsl(var(--main-hue) 70% 45%);
-	--scrolls-shadow-color: hsl(var(--main-hue) 82% 35% / 85%);
-	/* --scrolls-shadow-bottom-color: hsl(var(--main-hue) 82% 35% / 50%); */
-	--scrolls-header-background: hsl(var(--main-hue) 62% 40% / 42%);
-	--scrolls-footer-background: hsl(var(--main-hue) 62% 40% / 33%);
+	--scrolls-over-shadow-top-color: hsl(256deg 88% 40% / 75%);
+	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 45%);
+	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
+	/* --scrolls-shadow-bottom-color: hsl(256deg 82% 35% / 50%); */
+	--scrolls-header-background: hsl(256deg 62% 40% / 42%);
+	--scrolls-footer-background: hsl(256deg 62% 40% / 33%);
 }
 #app[night-mode='2'] {
 	--scrolls-over-shadow-top-color: hsla(332, 8%, 10%, 0.5);
@@ -509,7 +534,7 @@ main:not(.no-fade-in) {
 }
 #app[night-mode='1'] .scroll.shadow::before,
 #app[night-mode='1'] .scroll.shadow::after {
-	opacity: .5;
+	opacity: .6;
 	filter: saturate(.25);
 }
 body.night-mode-1 {
@@ -584,13 +609,13 @@ nav {
 	gap: 1rem;
 	position: absolute;
 	top: 5rem;
-	transition: all .3s ease;
 	border-radius: .5rem;
 	padding: 1rem 2.5rem;
 	align-items: stretch;
 	text-align: center;
 	box-shadow: 0 .4rem 1rem #0004;
 	background-color: hsl(150deg 13% 17%);
+	/* transition: all .3s ease; */
 	transition: transform .5s cubic-bezier(.68, -.28, .82, .11);
 	/* inverse: 1-C, 1-D, 1-A, 1-B -> A:0.18, B:0.89, C:0.32, D:1.28 =
 		 1-.32, 1-1.28, 1-.18 , 1-.89 => .68, -.28, .82, .11  */
@@ -618,9 +643,11 @@ nav {
 	max-width: 40rem;
 	margin: 1em auto;
 } */
-/* main p {
+main p {
 	padding-inline: 1em;
-} */
+	margin-inline: auto;
+	max-width: 40rem;
+}
 
 main p + p {
 	margin-top: 0;
@@ -658,9 +685,22 @@ input[type='password'] + button {
 	border-bottom-left-radius: 0;
 	border-left-color: #00000008;
 }
-
+/** Encode Sans */
+@font-face {
+  font-family: 'Encode Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/_assets/fonts/encode-sans/encode-sans-semi-condensed-v8-latin-500.woff2') format('woff2');
+}
+/** Roboto */
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/roboto/roboto-v29-latin-regular.woff2') format('woff2');
+}
 button, input, .button {
-	font-family: inherit;
+	font-family: Inter, Open Sans, sans-serif;
 	font-weight: normal;
 	font-size: inherit;
 	text-align: inherit;
@@ -683,7 +723,7 @@ a.button {
 	/* font-weight: 500; */
 }
 button, a.button {
-	font-size: 1em;
+	font-size: 1rem;
 	/* min-height: 2em; */
 	border-radius: .42rem;
 	padding: 0 1ch;
@@ -702,12 +742,12 @@ body.using-mouse *::-moz-focus-inner {
 }
 body.using-mouse button { outline: none }
 
-button.mini, button.xx-small { font-size: .7em;}
-button.small { font-size: .85em; }
-button.smaller, button.x-small { font-size: .75em }
-button.medium { font-size: 1.125em }
-button.big, button.large { font-size: 1.25em }
-button.bigger, button.x-large { font-size: 1.5em }
+button.mini, button.xx-small { font-size: .7rem;}
+button.small { font-size: .85rem; }
+button.smaller, button.x-small { font-size: .75rem }
+button.medium { font-size: 1.125rem }
+button.big, button.large { font-size: 1.25rem }
+button.bigger, button.x-large { font-size: 1.5rem }
 
 button.round, button.square {
 	width: 2em;
