@@ -16,13 +16,60 @@ export const isObject = o => !!o && typeof o === 'object' && !Array.isArray( o)
 export function maybe( thing){
 	return thing || {}
 }
-export const explodeArray = (arr) => arr.reduce( (cumul,val) =>
-	cumul.forEach((a,i) => a.push( val[ i])) || cumul
-, Array.from( Array(arr[0].length), () => []) )
 
+/**
+ * Utility to gather CSS classes accepting falsy values, filter those out and join them with a space.
+ */
 export const classes = (...classes) => classes.filter( c => c).join(' ')
+
+/**
+ * Adds a 'class' prop to each items equaling the (implicit or explicit) label's value.
+ *
+ * For each item:
+ * - If it's an object, add `class` prop equaling the `label`'s value,
+ * - If it's a string, create an object
+ *   with `label` and `class` props equaling the string value.
+ */
 export const labelAsClassMapper = o =>
 	typeof o === 'string' ? {label:o, class:o} : {...o, class:o.label}
+
+/** [ option (label || [label,value]) ] */
+/**
+ * create an options object for vs-selector
+ * from an array of ["label( | details)?" | [locale labels], value?, classes?]
+ */
+export function options(opts){
+	const details = []
+	const labels = opts.map( o => Array.isArray(o) ? o[0] : o)
+		// labels might have details ( "label | more details..." )
+		.map( (label,i) => typeof label === 'string' ?
+			parseLabel( label, details, i) :
+			parseLabels( label, details, i))
+	// Copy label for value:
+	// option not array / is string -> take it for value
+	// option is array : // [[label_en, label_fr], v?]
+	// if value ([1]), take it
+	// else, [0] is labels, take first label [0], default lang
+	// (if no val and single label, option would not be an array...)
+	/// if we copy label b/c no value, use the parsed one from above...
+	const values = opts.map( (o,i) => Array.isArray(o) ? o[1]!==undefined ? o[1] :
+		parseLabel(o[0][0]) : labels[i])
+	//log('info', 'labels, values',labels, values)
+	return { labels, values, details, classes: opts.map( o => o[2]) }
+}
+function parseLabel( label, details_arr, details_index){
+	let [l,d] = label.split(' | ')
+	if (details_arr) details_arr[details_index] = d
+	return l
+}
+function parseLabels( labels, details, index){
+	let [l,d] = explodeArray( labels.map( str => str.split(' | ')))
+	details[ index] = d
+	return l // arrays of only locale labels
+}
+const explodeArray = (arr) => arr.reduce( (cumul,val) =>
+	cumul.forEach((a,i) => a.push( val[ i])) || cumul
+, Array.from( Array(arr[0].length), () => []) )
 
 export const createOptions = opts => ({
 	labels: 	opts.map( o =>
