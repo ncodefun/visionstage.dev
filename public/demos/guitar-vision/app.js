@@ -3,7 +3,6 @@
 /// - custom chord sequence
 /// - custom chords ?
 
-
 import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
@@ -12,7 +11,7 @@ import { cycleWithin, tempClass, sleep }
 
 const fs = screenfull // embeded / global
 
-log('info', 'Updated 2022.07.29')
+// log('info', 'Updated 2022.07.29')
 
 
 /// thinsp:" "
@@ -83,7 +82,7 @@ class App extends VisionStage {
 
 			<nav flow='row gaps-large' class='v-menu nowrap'>
 				${ this.pages && this.pages.map( ([page],i) =>
-					this.pageLink( page, i < this.pages.length-1 ? '✦' : '')
+					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
 				)}
 			</nav>
 

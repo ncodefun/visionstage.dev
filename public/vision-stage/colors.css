@@ -1,14 +1,13 @@
 #app {
+	--hue: 150deg;
 	--text-color-dark: hsl(var(--hue), 20%, 17%);
 	--text-color-light: hsl(var(--hue), 56%, 88%);
-	--hue: 150deg;
 }
 
 
 
 /**  Basic light and dark button colors  **/
 button {
-
 	--btn-bg-color: hsl(0, 0%, 96%);
 	--btn-bg-color-hl: hsl(0, 0%, 100%);
 	--btn-text-color: hsla(0, 0%, 7%, 0.95);
@@ -39,6 +38,7 @@ button {
 		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 50%);
 		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
 }
+
 :where(.dark-components) button:not(.bare) {
 	font-weight: 300;
 }

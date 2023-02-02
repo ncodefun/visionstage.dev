@@ -20,7 +20,7 @@ button, input, a.button {
 	--hue: 150deg;
 	--lum: 61%;
 	--primary: hsl(150deg, 90%, 62%);
-	color: var(--text-color-bright);
+	color: var(--text-color-light);
 }
 
 #app[aspect-range*='portrait'] main {

@@ -16,14 +16,22 @@
 	font-weight: 500;
 	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-500.woff2) format('woff2');
 }
-
+:root {
+	--header-height: calc(var(--sth) / 12);
+}
 #app {
 	font: 1rem/1.5 Open Sans, serif;
-	color: var(--text-color-bright);
+	color: var(--text-color-light);
+	/* --hue: 300deg; */
+	/* --hue: 80deg; */
+
+	/* --primary: hsl(150deg, 90%, 62%); */
 }
-/* #app-header {
-	grid-template-columns: 1fr max-content 1fr;
-} */
+
+#app-header {
+	height: var(--header-height);
+	/* grid-template-columns: 1fr max-content 1fr; */
+}
 
 form {
 	margin: .25rem 0 1rem;

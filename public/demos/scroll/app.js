@@ -9,25 +9,16 @@ const NIGHT_MODES = [0,1,2]
 
 class App extends VisionStage {
 
-	// constructor(){
-	// 	super()
-	// 	this.registerSW()
-	// }
-
 	onConnected = () => this.render()
-	onFirstRendered(){}
-	onRendered(){}
-	onResized(){}
-	onPageChanged( page, prev){
-		//log('info', 'page:', page, this.params)
-		if( page===prev) return // just changed language
-		if( this.params)
-			for( let [p,val] of this.params){
-				if( p in this && val){
-					//log('check', 'set hash param on this:', p)
-					this[ p] = val
-				}
-			}
+	// onFirstRendered(){}
+	// onRendered(){}
+	// onResized(){}
+
+	onPageChanged (page, prev){
+		log('info', 'onPageChanged:', page||'<empty string>')
+		//this.params && log('info', 'params', ...this.params)
+
+		if (page===prev) this.render() // we've updated url manually
 		this.menu_open = false
 	}
 
@@ -81,7 +72,7 @@ class App extends VisionStage {
 
 			<nav flow='row gaps-large' class='v-menu nowrap'>
 				${ this.pages && this.pages.map( ([page],i) =>
-					this.pageLink( page, i < this.pages.length-1 ? '✦' : '')
+					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
 				)}
 			</nav>
 
@@ -89,29 +80,58 @@ class App extends VisionStage {
 	`
 	// Virtual pages templates
 	home = () => html`
-		<main id='home' class=' rel scroll' flow='col top full'>
+		<main id='home' class='scroll tin shadow' flow='col top full'>
 
 			<h1>Vision <small>✦</small> Stage</h1>
 			<div id='tagline'>— <em class='strong'>${ this.$tagline }</em> —</div>
 
-			<h2>Here's how simple it is</h2>
+			<h2>simple it is</h2>
+			<h3 class='text-center no-margin nowrap ${strIf('hide',this.is_portrait)}'>Clcik the "more" button <wbr>to see scrolling styles</h3>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dicta ex illo illum cumque impedit cupiditate vero consequuntur nam ipsa necessitatibus, rem ipsam quos at. Sed recusandae error eius minus.
+			</p>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dicta ex illo illum cumque impedit cupiditate…
+			</p>
 
-			<div flow='row top space-evenly'>
+			<button @click=${ e => this.more = !this.more }>${ this.more ? 'less' : 'more' }</button>
 
-				<div class='card scroll'>
-					<h3>Files structure</h3>
-
-				</div>
-
-				<div class='card scroll'>
-					<h3>App code</h3>
-					<figure id='demo-js'><img src='demo-js.png' alt='code overview'></figure>
-				</div>
-
-			</div>
+			<section class=${ strIf('hide', !this.more) }>
+				<p>
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dicta ex illo illum cumque impedit cupiditate vero consequuntur nam ipsa necessitatibus, rem ipsam quos at. …
+				</p>
+				<p>
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dicta ex illo illum cumque impedit cupiditate vero consequuntur nam ipsa necessitatibus, rem ipsam quos at. Sed recusandae error eius minus.
+				</p>
+			</section>
+			<!-- <footer><a href='#test/a=1/b=yes/c=true'>url parameters test page</a></footer> -->
 
 
+		</main>
+	`
 
+	test = () => html`
+		<main flow='col top grow' class='scroll scroll-hidden shadow'>
+			<p class='card'>
+				This shows how to get params from URL and sync them to props:
+				On load props are set from URL, when they change, the url is updated, and inversely, the props are updated if we manually change the URL.
+			</p>
+			<h2>Got URL params:</h2>
+			<table>
+				${ this.params.map( ([name,value]) => html`
+					<tr>
+						<td>Name: ${name}</td>
+						<td>Value: ${value}</td>
+						<td>Type: ${ typeof value }</td>
+					</tr>`) }
+			</table>
+			<h2>Synced to app properties:</h2>
+			<ul>
+				${ this.params.map( ([n,v]) => html`<li><code>this.${n} = ${n in this ? this[n] : html`<em class='faded'>not a prop</em>`}</code></li>`) }
+			</ul>
+			<button @click=${ e => this.c = !this.c }>
+				Flip&nbsp;<code>this.c</code>
+			</button>
 
 		</main>
 	`
@@ -121,6 +141,7 @@ App.languages = ['en', 'fr']
 
 App.pages = {
 	'': 		["Home", "Accueil"],
+	test: {titles:["test"], path:"test/a=1/b=yes/c=true/d=maybe"}
 }
 
 App.strings = {
@@ -128,13 +149,14 @@ App.strings = {
 }
 
 App.properties = {
-	dark_mode: {
-		value: 0, // unset = user pref; once set is cycling 1,2,3 ->
-		attribute: ['night-mode', 'auto'],
-		watcher( val){ document.body.classList.toggle('night-mode', val===2)}
-	},
 	menu_open: { value: false, class: 'menu-open'},
+	a: { value:null, sync_to_url_param: true },
+	b: { value:null, sync_to_url_param: true },
+	c: { value:null, sync_to_url_param: true },
+	// auto params cannot be storable; test...
+	more: false,
 }
+
 
 App.aspects = {
 	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)

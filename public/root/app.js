@@ -74,7 +74,7 @@ class App extends VisionStage {
 
 			<nav flow='row gaps-large' class='v-menu nowrap'>
 				${ this.pages && this.pages.map( ([page],i) =>
-					this.pageLink( page, i < this.pages.length-1 ? '✦' : '')
+					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
 				)}
 			</nav>
 

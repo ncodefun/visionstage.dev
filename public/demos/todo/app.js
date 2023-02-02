@@ -1,15 +1,32 @@
-import { VisionStage, html, define, log, icon, cache, maybe }
+import { VisionStage, html, define, log, icon, cache, maybe, setConfig, clearStores }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, strIf, nextFrame, q }
+import { cycleWithin, strIf, nextFrame, q, sleep }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull
-var NIGHT_MODES = [0,1,2]
+const NIGHT_MODES = [0,1]
+
+setConfig({
+	components_dir: '/_components/',
+	update_check_min: 30,
+	font_size_decimals: 0,
+
+})
 
 class App extends VisionStage {
 
-	onConnected = () => this.render()
+	sw = '/demos/todo/sw.js'
+
+	onConnected = () => {
+		// clearStores()
+		this.render()
+	}
+
+	async testModal(){
+		const answer = await this.modal.setup(['An update is ready.','Refresh?'], ['Later', 'Yes'])
+		log('info', 'answer:', answer)
+	}
 
 	template = () => html`
 		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
@@ -43,7 +60,10 @@ class App extends VisionStage {
 
 		</header>
 
-		${ cache( this[ this.page||'home' ]() ) }
+		<section id='app-content' class='rel' flow='col top grow'>
+			<vs-modal type='full'></vs-modal>
+			${ cache( this[ this.page||'home' ]() ) }
+		</section>
 
 		<footer id='app-footer' class='sth-scaling rel' flow='row'>
 
@@ -55,7 +75,7 @@ class App extends VisionStage {
 
 			<nav flow='row gaps-large' class='v-menu nowrap'>
 				${ this.pages && this.pages.map( ([page],i) =>
-					this.pageLink( page, i < this.pages.length-1 ? '✦' : '')
+					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
 				)}
 			</nav>
 
@@ -123,7 +143,8 @@ class App extends VisionStage {
 						?disabled=${ maybe(this.todo).done }
 						class='small'
 						@click=${ e => this.todo.created =
-							this.valueFromObject( this.todos[ this.todos.indexOf( this.todo) - 1],
+							this.validateAndCompute(
+								this.todos[ this.todos.indexOf( this.todo) - 1],
 								prev => !!prev, // validator
 								prev => prev.created - 1 // new value
 							)
@@ -136,18 +157,12 @@ class App extends VisionStage {
 						?disabled=${ maybe(this.todo).done }
 						class='small'
 						@click=${ e => this.todo.created =
-							// valueFromObject:
-							// get an object, check conditions,
-							// -> return a value from object || null if condition failed
-
-							// So here: validate a possible next todo
-							// and if valid, return its created val + 1
-							this.valueFromObject( this.todos[ this.todos.indexOf( this.todo) + 1],
-								next => !!next && !next.done, // .done are kept below
-								next => next.created + 1
+							this.validateAndCompute(
+								this.todos[ this.todos.indexOf( this.todo) + 1], // get a possible next
+								next => !!next && !next.done, // validate: if next exist and not .done (are kept below)
+								next => next.created + 1 // compute: increment next.created for the return
 							)
-							// if valueFromObject is null (condition failed), keep the same
-							|| this.todo.created
+							|| this.todo.created // keep the same
 						}
 						>
 						${ this.$move_down }
@@ -177,8 +192,20 @@ class App extends VisionStage {
 
 				<!-- show pattern where data is mutated elsewhere... -->
 			</section>
+
+			<button self='bottom'
+				@click=${ this.testModal }>Toggle modal</button>
+
+			<!-- <button id='test-update-btn'>Test update SW</button> -->
 		</main>
 	`
+
+	async onCacheUpdated(){
+		log('ok', 'update ready!')
+		const answer = await this.modal.setup(['An update is ready.','Refresh?'], ['Later', 'Yes'])
+		if( answer===1)
+			location.reload()
+	}
 }
 
 const newTodo = title => ({
@@ -188,7 +215,7 @@ const newTodo = title => ({
 	created: Date.now()
 })
 
-App.aspects = { portrait:.6, portrait_max:1, landscape:1 }
+App.aspects = { portrait:.6, portrait_max:1, landscape:1, landscape_max:2 }
 
 App.languages = ['en', 'fr']
 
@@ -224,7 +251,11 @@ App.properties = {
 				main.scrollTop = main.clientHeight
 			}
 		}
-	}
+	},
+	show_veil: {
+		value: false,
+		//getter: () => this.show_menu || this.show_settings
+	},
 }
 
-define( 'vision-stage', App, ['vs-selector'])
+define( 'vision-stage', App, ['vs-selector', 'vs-modal'])

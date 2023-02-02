@@ -3,47 +3,29 @@
 /// gallery w/ prev / next (see /vision-stage)
 /// input, text-area, bare input
 
-import { VisionStage, Component, html, cache, define, log, icon, labelAsClassMapper }
+import { VisionStage, Component, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, sleep, strIf }
+import { cycleWithin, sleep, strIf, labelAsClassMapper, options }
 	from '/vision-stage/utils.js'
 
+const NIGHT_MODES = [0,1]
 const fs = screenfull // embeded / global
+// window.UPDATE_CHECK_MIN = 1
 
+// log('info', 'Updated 2022.07.29')
 
-log('info', 'Updated 2022.07.29')
-/// thinsp:" "
-/// hairsp:" "
+// Use real char for readability (vs-code will highlight these for visibility)
+// thinsp:" "
+// hairsp:" "
 
-//! no divs warppers, just <br>??
-//! no html in label / details, use array: how to create (br) from arr in template?
 // new explicit format for options
 // const opts = [
-// 	{ label: '', detail: '', value: '', class: '' }
+// 	{ label: ''|['en-label','fr-label'], details?: '', value?: '', class?: '' } | 'label/value'
 // ]
-
-const NIGHT_MODES = [0,1,2]
-
-const BACKGROUNDS = ['magic-purple', 'whitish']
-// const BGS_RANGE = range(0, BACKGROUNDS.length-1)
-// log('pink', 'BG_RANGE:', BGS_RANGE)
-// let active = {title:'Active!'}
-
-// const NIGHT_MODES_OPTIONS = [
-// 	{value:0, label:'🌙', class:'icon moon shift-up-1'},
-// 	{value:1, class:'icon moon shift-up-1 night'}, // idem
-// 	{value:2, class:'icon moon shift-up-1 night'}
-// ]
-// 				<vs-selector id='night-mode-toggle' class='square bare'
-// 					type='stepper'
-// 					.selected=${  }
-// 					.options=${ NIGHT_MODES_OPTIONS }
-// 					>
-// 				</vs-selector>
 
 const STATE_DEMO2_OPTIONS = [
-	{ label:['Hello','Allo'], detail:'(Hi !)', value:'hello' },
+	{ label:['Hello','Allo'], details:'(Hi !)', value:'hello' },
 	{ label:['World !','Le monde !'], value:'world' },
 	'again…'
 ]
@@ -58,15 +40,15 @@ const DEMO_TYPES = [
 ]
 const DEMO_COLORS = [
 	'primary',
-	{label:'primary-adapt', detail:'subtler,<br>adapted for dark / light'},
+	{label:'primary-adapt', details:'subtler,<br>adapted for dark / light'},
 	'blue', 'green', 'yellow', 'orange', 'red'
 ].map( labelAsClassMapper)
 
 // log('pink', 'STATE_DEMO3_OPTIONS:', STATE_DEMO3_OPTIONS)
 
-// const THEMES = [
-// 	['',0], ['yellow-green',1], ['yellow',2], ['green',3]
-// ]
+const THEMES = options([
+	['',0], ['yellow-green',1], ['yellow',2], ['green',3]
+])
 
 // pre-contruct options object to use values in cycler (prop().nextIn())
 const STEPPER_DEMO_OPTS = [
@@ -94,8 +76,7 @@ class App extends VisionStage {
 		})
 	}
 
-	template = () => {
-		return html`
+	template = () => html`
 		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
 
 			<span flow='row left gaps' id='lang-bar'>
@@ -120,14 +101,13 @@ class App extends VisionStage {
 					🖼️
 				</button> -->
 
-
-				<!-- <button id='theme-toggle' class='square bare'
-					@pointerdown={ e => {
-						this.theme_index = cycle( this.theme_index, THEMES.values)
-						this.theme = THEMES.labels[ this.theme_index]
+				<button id='theme-toggle' class='square bare'
+					@pointerdown=${ e => {
+						this.theme_index = cycleWithin(THEMES.values, this.theme_index)
+						this.theme = THEMES.labels[this.theme_index]
 					}}>
 					🎨
-				</button> -->
+				</button>
 
 				<!-- /// type='cycler' | 'stepper' | 'steppers' -> can set .values instead of options and keep showing the initial content as the only label ?? (or bad idea... no signifier?)-->
 
@@ -170,12 +150,12 @@ class App extends VisionStage {
 
 			<nav flow='row gaps-large' class='v-menu nowrap'>
 				${ this.pages && this.pages.map( ([page],i) =>
-					this.pageLink( page, i < this.pages.length-1 ? '✦' : '')
+					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
 				)}
 			</nav>
 
-		</footer>`}
-
+		</footer>
+	`
 	home = () => html`
 		<main id='home'
 			class='grow text-center scroll shadow'
@@ -377,16 +357,7 @@ class App extends VisionStage {
 	`
 
 	onPageChanged( page, prev){
-		if( page===prev) return // only changed language -> different page.path
-		//log('info', 'page:', page, this.params)
-
-		if( this.params)
-		for( let [p,val] of this.params){
-			if( p in this && val){
-				//log('check', 'set hash param on this:', p)
-				this[ p] = val
-			}
-		}
+		if( page===prev) return // only changed language (or mod url) -> using a different page.path
 
 		this.menu_open = false
 	}

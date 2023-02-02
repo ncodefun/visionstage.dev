@@ -9,3 +9,4 @@
 /rollup.config.dev.js
 /rollup.config.prod.js
 /public/cv*
+ts-test

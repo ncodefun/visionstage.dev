@@ -65,8 +65,6 @@ export default class Selector extends Component {
 			}
 
 		this.opts = this.options
-			// ? Array.isArray( this.options) ? createOptions( this.options) : this.options
-			// : null
 
 		// if not folding (so no header/label for "please select...")
 		// and nothing selected -> auto select first option
@@ -283,7 +281,7 @@ export default class Selector extends Component {
 							}
 							<span flow='col' class='text'>
 								${ this.opt( 'label', i) }
-								<span class='details'>${ this.opt('detail', i) }</span>
+								<span class='details'>${ this.opt('details', i) }</span>
 							</span>
 						</button>
 					`})}
@@ -308,8 +306,8 @@ export default class Selector extends Component {
 				o.label !== undefined ? this.getLocale(o.label) :
 				o.icon ? icon( o.icon) :
 				this.getLocale(this.opts[0].label) || '?'
-			case 'detail':
-				return this.getLocale(o.detail)
+			case 'details':
+				return this.getLocale(o.details)
 			case 'value':
 				return o.value !== undefined ? o.value : this.opt('label', index)
 			case 'class':
