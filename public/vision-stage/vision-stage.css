@@ -513,11 +513,11 @@ main:not(.no-fade-in) {
 	box-shadow: 0 -.25rem .33rem hsl(256 20% 25% / 75%);
 }
 #app:not([night-mode]).main-has-scrollbar #app-header {
-	background: var(--scrolls-header-background);
+	/* background: var(--scrolls-header-background); */
 	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
 }
 #app:not([night-mode]).main-has-scrollbar #app-footer {
-	background: var(--scrolls-footer-background);
+	/* background: var(--scrolls-footer-background); */
 	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
 }
 #app {
@@ -525,7 +525,8 @@ main:not(.no-fade-in) {
 	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 45%);
 	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
 	/* --scrolls-shadow-bottom-color: hsl(256deg 82% 35% / 50%); */
-	--scrolls-header-background: hsl(256deg 62% 40% / 42%);
+	--scrolls-header-background: #0001;
+	/* hsl(256deg 62% 40% / 42%); */
 	--scrolls-footer-background: hsl(256deg 62% 40% / 33%);
 }
 #app[night-mode='2'] {
