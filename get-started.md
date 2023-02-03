@@ -34,7 +34,7 @@ This cannot be more straightforward:
 	```
 	With optional utils:
 	```js
-	import { sleep, strIf, cycleWithin }
+	import { sleep, strIf, cycleValueWithin }
 		from '/vision-stage/utils.js'
 	```
 
