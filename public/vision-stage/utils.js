@@ -267,3 +267,58 @@ export const containsHTML = str => {
 	// log('check', 'check if contains HTML:', str, '->', containsHTMLElements( str) || containsHTMLEnties( str))
 	return containsHTMLElements( str) || containsHTMLEntities( str)
 }
+
+/**
+	* / Snaps a value on a virtual grid to the closest side /
+	* / Works with floats and negative values
+	*  e.g. snap(84, 40) => 80
+ * @param {Number} val - initial value
+ * @param {Number} step - modulo value, defines the grid step size
+ * @param {Number} offset - use if the grid is not positioned at a multiple of step (self-synced?)
+ * 	e.g. grid start X = 103, step=20: use 103 or 3 as offset
+ * @param {Number} threshold - creates a dead spot in the middle of two snap points:
+ * 	if val is too far from snap value (> threshold), return original value
+ *    e.g. snap = 30, threshold = 8 => [0-8] snaps to 0, [22-30] snaps to 30, else => no snap
+ *    Must use less than a half step... step * .4 means 20% dead spot -> (.4|.4) + .2 + (.4|.4)
+ *    we can set a percent deadspot by using a string: '30%'
+ * @return {Number} The value snapped to the closest point.
+ */
+export function snap( val, step, offset=0, threshold=null){
+	let original = val
+	if( typeof threshold === 'string') //  % deadspot
+		threshold = (1 - parseInt( threshold) / 100) / 2 * step
+
+	val = val - offset // remove offset
+	let distL = val - snapFloor( val, step), 	// distance from val to the left step
+		 distR = snapCeil( val, step) - val 	// distance from val to the right step
+	if( Math.abs( distL) < Math.abs( distR)){
+		if( threshold && Math.abs( distL) > threshold)
+			return original // or null
+		return val - distL + offset
+	}
+	else {
+		if( threshold && Math.abs( distR) > threshold)
+			return original
+		return val + distR + offset
+	}
+}
+/**
+ * snap a value on a grid to the higher value
+ * @return {Number} value increased to the next grid point
+ */
+export function snapCeil( val, mod){
+	// remove remainder and add a grid step, unless negative value:
+	return val > 0 ?
+		val - val % mod + mod :
+		val - val % mod
+}
+/**
+ * snap a value on a grid to the lower value
+ * @return  value decreased to the previous grid point
+ */
+export function snapFloor( val, mod){
+	// remove remainder and if negative value remove a grid step
+	return val > 0 ?
+		val - val % mod :
+		val - val % mod - mod
+}
