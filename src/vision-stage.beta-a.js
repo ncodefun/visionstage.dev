@@ -27,6 +27,7 @@ const stores = {}
  * @prop {Object} config_object.icons_mappings_vb
  */
 const config = {
+	sw: null,
 	components_dir: '/_components/',
 	update_check_min: 30,
 	font_size_decimals: 0,
@@ -44,7 +45,8 @@ const config = {
 		'arrow-right-rounded': '0 0 45.6 45.6',
 		'fanion': '0 -11 100 120',
 	},
-	night_modes: [0,1,2] // CSS [night-mode='1|2'] styles are pre-defined
+	night_modes: [0,1], // CSS [night-mode='1|2'] styles are pre-defined
+	icons_path: '/_assets/images/icons.svg',
 }
 
 /**
@@ -57,9 +59,10 @@ const config = {
  * @param {object} config_object.icons_mappings
  * @param {object} config_object.icons_mappings_vb
  * @param {number[]} config_object.night_modes
+ * @param {string} config.sw
  */
 export function setConfig( config_object){
-	Object.assign(config, config_object)
+	return Object.assign(config, config_object)
 }
 
 /// lit-html 1.4.1
@@ -86,8 +89,9 @@ import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, 
 
 export { log, html, svg, unsafeHTML, ifDefined, repeat, live, guard, cache }
 
+let app, after_resize_timeout, aspect_ratios, active_sw, redundant
+
 const debug = { /* load:true */ }
-let app, after_resize_timeout, aspect_ratios
 
 // Will reference all components having an onResized method
 // to call them after window is resized
@@ -96,7 +100,7 @@ const resize_watchers = new Set()
 // keep track of the loaded ones, so we don't load the same component Class multiple times
 const loaded_components = new Set()
 
-/// Component base class, to be extended by our components
+/** Component base class, to be extended by our components **/
 export class Component extends HTMLElement {
 
 	constructor(){
@@ -449,6 +453,7 @@ export class Component extends HTMLElement {
 	 * @param evt_ctx {Component} We may use another component as the events context (so `this` will refer to this other component instead of the one where the handler is defined).
 	 */
 	async render( evt_ctx){
+
 		if( !this.template){
 			if( this.localName !== 'vision-stage')
 				log('warn', '--no template, cannot render(): '+ this.id +', '+ this.tagName)
@@ -630,12 +635,12 @@ export class Component extends HTMLElement {
 		if (/^\./.test( css))
 			css = location.pathname + css.replace(/^\.\//,'') // if starts with dot, remove it
 		else if (! /^\./.test( css))
-			css = `${ DIRECTORY + config.components_dir }${ css }`
+			css = `${ config.components_dir }${ css }`
 
 		if (/^\./.test( js))
 			js = location.pathname + js.replace(/^\.\//,'') // if starts with dot, remove it
 		else
-			js = `${ DIRECTORY + config.components_dir }${ js }`
+			js = `${ config.components_dir }${ js }`
 
 		if (debug.load)
 			log('purple', 'load js, css :', js, css)
@@ -650,10 +655,7 @@ export class Component extends HTMLElement {
 	}
 }
 
-
-let active_sw, redundant
-
-// App Component
+/** App Component **/
 export class VisionStage extends Component {
 
 	constructor(){
@@ -716,10 +718,9 @@ export class VisionStage extends Component {
 		if( ctor( this).sounds)
 			this.setupSounds() // playSound( name), stopSound( name)
 
-		if (this.sw){
+		if (config.sw){
 			this.getActiveSW().then( SW => {
 				active_sw = SW || null
-
 				this.registerSW()
 			})
 		}
@@ -1097,7 +1098,7 @@ export class VisionStage extends Component {
 	  document.head.appendChild( stylesheet)
 	}
 
-	// must be called from the app after user event, or onConnected but then the first time it won't play on iOS
+	// must be called from the app after user event, or onConnected but then the first time it won't play on iOS (?still true?)
 	/**
 	 * Basic audio playback with Web Audio. No lib! ;)
 	 * the main limitation is that the volume, althought it can be adjusted by individual sounds, is global, so if two sounds with different volume option||default are overlapping, the volume will sharply change; the ideal is to have sounds prerendered at the right volume. This does not concern this.global_volume which is another layer (a fract. multiplier) that the user can adjust.
@@ -1209,9 +1210,9 @@ export class VisionStage extends Component {
 	}
 
 	registerSW(){
-		log('info', 'registerSW()', this.sw)
+		//log('info', 'registerSW()', config.sw)
 		if ('serviceWorker' in navigator)
-		navigator.serviceWorker.register( this.sw)
+		navigator.serviceWorker.register(config.sw)
 			.then( reg => {
 				log('info',"Service Worker Registered")
 				reg.onupdatefound = () => {
@@ -1467,19 +1468,15 @@ export const P = {
 	},
 }
 
-let DIRECTORY = ''
-
 /**
  * Defines a custom element (window.customElements.define) and return whenDefined promise
- * @param components wait and load required components before define
+ * @param {string[]} components wait and load required components before define
  * @return whenDefined's promise
- * @usage `define('my-comp', MyCompClass, []).then( ...)`
+ * @usage `define('my-comp', MyCompClass, [])`
  */
-export async function define( tag_name, clss, components, directory=''){
-	if( directory)
-		DIRECTORY = directory
+export async function define( tag_name, clss, components){
 	// import comps (js & css) dependencies (when required right from the start)
-	if( components && components.length){ // app is not defined yet
+	if (components && components.length){ // app is not defined yet
 		components = components.map( c => Component.load( c))
 		await Promise.all( components)
 	}
@@ -1505,7 +1502,7 @@ export async function define( tag_name, clss, components, directory=''){
 
 /**	=> html`<svg><use src='#'>...</svg>` */
 export function useSVG( id, clss, ar){
-	let src = app.icons_path || DIRECTORY + '/_assets/images/icons.svg'
+	let src = config.icons_path
 	// proxy names
 	if( config.icons_mappings[id])
 		id = icons_mappings[id]
@@ -1515,7 +1512,7 @@ export function useSVG( id, clss, ar){
 		<use href='${src}#${id}'/>
 	</svg>`
 }
-/** wraps useSVG symbol inside a span.vs-icon */
+/** wraps useSVG symbol inside a `span.vs-icon` */
 export const icon = (svg_id, clss='', opts={}) =>
 	html`<span class='vs-icon ${clss}'>${ useSVG( svg_id, opts.svg_class||'', opts.ar) }</span>`
 export const maybe = thing => thing || {}
@@ -1616,11 +1613,13 @@ export function saveStore(ns, elem_id, prop, val, remove=false){
 	// log('purple', 'set localstorage:', ns, str)
 	localStorage.setItem(ns, str)
 }
+
 function saveStores(){
 	// log('purple', 'saveStores()', )
 	for (let ns in stores)
 		saveStore(ns)
 }
+
 export function clearStore(ns){
 
 	if(!ns){ // recreate this.ns
@@ -1659,8 +1658,7 @@ export function clearStores(){
 	window.do_not_store = true // prevent storing on before reload
 	location.reload()
 }
-//  Setting many props at once with storable:true, each will call saveStore (writes to LS),
-//  so use a throttled "version" instead
+
 const throttled_saveStores = debounce( saveStores, 200)
 
 // screenfull.min.js
@@ -1670,18 +1668,3 @@ const throttled_saveStores = debounce( saveStores, 200)
 // export const px2rem = (px, decimals=FONT_SIZE_DECIMALS) => {
 // 	return app && px/app.REM || 0 // ex: px=100, app.REM=16 = 100/16 = 6.25rem
 // }
-
-/*
-		CTOR:
-
-
-
-		// let icons_path = this.getAttribute('icons')
-		// if( icons_path)
-		// 	this.icons_path = icons_path
-
-
-		this._onInstallable = this.onInstallable.bind( this)
-		this._onClickInstall = this.onClickInstall.bind( this)
-		window.addEventListener('beforeinstallprompt', this._onInstallable)
- */
