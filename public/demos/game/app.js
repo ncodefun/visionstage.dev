@@ -1,7 +1,7 @@
 import { VisionStage, html, cache, define, log, icon, useSVG }
 	from '/vision-stage/vision-stage.min.js'
 
-import { q, qAll, cycleWithin, sleep, strIf, range, nextFrame, tempClass, snap }
+import { q, qAll, cycleValueWithin, sleep, strIf, range, nextFrame, tempClass, snap }
 	from '/vision-stage/utils.js'
 
 // import { data } from './data.js'
@@ -124,7 +124,7 @@ class App extends VisionStage {
 					id='night-mode-toggle'
 					class='square bare fadable ${ strIf('faded', !this.show_settings) }'
 					title=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleWithin(NIGHT_MODES, this.night_mode) }
+					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }
 					>
 					<span class='shift-icon icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
 				</button>

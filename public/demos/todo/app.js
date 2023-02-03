@@ -1,22 +1,19 @@
 import { VisionStage, html, define, log, icon, cache, maybe, setConfig, clearStores }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, strIf, nextFrame, q, sleep }
+import { cycleValueWithin, strIf, nextFrame, q, sleep }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull
-const NIGHT_MODES = [0,1]
 
-setConfig({
-	components_dir: '/_components/',
-	update_check_min: 30,
-	font_size_decimals: 0,
-
-})
+const config = setConfig({ sw: '/demos/todo/sw.js' })
+// {
+// 	update_check_min: 30,
+// 	font_size_decimals: 0,
+// 	night_modes: [0,1],
+// }
 
 class App extends VisionStage {
-
-	sw = '/demos/todo/sw.js'
 
 	onConnected = () => {
 		// clearStores()
@@ -24,7 +21,7 @@ class App extends VisionStage {
 	}
 
 	async testModal(){
-		const answer = await this.modal.setup(['An update is ready.','Refresh?'], ['Later', 'Yes'])
+		const answer = await this.modal.setup(["Hello","What's your name?"], null, true)
 		log('info', 'answer:', answer)
 	}
 
@@ -46,9 +43,12 @@ class App extends VisionStage {
 			<span flow='row right gaps'>
 
 				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleWithin(NIGHT_MODES, this.night_mode) }>
-					<span class='icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
+					@pointerdown=${ e =>
+						this.night_mode = cycleValueWithin(this.night_mode, config.night_modes)
+					}>
+					<span class='icon moon ${ strIf('night',this.night_mode) }' shift='-1'>🌙</span>
 				</button>
+
 				<button id='fullscreen-toggle'
 					class='square bare'
 					aria-label=${ this.$fullscreen }
@@ -61,6 +61,7 @@ class App extends VisionStage {
 		</header>
 
 		<section id='app-content' class='rel' flow='col top grow'>
+			<!-- Inside middle section: will not overlay header & footer -->
 			<vs-modal type='full'></vs-modal>
 			${ cache( this[ this.page||'home' ]() ) }
 		</section>
@@ -215,7 +216,13 @@ const newTodo = title => ({
 	created: Date.now()
 })
 
-App.aspects = { portrait:.6, portrait_max:1, landscape:1, landscape_max:2 }
+App.aspects = {
+	portrait:.6,
+	portrait_max:1,
+	landscape:1,
+	landscape_max:16/9,
+	cross_margin: '1.23%'
+}
 
 App.languages = ['en', 'fr']
 

@@ -1,7 +1,7 @@
 import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, sleep, strIf }
+import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull // embeded / global
@@ -46,8 +46,8 @@ class App extends VisionStage {
 			<span flow='row right gaps'>
 
 				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleWithin(NIGHT_MODES, this.night_mode) }>
-					<span class='icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
+					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
+					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 				</button>
 
 				<button id='fullscreen-toggle'
@@ -172,7 +172,7 @@ class App extends VisionStage {
 					<button ?disabled=${ this.pres_index===0 }
 						id='btn-prev-presentation'
 						class='bare square'
-						@pointerdown=${ e => this.pres_index = cycleWithin( PRES, this.pres_index, -1) }
+						@pointerdown=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, -1) }
 						>
 						${ icon('arrow-right-rounded', 'large') }
 					</button>
@@ -180,7 +180,7 @@ class App extends VisionStage {
 					<button ?disabled=${ this.pres_index===1 }
 						id='btn-next-presentation'
 						class='bare square'
-						@pointerdown=${ e => this.pres_index = cycleWithin( PRES, this.pres_index, 1) }
+						@pointerdown=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, 1) }
 						>
 						${ icon('arrow-right-rounded', 'large') }
 					</button>

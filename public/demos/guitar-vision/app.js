@@ -6,7 +6,7 @@
 import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, tempClass, sleep }
+import { cycleValueWithin, tempClass, sleep }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull // embeded / global
@@ -55,9 +55,9 @@ class App extends VisionStage {
 
 			<span flow='row right gaps'>
 				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleWithin(NIGHT_MODES, this.night_mode) }
+					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }
 					>
-					<span class='icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
+					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 				</button>
 
 				<button id='fullscreen-toggle' class='square bare large'

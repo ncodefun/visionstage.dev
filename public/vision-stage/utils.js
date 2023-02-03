@@ -88,20 +88,22 @@ export const createOptions = opts => ({
 		o.label === undefined ? opts[0].selected_class : undefined
 	),
 })
+
 /**
- * Get a value in an array from a starting value, plus/minus step
- * @param vals Array of values to cycle
- * @param from_val value to start from
- * @param step (default 1) How many step to move (positive or negative)
- * @param wrap If this wraps pass end from last to first, and inversely; if false, value will stick at first or at last value if we try to go beyond.
- * @return The value at (+/-) steps from val position
+ * Get an adjascent value in an array from a starting value (plus/minus step)
+ * @param {any} from_val value to start from
+ * @param {any[]} values the Array of values to cycle through
+ * @param {number} step (default 1) How many step to move (positive or negative)
+ * @param {bool} wrap If true, wraps pass end from last to first, and inversely; if false, value will stick at first or at last value if we try to go beyond.
+ * @return The value at (+/-) steps away of from_val position
  */
-export function cycleWithin( values, from_val, step=1, wrap=true){
-	let next = values.indexOf( from_val) + step,
+export function cycleValueWithin( from_val, values, step=1, wrap=true){
+	let next = values.indexOf(from_val) + step,
 		 len = values.length
 		//  log('pink', 'next, len:', next, len, (len + next) % len)
-	return values[ wrap ? (len + next) % len : clamp( next, 0, len-1) ]
+	return values[ wrap ? (len + next) % len : clamp(next, 0, len-1) ]
 }
+
 /**
   * Auto data-state value cycling instead of class/no-class toggling
   * Ex: data-state='off' data-states='on,off' : on click => cycleDataStates( e.target)

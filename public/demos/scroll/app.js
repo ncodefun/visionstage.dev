@@ -1,26 +1,17 @@
-import { VisionStage, html, cache, define, log, icon }
+import { VisionStage, html, cache, define, log, icon, setConfig }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, sleep, strIf }
+import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull // embeded / global
-const NIGHT_MODES = [0,1,2]
 
-class App extends VisionStage {
+const config = setConfig() // { night_modes: [0,1,2] }
+
+class App extends VisionStage { /** callbacks: onFirstRendered, onRendered, onResized, onPageChanged */
 
 	onConnected = () => this.render()
-	// onFirstRendered(){}
-	// onRendered(){}
-	// onResized(){}
-
-	onPageChanged (page, prev){
-		log('info', 'onPageChanged:', page||'<empty string>')
-		//this.params && log('info', 'params', ...this.params)
-
-		if (page===prev) this.render() // we've updated url manually
-		this.menu_open = false
-	}
+	onPageChanged = (page, prev) => this.menu_open = false
 
 	// App template
 	template = () => html`
@@ -43,9 +34,11 @@ class App extends VisionStage {
 
 			<span flow='row right gaps'>
 
-				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleWithin(NIGHT_MODES, this.night_mode) }>
-					<span class='icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
+				<button id='night-mode-toggle'
+					class='square bare'
+					aria-label=${ this.$night_mode }
+					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
+					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 				</button>
 
 				<button id='fullscreen-toggle'
@@ -60,7 +53,11 @@ class App extends VisionStage {
 
 		</header>
 
-		${ this.page!==null && cache( this[(this.page||'home')]() ) }
+		<section id='app-content' class='scroll tiny shadow' flow='col top stretch grow'>
+			<!-- Inside middle section: will not overlay header & footer -->
+			<!-- <vs-modal type='full'></vs-modal> -->
+			${ this.page!==null && cache( this[ this.page||'home' ]() ) }
+		</section>
 
 		<footer id='app-footer' flow='row' class='sth-scaling rel'>
 
@@ -78,9 +75,11 @@ class App extends VisionStage {
 
 		</footer>
 	`
+
 	// Virtual pages templates
+
 	home = () => html`
-		<main id='home' class='scroll tin shadow' flow='col top full'>
+		<main id='home' class='scroll tiny shadow' flow='col top full'>
 
 			<h1>Vision <small>✦</small> Stage</h1>
 			<div id='tagline'>— <em class='strong'>${ this.$tagline }</em> —</div>
@@ -104,8 +103,6 @@ class App extends VisionStage {
 					Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi dicta ex illo illum cumque impedit cupiditate vero consequuntur nam ipsa necessitatibus, rem ipsam quos at. Sed recusandae error eius minus.
 				</p>
 			</section>
-			<!-- <footer><a href='#test/a=1/b=yes/c=true'>url parameters test page</a></footer> -->
-
 
 		</main>
 	`
@@ -141,7 +138,7 @@ App.languages = ['en', 'fr']
 
 App.pages = {
 	'': 		["Home", "Accueil"],
-	test: {titles:["test"], path:"test/a=1/b=yes/c=true/d=maybe"}
+	test: {titles:["test"], path:"test/a=1/b=yes/c=true/d=maybe/night_mode=1"}
 }
 
 App.strings = {
@@ -152,11 +149,9 @@ App.properties = {
 	menu_open: { value: false, class: 'menu-open'},
 	a: { value:null, sync_to_url_param: true },
 	b: { value:null, sync_to_url_param: true },
-	c: { value:null, sync_to_url_param: true },
-	// auto params cannot be storable; test...
+	c: { value:null, sync_to_url_param: true, storable: true }, /** params will override a stored value */
 	more: false,
 }
-
 
 App.aspects = {
 	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)

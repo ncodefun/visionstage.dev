@@ -6,7 +6,7 @@
 import { VisionStage, Component, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleWithin, sleep, strIf, labelAsClassMapper, options }
+import { cycleValueWithin, sleep, strIf, labelAsClassMapper, options }
 	from '/vision-stage/utils.js'
 
 const NIGHT_MODES = [0,1]
@@ -103,7 +103,7 @@ class App extends VisionStage {
 
 				<button id='theme-toggle' class='square bare'
 					@pointerdown=${ e => {
-						this.theme_index = cycleWithin(THEMES.values, this.theme_index)
+						this.theme_index = cycleValueWithin(this.theme_index, THEMES.values)
 						this.theme = THEMES.labels[this.theme_index]
 					}}>
 					🎨
@@ -124,8 +124,8 @@ class App extends VisionStage {
 				</button>
 
 				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleWithin(NIGHT_MODES, this.night_mode) }>
-					<span class='icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
+					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
+					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 				</button>
 
 				<button id='fullscreen-toggle' class='square bare large'

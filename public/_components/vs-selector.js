@@ -2,7 +2,7 @@
 import { log, Component, html, define, icon, unsafeHTML, classes, ifDefined }
 	from '../vision-stage/vision-stage.min.js'
 
-import { cycleWithin, containsHTML, nextFrame, strIf, q }
+import { cycleValueWithin, containsHTML, nextFrame, strIf, q }
 	from '/vision-stage/utils.js'
 
 const app = q('vision-stage')
@@ -350,7 +350,7 @@ export default class Selector extends Component {
 			let step = e.target.classList.contains('left') ?
 				-this.step : this.step
 			let vals = this.opts.map( o => this.val(o))
-			this.selected = cycleWithin( vals, this.selected, step, this.wrap)
+			this.selected = cycleValueWithin( this.selected, vals, step, this.wrap)
 			this.dispatchChange()
 		}
 		else if( this.is_toggle){
