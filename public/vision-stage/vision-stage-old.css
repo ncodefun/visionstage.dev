@@ -1,0 +1,769 @@
+@import '/vision-stage/colors.css';
+
+html {
+	--scrollbar-bg-color: #0001;
+	--scrollbar-handle-color: #FFF5;
+	--blue-gray-darker: hsl(215, 11%, 22%);
+}
+body {
+	color: hsl(267, 100%, 96%);
+	background: hsl(224deg, 23%, 31%);
+}
+vision-stage {
+	background: url(/_assets/images/textures/paper-opaque-8bit.png);
+	/* color: var(--blue-gray-darker, #272727); */
+}
+
+*, *::after, *::before {
+	box-sizing: inherit;
+	-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+	-webkit-touch-callout: none;
+	-webkit-user-drag: none;
+}
+img { margin: 0; display: inline-block }
+noscript { color: white }
+html {
+	height: 100%;
+	font: 18px/1.5 Josefin Sans, serif;
+}
+body {
+	margin: 0;
+	min-height:100%;
+	overflow: hidden;
+	box-sizing: border-box;
+}
+/* body *:not(:defined){
+	display: none !important;
+} */
+
+vision-stage {
+	width: var(--stw);
+	height: var(--sth);
+	position: relative;
+	transition: opacity 1s .1s ease; /** delay, let #loading fade out first */
+}
+/* vision-stage.faded {
+	opacity: 0;
+} */
+vision-stage.has-margins {
+	border-radius: .5rem;
+	box-shadow: 0 .125rem 1rem -.25rem rgb(0, 0, 0, .42);
+}
+/** .sth-scaling (sth = stage height)
+ * this will continue to scale relative to stage height, even under portrait ratio,
+ *	so content will not scaled down as much as other content on narrow screens
+ */
+  /** from portrait-min is when we start scaling down content to fit width */
+#app[aspect-range*='portrait'] .sth-scaling {
+	/** uses em to allow super-scaling adjustments from parents */
+	font-size: var(--sth-based-fs-em) !important;
+}
+
+#app.main-has-scrollbar .scroll.shadow::before,
+#app.main-has-scrollbar .scroll.shadow::after {
+	content: '';
+	pointer-events: none;
+}
+.scroll.shadow::before, .scroll.shadow::after {
+	display: block;
+	position: absolute;
+	z-index:3;
+	width: 100%;
+	left: 0;
+	/** to match footer scaling type -> otherwise we'd have to set this class on main... */
+	font-size: var(--sth-based-fs) !important; /*! not -em so to not super-scale with <main> parent, we want same result as footer which is outside / sibling of <main> */
+	height: 2.5em;
+	mix-blend-mode: darken;
+}
+.scroll.shadow::before {
+	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
+	/* mix-blend-mode: color-burn; */
+}
+.scroll.shadow:after {
+	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color), #0000);
+	bottom: var(--app-footer-height);
+}
+
+#app[night-mode='2'] .scroll.shadow::before {
+	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
+}
+#app[night-mode='2'] .scroll.shadow::after {
+	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color), #0000);
+}
+/** SCROLL **/
+	.scroll {
+		touch-action: pan-y;
+		-webkit-overflow-scrolling: touch;
+		overflow-x: hidden;
+		overflow-y: auto !important;
+		pointer-events: auto !important; /* re-anable if .layer */
+	}
+	body.has-srollbar .scroll { /** has-scrollbar is auto set in JS */
+		scroll-behavior: smooth;
+		overflow-y: auto;
+	}
+	/* @media (hover: none) and (pointer: coarse) { /** touch */
+	@media (hover: hover) and (pointer: fine) { /** mouse / touchpad */
+		.scroll-hidden::-webkit-scrollbar {
+			visibility: hidden;
+		}
+		.scroll-hidden::-webkit-scrollbar,
+		.scroll::-webkit-scrollbar {
+			position: relative;
+			width: .67rem;
+			overflow: hidden;
+		}
+		.scroll.tiny::-webkit-scrollbar {
+			width: .2rem;
+		}
+		.scroll::-webkit-scrollbar-track {
+			background-color: var(--scrollbar-bg-color);
+			box-shadow: inset .2rem 0 .2rem #00000007;
+		}
+		.scroll::-webkit-scrollbar-thumb {
+			background: var(--scrollbar-handle-color);
+			border-radius: 2px;
+			box-shadow:
+				.07rem .15rem .25rem  rgb(0, 0, 0, .12);
+		}
+
+	}
+
+
+button.dummy { visibility: hidden }
+hr {
+	width: 100%;
+	margin: 1rem auto .5rem;
+	border: none;
+	border-top: 1.5px solid rgba(255, 255, 255, 0.33);
+	border-bottom: 1.5px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 .15rem .2rem rgba(0, 0, 0, 0.05);
+}
+hr.inset {
+	border-bottom: 1.5px solid rgba(255, 255, 255, 0.15);
+	border-top: 1.5px solid rgba(0, 0, 0, 0.1);
+	box-shadow: 0 -.15rem .2rem rgba(0, 0, 0, 0.05);
+}
+hr.split {
+  margin-top: auto !important;
+  visibility: hidden;
+}
+.no-events { pointer-events: none }
+.nowrap { white-space: nowrap }
+.pre { white-space: pre }
+.text-center {text-align: center}
+.text-left {text-align: left}
+.text-right {text-align: right}
+.text-justify {text-align: justify}
+.transparent {
+	opacity: 0;
+	pointer-events: none;
+}
+.hidden { visibility: hidden !important }
+.hide { display: none !important }
+.collapsed { height: 0 !important }
+.layer {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+	pointer-events: none;
+}
+.layer-item {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	left: 0;
+	top: 0;
+}
+/* for .layer */
+.height-auto { height: auto }
+.layer > * { pointer-events: auto }
+.abs { position: absolute !important}
+.rel { position: relative }
+.fixed { position: fixed }
+.fixed.top, .abs.top { top:0 }
+.fixed.bottom, .abs.bottom { bottom:0 }
+.fixed.left, .abs.left { left:0 }
+.fixed.right, .abs.right { right:0 }
+.pink { background-color: rgba(255, 192, 203, 0.267) }
+
+
+[flow],
+[flow~='row'],
+[flow~='row-rev'],
+[flow~='col'],
+[flow~='col-rev']{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	align-content: flex-start; /* when wrapped */
+}
+[flow~='content-center'] {
+	align-content: center;
+}
+[flow='iblk']	{display:inline-block}
+
+[flow~='row-rev']							{flex-direction: row-reverse}
+[flow~='col']								{flex-direction: column}
+[flow~='col-rev']							{flex-direction: column-reverse}
+[flow~='wrap']								{flex-wrap: wrap}
+[flow~='inherit']							{align-items: inherit ; flex-direction: inherit}
+[flow~='stretch']							{align-items: stretch}
+
+/** SIDE ALIGNEMENTS */
+[flow~='row'][flow~='top'],
+[flow~='row-rev'][flow~='top'],
+[flow~='col'][flow~='left'],
+[flow~='col-rev'][flow~='left']		{align-items: flex-start}
+
+[flow~='row'][flow~='bottom'],
+[flow~='row-rev'][flow~='bottom'],
+[flow~='col'][flow~='right'],
+[flow~='col-rev'][flow~='right']		{align-items: flex-end}
+
+[flow~='row'][flow~='baseline']		{align-items: baseline}
+
+
+[flow~='row'][flow~='left'],
+[flow~='row-rev'][flow~='right'],
+[flow~='col'][flow~='top'],
+[flow~='col-rev'][flow~='bottom']	{justify-content: flex-start}
+
+[flow~='row'][flow~='right'],
+[flow~='row-rev'][flow~='left'],
+[flow~='col'][flow~='bottom'],
+[flow~='col-rev'][flow~='top']		{justify-content: flex-end}
+
+/** JUSTIFY SPACING  */
+[flow~='space-between']					{justify-content: space-between}
+[flow~='space-around']					{justify-content: space-around}
+[flow~='space-evenly']					{justify-content: space-around; justify-content: space-evenly}
+
+[flow~='row'][flow~='full'],
+[flow~='row-rev'][flow~='full'] {
+  width: 100%;
+}
+[flow~='col'][flow~='full'],
+[flow~='col-rev'][flow~='full']{
+	height: 100%;
+}
+.grow,
+[flow~='grow'] { flex-grow: 1 }
+[flow~='inline'] { display: inline-flex }
+[self~='center'] { align-self: center }
+[flow~='col'] [self~='bottom'] { margin-top: auto !important }
+
+[flow~='gaps'], .gaps { gap: 1em }
+[flow~='gaps-small'], .gaps-small { gap: .5em }
+[flow~='gaps-x-small'], .gaps-x-small { gap: .25em }
+[flow~='gaps-xx-small'], .gaps-xx-small { gap: 2px }
+[flow~='gaps-large'], .gaps-large { gap: 2em }
+[flow~='gaps-x-large'], .gaps-x-large { gap: 3em }
+
+[flow~='col'][flow~='block-gaps'],
+[flow~='row'][flow~='inline-gaps'] { column-gap: 1em }
+[flow~='col'][flow~='block-gaps-small'],
+[flow~='row'][flow~='inline-gaps-small'] { column-gap: .5em }
+[flow~='col'][flow~='block-gaps-x-small'],
+[flow~='row'][flow~='inline-gaps-x-small'] { column-gap: .25em }
+[flow~='col'][flow~='block-gaps-xx-small'],
+[flow~='row'][flow~='inline-gaps-xx-small'] { column-gap: 2px }
+[flow~='col'][flow~='block-gaps-large'],
+[flow~='row'][flow~='inline-gaps-large'] { column-gap: 2em }
+[flow~='col'][flow~='block-gaps-x-large'],
+[flow~='row'][flow~='inline-gaps-x-large'] { column-gap: 3em }
+
+[flow~='row'][flow~='block-gaps'],
+[flow~='col'][flow~='inline-gaps'] { row-gap: 1em }
+[flow~='row'][flow~='block-gaps-small'],
+[flow~='col'][flow~='inline-gaps-small'] { row-gap: .5em }
+[flow~='row'][flow~='block-gaps-x-small'],
+[flow~='col'][flow~='inline-gaps-x-small'] { row-gap: .25em }
+[flow~='row'][flow~='block-gaps-xx-small'],
+[flow~='col'][flow~='inline-gaps-xx-small'] { row-gap: 2px }
+[flow~='row'][flow~='block-gaps-large'],
+[flow~='col'][flow~='inline-gaps-large'] { row-gap: 2em }
+[flow~='row'][flow~='block-gaps-large'],
+[flow~='col'][flow~='inline-gaps-x-large'] { row-gap: 3em }
+
+
+/* #app[orientation='portrait'] [flow~='col-port']{
+	flex-direction: column !important;
+} */
+/*! TODO - adjust for all other directional values that need to flip... */
+
+
+/*
+[even-gaps] > button:hover,
+[even-gaps] > button {
+	background-clip: padding-box;
+	--border-opacity: .33;
+}
+[even-gaps] > *:not(button) {
+	border: .12rem solid transparent;
+}
+[even-gaps='tiny'] > *:not(button) {
+	border: .06rem solid transparent;
+}
+[even-gaps='medium'] > *:not(button) {
+	border: .18rem solid transparent;
+}
+[even-gaps='large'] > *:not(button) {
+	border: .24rem solid transparent;
+}
+[even-gaps='x-large'] > *:not(button) {
+	border: .3rem solid transparent;
+}
+*/
+
+span.vs-icon {
+	height: 1em;
+	width: 1em;
+	line-height: 1;
+}
+span.vs-icon svg {
+	height: 100%;
+	width: 100%;
+	display: inline-block;
+	fill: currentColor;
+	stroke: none;
+	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, .25));
+}
+span.vs-icon.x-small { font-size: .72em }
+span.vs-icon.small { font-size: .85em }
+span.vs-icon.large { font-size: 1.25em }
+span.vs-icon.x-large { font-size: 1.37em }
+span.vs-icon.xx-large { font-size: 1.5em }
+span.vs-icon.xxx-large { font-size: 1.75em }
+
+/** MY STYLE **/
+
+@font-face {
+	font-family: 'Open Sans';
+	font-style: normal;
+	font-weight: 400;
+	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-regular.woff2) format('woff2');
+}
+
+/* josefin-sans-300 - latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/_assets/fonts/josefin-sans/josefin-sans-v24-latin-300.woff2') format('woff2');
+}
+/* josefin-sans-300italic - latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: italic;
+  font-weight: 300;
+  src: url('/_assets/fonts/josefin-sans/josefin-sans-v24-latin-300italic.woff2') format('woff2');
+}
+/* josefin-sans-regular - latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/josefin-sans/josefin-sans-v24-latin-regular.woff2') format('woff2');
+}
+/* josefin-sans-italic - latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: italic;
+  font-weight: 400;
+  src: url('/_assets/fonts/josefin-sans/josefin-sans-v24-latin-italic.woff2') format('woff2');
+}
+/* josefin-sans-600 - latin */
+@font-face {
+  font-family: 'Josefin Sans';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/_assets/fonts/josefin-sans/josefin-sans-v24-latin-600.woff2') format('woff2');
+}
+
+html {
+	--scrollbar-handle-color: hsl(247, 70%, 67%);
+	--sea-green: hsl(150, 100%, 83%);
+	--sea-green-white: hsl(150, 65%, 82%) }
+#app[night-mode='2'] {
+	--scrollbar-handle-color: hsl(252, 4%, 56%);
+}
+body {
+	background: hsl(194, 18%, 52%) }
+#app {
+	/* color: #fffc; */
+	--floor: 56%;
+	background-color:  hsl(256, 88%, 40%);
+	background-image:
+		linear-gradient( to bottom,
+			rgba(0,0,0,0),
+			rgba(0,0,0,0) var(--floor),
+			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
+			rgba(0,0,0,0) 70%,
+			hsla(298, 69%, 90%, 0.12)),
+		radial-gradient( circle farthest-side,
+			hsla(0, 0%, 82%, 0.19),
+			hsla(0, 0%, 75%, 0.08) 60%,
+			hsla(0, 0%, 69%, 0))
+}
+
+
+
+#app[night-mode='1'],
+#app[night-mode='2'] {
+	--hue: 276deg;
+
+	/* --primary: hsl(276, 79%, 74%); */
+	--primary: hsl(276, 93%, 79%);
+	--primary-hl: hsl(276, 100%, 83%);
+	--link-color: hsla(276, 100%, 82%, 1);
+	--link-color-hl: hsl(276, 100%, 85%);
+}
+#app[night-mode='1'] {
+	background-color: hsl(255, 24%, 27%);
+}
+#app[night-mode='2'] {
+	background-color: hsl(45, 8%, 9%);
+	background-image:
+		linear-gradient( to bottom,
+			rgba(0,0,0,0),
+			rgba(0,0,0,0) var(--floor),
+			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
+			rgba(0,0,0,0) 70%,
+			hsla(46, 69%, 90%, .1)),
+		radial-gradient( circle farthest-side,
+			hsla(0, 0%, 82%, 0.12),
+			hsla(0, 0%, 75%, 0.08) 60%,
+			hsla(0, 0%, 69%, 0))
+}
+
+.icon.moon:not(.night){
+	filter: brightness(0.6);
+}
+.sun.dark {
+	filter: brightness(0.6);
+}
+::placeholder { color: hsl(var(--hue, 150deg), 21%, 53%) }
+::selection {
+	background-color: hsl(150, 100%, 64%);
+	color: #000a;
+}
+
+
+#app {
+	--app-footer-height: 3em;
+	font: 400 1rem/1.5 Josefin Sans, serif;
+	--base-color: hsl(251, 100%, 96%);
+	/* text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6); */
+}
+
+a, button, .strong { font-weight:400 }
+
+main:not(.no-fade-in) {
+	/** auto fade-in page when its rendered */
+	animation: fade-in .22s ease-in;
+}
+@keyframes fade-in {
+	0% { opacity: 0 }
+	100% { opacity: 1 }
+}
+
+/** .main-has-scrollbar is toggled automatically in app.js */
+
+#app[night-mode].main-has-scrollbar main.scroll #app-header {
+	box-shadow: 0 .25rem .5rem hsla(0, 0%, 0%, .15);
+}
+#app[night-mode].main-has-scrollbar main.scroll #app-footer {
+	box-shadow: 0 -.25rem .5rem hsla(0, 0%, 0%, 0.15);
+}
+#app:not([night-mode]).main-has-scrollbar main.scroll #app-header {
+	background: var(--scrolls-header-background);
+	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
+}
+#app:not([night-mode]).main-has-scrollbar main.scroll #app-footer {
+	background: var(--scrolls-footer-background);
+	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
+}
+#app {
+	--main-hue: 256deg; /* with mix blenmode... */
+
+	--scrolls-over-shadow-top-color: hsl(var(--main-hue) 88% 40% / 75%);
+	--scrolls-over-shadow-bottom-color: hsl(var(--main-hue) 70% 45%);
+	--scrolls-shadow-color: hsl(var(--main-hue) 82% 35% / 85%);
+	/* --scrolls-shadow-bottom-color: hsl(var(--main-hue) 82% 35% / 50%); */
+	--scrolls-header-background: hsl(var(--main-hue) 62% 40% / 42%);
+	--scrolls-footer-background: hsl(var(--main-hue) 62% 40% / 33%);
+}
+#app[night-mode='2'] {
+	--scrolls-over-shadow-top-color: hsla(332, 8%, 10%, 0.5);
+	--scrolls-over-shadow-bottom-color: hsla(332, 7%, 15%, 0.5);
+}
+#app[night-mode='1'] .scroll.shadow::before,
+#app[night-mode='1'] .scroll.shadow::after {
+	opacity: .5;
+	filter: saturate(.25);
+}
+body.night-mode-1 {
+	background: hsl(260deg 15% 52%);
+}
+body.night-mode-2 {
+	background: hsl(340, 7%, 18%);
+}
+#app-header, #app-footer { z-index: 2 }
+#app-header {
+	font-family: Open Sans, sans-serif;
+	background: #0001;
+	padding: .5em 1em;
+}
+/* #app-header h1 {
+	margin: 0;
+	line-height: 1.5;
+} */
+
+#night-mode-toggle {
+	line-height: 1;
+	/* padding-bottom: .07rem; */
+}
+
+#app-footer {
+	flex-shrink: 0;
+	background: #0001;
+	/* margin-top: auto; */
+	height: var(--app-footer-height, auto);
+}
+#app-footer nav {
+	padding: 0 1rem;
+	z-index: 2;
+
+}
+nav small { opacity: .7 }
+#nav-toggle { display: none }
+nav { user-select: none }
+
+.titlecase { text-transform: capitalize }
+.uppercase { text-transform: uppercase }
+.josefin-300 { font: 300 1em/normal Josefin Sans, sans-serif }
+.josefin-400 { font: 400 1em/normal Josefin Sans, sans-serif }
+.josefin-600 { font: 600 1em/normal Josefin Sans, sans-serif }
+
+.equal-deco {
+	font-size: 2.3em;
+	padding-bottom: .04em;
+	font-weight: 400;
+	font-family: serif;
+	color: var(--sea-green);
+	opacity: .15;
+	line-height: 1;
+	display: inline-block;
+}
+nav {
+	color: hsl(var(--hue), 100%, 83%);
+}
+.nav-sep {
+	/* font-size: .9em; */
+	opacity: .5;
+}
+#app[aspect-range*='portrait'] .nav-sep {
+	display: none;
+}
+/** vertical menu */
+
+#app[aspect-range*='portrait'] #app-footer nav.v-menu {
+	flex-direction: column;
+	gap: 1rem;
+	position: absolute;
+	top: 5rem;
+	transition: all .3s ease;
+	border-radius: .5rem;
+	padding: 1rem 2.5rem;
+	align-items: stretch;
+	text-align: center;
+	box-shadow: 0 .4rem 1rem #0004;
+	background-color: hsl(150deg 13% 17%);
+	transition: transform .5s cubic-bezier(.68, -.28, .82, .11);
+	/* inverse: 1-C, 1-D, 1-A, 1-B -> A:0.18, B:0.89, C:0.32, D:1.28 =
+		 1-.32, 1-1.28, 1-.18 , 1-.89 => .68, -.28, .82, .11  */
+}
+#app[aspect-range*='portrait'].menu-open #app-footer nav.v-menu {
+	transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+	position: absolute;
+	transform: translateY(calc(-100% - 6rem));
+}
+#app[aspect-range*='portrait'] #app-footer nav.v-menu a {
+	border: 1px solid hsl(161deg 54% 25%);
+	padding: .4rem 2rem;
+	background: hsl(164deg 20% 20%)
+}
+#app[aspect-range*='portrait'] #nav-toggle {
+	display: inline-flex;
+}
+
+#app-header.lang-center {
+	display: grid;
+	grid-template-columns: 1fr minmax(auto, 15rem) 1fr;
+	align-items: center;
+}
+main p {
+	padding-inline: 1em;
+	max-width: 40rem;
+	margin: 1em auto;
+}
+main p + p {
+	margin-top: 0;
+}
+
+.small {
+	font-size: .85em;
+}
+.flip-x { transform: scaleX(-1) }
+
+
+/* @media screen and (max-aspect-ratio: 1/1){
+
+} */
+
+/**  INPUTS / BUTTONS  **/
+
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+	text-align: inherit;
+	padding: 0 .25rem;
+	height: 1.7rem; /* matches height: 2em of small button (fs:.85em) */
+}
+textarea::placeholder,
+input[type='text']::placeholder,
+input[type='email']::placeholder,
+input[type='password']::placeholder {
+	font-style: italic;
+}
+input[type='text'] + button,
+input[type='email'] + button,
+input[type='password'] + button {
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	border-left-color: #00000008;
+}
+
+button, input, .button {
+	font-family: inherit;
+	font-weight: normal;
+	font-size: inherit;
+	text-align: inherit;
+	line-height: 1.25;
+}
+textarea {
+	font-size: inherit;
+}
+
+button[disabled], input[disabled], .button[disabled], textarea[disabled] {
+	pointer-events: none;
+	opacity: .6;
+}
+button[disabled] svg.icon, .button[disabled] svg.icon {
+	opacity: .6;
+}
+svg.icon { /** inserted with useSVG('name') */
+	display: inline-block;
+	fill: currentColor;
+	stroke: none;
+	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, 0.22));
+}
+
+
+a.button {
+	text-decoration: none;
+	/* font-weight: 500; */
+}
+button, a.button {
+	font-size: 1em;
+	/* min-height: 2em; */
+	border-radius: .42rem;
+	padding: 0 1ch;
+	user-select: none;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+
+}
+button > * { pointer-events: none }
+button a { pointer-events: auto }
+
+body.using-mouse *::-moz-focus-outer,
+body.using-mouse *::-moz-focus-inner {
+	border: 0;
+}
+body.using-mouse button { outline: none }
+
+button.mini, button.xx-small { font-size: .7em;}
+button.small { font-size: .85em; }
+button.smaller, button.x-small { font-size: .75em }
+button.medium { font-size: 1.125em }
+button.big, button.large { font-size: 1.25em }
+button.bigger, button.x-large { font-size: 1.5em }
+
+button.round, button.square {
+	width: 2em;
+	height: 2em;
+	padding: 0;
+	flex-shrink: 0;
+}
+button.round {
+	border-radius: 50%;
+}
+/* smaller icon with more padding */
+button.green.add,
+button.red.remove {
+	padding: .3rem 0;
+}
+
+button.bare {
+	background: none;
+	border: none;
+	box-shadow: none;
+	border-radius: .25rem !important;
+	/* padding: 0; */
+	padding-block: .25em;
+}
+button.underline {
+	text-decoration: underline;
+	text-decoration-color: hsla(var(--hue), 60%, 60%, .5);
+}
+button.underline.selected {
+	text-decoration-color: var(--link-color);
+}
+
+[flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,article):not(.inline) { flex:1 0 100% }
+.inline { display: inline-block }
+/** micro adjustment to vertical position for icons */
+[shift], .shift-icon { position: relative }
+[shift='-1'], .shift-up-1 { top: -.02rem }
+[shift='-2'], .shift-up-2 { top: -.04rem }
+[shift='-3'], .shift-up-3 { top: -.06rem }
+[shift='-4'], .shift-up-4 { top: -.04rem }
+
+
+[shift='1'], .shift-down-1 { top: .02rem }
+[shift='2'], .shift-down-2 { top: .04rem }
+[shift='3'], .shift-down-3 { top: .06rem }
+[shift='4'], .shift-down-4 { top: .08rem }
+
+/* @keyframes step-pulse {
+	0% {
+		opacity: .6;
+		animation-timing-function: steps(3);
+	}
+	50% {
+		opacity: 1;
+		animation-timing-function: steps(3);
+	}
+	100% {
+		opacity: .6;
+	}
+} */
+
+.events {
+	pointer-events: auto;
+}
