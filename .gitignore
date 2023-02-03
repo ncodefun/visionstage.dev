@@ -1,7 +1,7 @@
 /.firebase
 /.firebaserc
 /.vscode
-/docs
+/todo
 /node_modules
 /old_components
 /old_projects
@@ -9,4 +9,4 @@
 /rollup.config.dev.js
 /rollup.config.prod.js
 /public/cv*
-ts-test
+/out
