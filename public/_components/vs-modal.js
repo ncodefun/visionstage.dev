@@ -35,10 +35,14 @@ class Modal extends Component {
 	 */
 	setup( msg, options=null, use_text_input=false, input_validator=null, force_answer=false){
 
+		this.message = Array.isArray( msg) ?
+			msg.map( (m,i) => i===0 ? html`<h1>${m}</h1>` : html`<div>${m}</div>`) :
+			// -> array of html result can be accepted in templates
+			html`<h1>${ msg }</h1>`
+
 		if (use_text_input){
 			this.mode = 'input'
 			this.input_validator = input_validator
-			this.message = msg
 			this.force_answer = force_answer
 			this.options = force_answer ? ['OK'] : ['Annuler','OK']
 			setTimeout( e => {
@@ -49,10 +53,6 @@ class Modal extends Component {
 		else {
 			this.mode = 'buttons'
 			this.options = options
-			this.message = Array.isArray( msg) ?
-				msg.map( (m,i) => i===0 ? html`<h1>${m}</h1>` : html`<div>${m}</div>`) :
-				// -> array of html result can be accepted in templates
-				html`<h1>${ msg }</h1>`
 		}
 
 			//'<h1>'+m+'</h1>' : '<div>'+m+'</div>').join('') :
@@ -70,13 +70,10 @@ class Modal extends Component {
 			return
 
 		const answer = this.options.indexOf( e.target.textContent)
-
+		//log('check', 'answer:', answer, 'this.mode:', this.mode)
 		if (this.mode === 'input'){
 			const text = this.q('input').value
 
-			// Clicked Cancel
-			if (answer===0 && !this.force_answer)
-				return
 			// No required text
 			if (this.force_answer && !text)
 				return
@@ -84,8 +81,15 @@ class Modal extends Component {
 			if (this.input_validator && !this.input_validator(text))
 				return // do not close / resolve
 
-			this.modal_resolve(text)
-			this.show = false
+			// Clicked Cancel
+			if (answer===0 && !this.force_answer){
+				this.show = false
+				this.modal_resolve(null)
+			}
+			else {
+				this.modal_resolve(text)
+				this.show = false
+			}
 		}
 		else {
 			this.modal_resolve(answer)
