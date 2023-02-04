@@ -52,6 +52,14 @@ vision-stage.has-margins {
 	border-radius: .5rem;
 	box-shadow: 0 .125rem 1rem -.25rem rgb(0, 0, 0, .42);
 }
+
+/** micro adjustment to vertical position for icons */
+[shift], .icon { position: relative }
+[shift='-1'], .shift-up-1 { top: -.02rem }
+[shift='-2'], .shift-up-2 { top: -.04rem }
+[shift='1'], .shift-down-1 { top: .02rem }
+[shift='2'], .shift-down-2 { top: .04rem }
+
 /** .sth-scaling (sth = stage height)
  * this will continue to scale relative to stage height, even under portrait ratio,
  *	so content will not scaled down as much as other content on narrow screens
@@ -718,6 +726,12 @@ button[disabled], input[disabled], .button[disabled], textarea[disabled] {
 button[disabled] svg.icon, .button[disabled] svg.icon {
 	opacity: .6;
 }
+svg.icon { /** inserted with useSVG('name') */
+	display: inline-block;
+	fill: currentColor;
+	stroke: none;
+	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, 0.22));
+}
 
 a.button {
 	text-decoration: none;
@@ -783,12 +797,7 @@ button.underline.selected {
 
 [flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,article):not(.inline) { flex:1 0 100% }
 .inline { display: inline-block }
-/** micro adjustment to vertical position for icons */
-[shift], .icon { position: relative }
-[shift='-1'], .shift-up-1 { top: -.02rem }
-[shift='-2'], .shift-up-2 { top: -.04rem }
-[shift='1'], .shift-down-1 { top: .02rem }
-[shift='2'], .shift-down-2 { top: .04rem }
+
 
 /* @keyframes step-pulse {
 	0% {

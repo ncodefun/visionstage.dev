@@ -1,9 +1,8 @@
-
-vs-modal {
-  --modal-bg-color: hsl(253deg 100% 50%);
+html {
+  --modal-bg-color: hsl(240deg 100% 50%);
   --modal-dark-bg-color: rgb(82, 76, 96);
-
-  /* position: fixed; */
+}
+vs-modal {
   position: absolute;
   display: flex;
   align-items: center;
@@ -35,12 +34,9 @@ vs-modal i {
   /* color: rgba(255, 255, 255, 0.85); */
   font-family: Roboto Condensed;
 }
-
-
 vs-modal button {
   margin: .2rem .5rem;
 }
-
 vs-modal .buttons {
   margin-top: 1.25rem;
 }
@@ -50,16 +46,14 @@ vs-modal .buttons button {
   margin: 0 .75rem;
   min-width: 6rem;
 }
-
 vs-modal h1 {
   margin: 0;
   font-size: 1.75rem;
+  font-family: inherit;
 }
-
 vs-modal a {
   color: white;
 }
-
 vs-modal input {
   font-size: 1.25rem;
   background: #fffc;
@@ -68,11 +62,11 @@ vs-modal input {
   margin: 1rem 0;
 }
 
-vs-modal[type='minimal'], vs-modal:not([type]) {
+/* vs-modal[type='minimal'], vs-modal:not([type]) {
 
-}
+} */
 
-vs-modal[type='full'] {
+vs-modal {
   pointer-events: auto; /* is .layer... */
   width: 100%;
   height: 100%;
@@ -82,31 +76,26 @@ vs-modal[type='full'] {
 	will-change: opacity, visibility;
 	transition: opacity var(--modal-fadeout-duration, .4s) var(--modal-fadeout-delay, 0s) ease, visibility .6s var(--modal-fadeout-delay, 0s);
 }
-vs-modal[type='full'].show {
+vs-modal.show {
 	visibility: visible;
 	transition: opacity var(--modal-fadeout-duration, .25s) ease, visibility 0s;
   opacity: 1;
 }
-vs-modal[type='full'] .bg {
+vs-modal .bg {
 	background: url(/_assets/images/textures/brushed-alum.png) var(--modal-bg-color, #b3ab8f);
-  filter: var(--modal-bg-filter, saturate(1.5) contrast(0.6) brightness(.46));
+  filter: var(--modal-bg-filter, saturate(1.5) contrast(0.5) brightness(.46));
 	opacity: var(--modal-bg-opacity, .9);
   z-index: -1;
 }
 
-#app[night-mode] vs-modal[type='full'] .bg {
-  background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
-  background-blend-mode: var(--modal-bg-blend-mode, overlay);
-  filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
-  opacity: var(--modal-dark-bg-opacity, .95);
-}
 
-vs-modal.show ~ main,
-vs-modal.show ~ .main {
+/** Modal next siblings transition will be overriden when showing menu or settings */
+vs-modal.show ~ * {
   filter: blur(5px);
+  transition: filter .3s ease;
 }
-vs-modal ~ main {
-  transition: filter var(--modal-fadeout-duration, .3s) calc(var(--modal-fadeout-delay, 0s) - .1s) ease-in !important;
+#app[hidding='modal'] vs-modal ~ * {
+  transition: filter .3s .2s ease-in;
 }
 vs-modal .content {
   background: #282828;
@@ -115,13 +104,46 @@ vs-modal .content {
   border-radius: .5rem;
   box-shadow: 0 .3rem 1rem #0006;
   transform: translateY(130%);
-  transition: opacity .3s ease, transform .3s ease;
+  /* transition: opacity .3s ease, transform .3s ease; */
+  transition:
+    opacity .7s ease,
+    transform .7s cubic-bezier(.42,-0.54,.58,1);
   opacity: 0;
 }
 vs-modal.show .content {
+  transition:
+    opacity .4s ease,
+    transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
   transform: translateY(0);
   opacity: 1;
 }
+
+#app[theme='gold'] vs-modal .bg {
+  /* opacity: 1; */
+  filter: contrast(1.4) brightness(0.7);
+}
+#app[theme='gold'] vs-modal .content {
+  mix-blend-mode: hard-light; /* overlay is cool too... */
+}
+#app[night-mode] vs-modal .bg {
+  background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
+  background-blend-mode: var(--modal-bg-blend-mode, overlay);
+  filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
+  opacity: var(--modal-dark-bg-opacity, .95);
+}
+#app[theme='gold'][night-mode] vs-modal .content {
+  mix-blend-mode: normal; /* overlay is cool too... */
+  background: hsl(50deg 7% 42%);
+}
+
+/* #app[theme='gold'][night-mode] vs-modal .bg {
+  background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
+  background-blend-mode: var(--modal-bg-blend-mode, overlay);
+  filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
+  opacity: var(--modal-dark-bg-opacity, .95);
+} */
+
+
 /* #app[night-mode] vs-modal .content {
   background: var(--modal-dark-bg-color, #2f2f2f);
 } */
