@@ -1,6 +1,7 @@
-import { log, Component, html, define, unsafeHTML }
+import { log, Component, html, define }
 	from '/vision-stage/vision-stage.min.js'
-import {q}
+
+import { q }
 	from '/vision-stage/utils.js'
 
 const app = q('vision-stage')
@@ -9,22 +10,30 @@ class Modal extends Component {
 
 	onConnected(){
 		app.modal = this
+		if (!this.init_done) this.init()
+	}
+
+	init(){
+		this.init_done = true
 		document.addEventListener('keydown', this.onKey.bind( this))
 		this.type = this.getAttribute('type')
 	}
 
-	template(){
-		return html`
+	template = () => html`
 		<div class='content'>
 			<header>${ this.message }</header>
 			${ this.mode === 'input' ? html`<input type='text'>` : '' }
-			<div class='buttons' flow='row' @click=${ this.onAnswer }>
-				${ this.options && this.options.map( opt => html`<button class='big'>${ opt }</button>`) }
+			<div class='buttons' flow='row' @pointerdown=${ this.onAnswer }>
+				${ this.options && this.options.map( opt =>
+						html`<button class='big'>${ opt }</button>`
+				)}
 			</div>
 		</div>
-		<div class='bg layer events' @click=${ e => { if (!this.force_answer) this.show = false }}></div>
-		`
-	}
+		<div
+			class='bg layer events'
+			@pointerdown=${ () => { if (!this.force_answer) this.show = false }}>
+		</div>
+	`
 
 	/**
 	 * @param msg {(string|string[])} Main message, optionally a second string in an array will be smaller subtitle
@@ -45,7 +54,7 @@ class Modal extends Component {
 			this.input_validator = input_validator
 			this.force_answer = force_answer
 			this.options = force_answer ? ['OK'] : ['Annuler','OK']
-			setTimeout( e => {
+			setTimeout( () => {
 				let input = this.q('input')
 				input && input.focus()
 			}, 300)
@@ -55,16 +64,12 @@ class Modal extends Component {
 			this.options = options
 		}
 
-			//'<h1>'+m+'</h1>' : '<div>'+m+'</div>').join('') :
-			//'<h1>'+msg+'</h1>'
-
 		// so we can wait user response (let answer = await setMessage(...))
-		return new Promise( (resolve, reject) => {
-			this.modal_resolve = resolve
+		return new Promise( (resolve) => {
+			this.resolve = resolve
 		})
 	}
 
-	// -> listener for buttons
 	onAnswer( e){
 		if( e.target.localName !== 'button' )
 			return
@@ -84,15 +89,15 @@ class Modal extends Component {
 			// Clicked Cancel
 			if (answer===0 && !this.force_answer){
 				this.show = false
-				this.modal_resolve(null)
+				this.resolve(null)
 			}
 			else {
-				this.modal_resolve(text)
+				this.resolve(text)
 				this.show = false
 			}
 		}
 		else {
-			this.modal_resolve(answer)
+			this.resolve(answer)
 			this.show = false
 		}
 		this.mode = 'buttons'
@@ -109,29 +114,23 @@ class Modal extends Component {
 					return
 				if (this.force_answer && !text)
 					return
-				this.modal_resolve(text || null)
+				this.resolve(text || null)
 				this.show = false
 			}
 		}
 	}
 
 	dismiss( e){
-		this.modal_resolve(0) // -> treated like an explicit cancel
+		this.resolve(0) // -> treated like an explicit cancel
 		this.show = false
-		this.mode = 'buttons'
 	}
 }
 
 Modal.properties = {
-	// type: { // fullscreen | minimal (with blurred bg)
-	// 	value: 'minimal',
-
-	// },
 	message: {
 		value: '',
 		watcher( val){
 			if( val){
-				//this.answer = null
 				this.show = true
 			}
 		}
