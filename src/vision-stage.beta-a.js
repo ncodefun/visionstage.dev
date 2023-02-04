@@ -1,37 +1,14 @@
 /// --- Vision Stage Framework --- ///
 
-const VERSION = 'Beta-A'
+const VERSION = '1.0.0'
 
-// → if = 1 : only one decimal => makes total rem space vary a bit,
-// but we get a more even layout spacing (Browsers are BAD at this…)
-
-// z-console is kept out of the bundle by rollup externals option;
-// we need to set it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
-import log from './z-console.js'
-
-log('info','•• Vision Stage ••', VERSION, '(w/ lit-html 1.4.1)')
-const stores = {}
-/**
- *
- * @prop {string} config_object.components_dir - Path of the components directory
- * @prop {number} config_object.update_check_min  - Number of minutes for checking sw.js update
- * @prop {number} config_object.font_size_decimals - Integer -
- * How many decimal places to use when setting html font-size.
- * Decimals allow for more precise scaling of content compare to stage:
- * - 0 or 1 means that when resizing the window, content may not be sized or positioned exactly the same in relation to stage (which doesn't rounds its dimensions)
- * - But fractional font-size may sometimes results in artifacts in rendering, like uneven, blurry lines.
- * @prop {string} config_object.icons_file_path
- * @prop {Object} config_object.icons_mappings
- * 	maps alternative (reprensentative rather than descriptive)
- * 	icon names to the real svg ids
- * @prop {Object} config_object.icons_mappings_vb
- */
-const config = {
+/** See infos for each option at `define(…)` */
+export const config = {
 	sw: null,
 	components_dir: '/_components/',
 	update_check_min: 30,
 	font_size_decimals: 0,
-	icons_file_path: '',
+	icons_path: '/_assets/images/icons.svg',
 	icons_mappings: {
 		delete: 'trash',
 		remove: 'cross',
@@ -40,29 +17,12 @@ const config = {
 		'+': 'plus',
 		'x': 'cross'
 	},
-	icons_mappings_vb: {
+	icons_viewbox: {
 		'double-chevron-right': '0 0 1024 1024',
 		'arrow-right-rounded': '0 0 45.6 45.6',
 		'fanion': '0 -11 100 120',
 	},
 	night_modes: [0,1], // CSS [night-mode='1|2'] styles are pre-defined
-	icons_path: '/_assets/images/icons.svg',
-}
-
-/**
- * Allow setting customized value on the config object
- * @param {object} config_object User config object to merge with the default config
- * @param {string} config_object.components_dir
- * @param {number} config_object.update_check_min
- * @param {number} config_object.font_size_decimals
- * @param {string} config_object.icons_file_path
- * @param {object} config_object.icons_mappings
- * @param {object} config_object.icons_mappings_vb
- * @param {number[]} config_object.night_modes
- * @param {string} config.sw
- */
-export function setConfig( config_object){
-	return Object.assign(config, config_object)
 }
 
 /// lit-html 1.4.1
@@ -89,8 +49,15 @@ import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, 
 
 export { log, html, svg, unsafeHTML, ifDefined, repeat, live, guard, cache }
 
-let app, after_resize_timeout, aspect_ratios, active_sw, redundant
 
+
+// z-console is kept out of the bundle by rollup externals option;
+// we need to set it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
+import log from './z-console.js'
+log('info','•• Vision Stage ••', VERSION, '(w/ lit-html 1.4.1)')
+
+
+const stores = {}
 const debug = { /* load:true */ }
 
 // Will reference all components having an onResized method
@@ -99,6 +66,8 @@ const resize_watchers = new Set()
 
 // keep track of the loaded ones, so we don't load the same component Class multiple times
 const loaded_components = new Set()
+
+let app, after_resize_timeout, aspect_ratios, active_sw, redundant
 
 /** Component base class, to be extended by our components **/
 export class Component extends HTMLElement {
@@ -157,7 +126,7 @@ export class Component extends HTMLElement {
 			let store_id = this.id
 			let ns = typeof desc.storable === 'string' ? desc.storable : this.ns
 			//log('err', 'Got ns:', ns, prop)
-			let stored_val = !!store_id ? storedValue(ns, store_id, prop) : undefined
+			let stored_val = store_id ? storedValue(ns, store_id, prop) : undefined
 			let use_value = stored_val !== undefined ? stored_val : desc.value
 
 			if (stored_val !== undefined){
@@ -194,7 +163,7 @@ export class Component extends HTMLElement {
 
 			if (desc.attribute){ // ['open', 'bool']
 				//! wait for ctor to finish, else attr will be set to prop initial value before we read initial attr value
-				requestAnimationFrame( t => {
+				requestAnimationFrame( () => {
 
 					if( typeof desc.attribute === 'string'){
 						this.setAttribute( desc.attribute, use_value)
@@ -273,7 +242,6 @@ export class Component extends HTMLElement {
 
 						if (desc.sync_to_url_param){
 							// Update param - find param w/ name matching prop, sync it's val [1]
-
 							// this prop may be global and app doesn't use or have params
 							if (this.params){
 								this.params[this.params.findIndex(p => p[0]===prop)][1] = val
@@ -598,7 +566,7 @@ export class Component extends HTMLElement {
 	 * @param file_path {string} Path for component
 	 * @return {Promise<ModuleNamespaceObject>} an object that describes all exports from a module
 	 */
-	static async load( file_path, scripts){
+	static async load( file_path){
 		// log('err', 'config.components_dir:', config.components_dir)
 		if( debug.load)
 			log('ok','load() file_path:', file_path)
@@ -710,10 +678,12 @@ export class VisionStage extends Component {
 
 	connectedCallback(){
 		this.onConnected && this.onConnected()
-		// no pages yet
-		if( this.$doc_title)
-			document.title = this.$doc_title + ' • ' + decodeURI( location.hash.slice(1))
-		// else: title remain as defined in the <title> tag
+		const page = decodeURI( location.hash.slice(1).split('/')[0])
+		const title = this.$doc_title || this.$title
+		if (title)
+			document.title = title + ' • ' + page
+		else if (page)
+			document.title = page
 
 		if( ctor( this).sounds)
 			this.setupSounds() // playSound( name), stopSound( name)
@@ -748,7 +718,7 @@ export class VisionStage extends Component {
 		this.classList.add('installable') /// use to show install shortcut/standalone button
 	}
 
-	#onInstalled(e){
+	#onInstalled(){
 		log('ok', 'App installed')
 		this.deferredPrompt = null
 		this.classList.remove('installable')
@@ -756,7 +726,7 @@ export class VisionStage extends Component {
 	}
 
 	/** user want to "install" a shortcut, trigger native prompt */
-	install(e){
+	install(){
 		if( !this.deferredPrompt){
 			log('err','no deferredPrompt', this)
 			return
@@ -773,7 +743,7 @@ export class VisionStage extends Component {
 		// 	})
 	}
 
-	#onHashChanged(e){
+	#onHashChanged(){
 		this.#setPageFromHash()
 	}
 
@@ -789,12 +759,14 @@ export class VisionStage extends Component {
 			return
 		}
 		// find corresp. path in pages to get key
+		if( h.endsWith('/')) h = h.slice(0,-1)
 		let [page, ...params] = h.split('/')
-		// page:pA=1,p2=allo
-		this.params = !params ? [] : params
+		// log('err', 'raw params:', params)
+
+		this.params = !params.length ? null : params
 			.map( p => p.split('='))
 			.map( ([k,v]) => [k, v==='true'?true : v==='false'?false : !isNaN(v)?parseFloat(v) : v])
-		log('pink', 'Got params from hash:', h)
+		// log('pink', 'Got params from hash:', h, this.params)
 		let page_name = ''
 		//log('info', 'match page, in pages:', page, this.pages)
 		outer:
@@ -816,7 +788,7 @@ export class VisionStage extends Component {
 
 		this.page = page_name
 
-		let {path, title} = this.getPage()
+		let {title} = this.getPage()
 		if (this.$doc_title)
 			document.title = this.$doc_title + ' • ' + title
 	}
@@ -890,7 +862,7 @@ export class VisionStage extends Component {
 	// }
 
 	// delayed
-	afterResize(e){
+	afterResize(){
 		app.resizing = false
 		app.updateScrollbarClass()
 	}
@@ -1471,21 +1443,36 @@ export const P = {
 /**
  * Defines a custom element (window.customElements.define) and return whenDefined promise
  * @param {string[]} components wait and load required components before define
+ * @param {object} config_obj Custom config; all props are optional, use default values
+ * @param {string} config_obj.sw Path of service worker
+ * @param {string} config_obj.components_dir - Path of the components directory
+ * @param {number} config_obj.update_check_min  - Number of minutes for checking sw.js update
+ * @param {number} config_obj.font_size_decimals - Integer. How many decimal places to use when setting html font-size.
+ * @param {string} config_obj.icons_path Path to the icons file
+ * @param {object} config_obj.icons_mappings
+ * 	maps alternative (reprensentative rather than descriptive)
+ * 	icon names to the real svg ids
+ * @param {object} config_obj.icons_viewbox
+ * @param {string[]} night_modes
  * @return whenDefined's promise
  * @usage `define('my-comp', MyCompClass, [])`
  */
-export async function define( tag_name, clss, components){
+export async function define( tag_name, clss, components=null, config_obj=null){
+
+	if (config_obj && tag_name === 'vision-stage')
+		Object.assign(config, config_obj)
+
 	// import comps (js & css) dependencies (when required right from the start)
 	if (components && components.length){ // app is not defined yet
-		components = components.map( c => Component.load( c))
-		await Promise.all( components)
+		components = components.map(c => Component.load( c))
+		await Promise.all(components)
 	}
 
-	window.customElements.define( tag_name, clss)
+	window.customElements.define(tag_name, clss)
 
-	return window.customElements.whenDefined( tag_name).then( () => {
+	return window.customElements.whenDefined(tag_name).then( () => {
 		//log('check', 'when defined:', tag_name)
-		if( tag_name === 'vision-stage'){
+		if (tag_name === 'vision-stage'){
 
 			app.resize()
 			app.classList.add('resized')
@@ -1506,7 +1493,7 @@ export function useSVG( id, clss, ar){
 	// proxy names
 	if( config.icons_mappings[id])
 		id = icons_mappings[id]
-	let vb = config.icons_mappings_vb[id] || '0 0 32 32'
+	let vb = config.icons_viewbox[id] || '0 0 32 32'
 
 	return html`<svg class=${clss ? 'icon '+clss : 'icon'} viewBox=${vb} preserveAspectRatio=${ ifDefined( ar) }>
 		<use href='${src}#${id}'/>
@@ -1668,3 +1655,10 @@ const throttled_saveStores = debounce( saveStores, 200)
 // export const px2rem = (px, decimals=FONT_SIZE_DECIMALS) => {
 // 	return app && px/app.REM || 0 // ex: px=100, app.REM=16 = 100/16 = 6.25rem
 // }
+
+/**
+ Font size decimals:
+ Decimals allow for more precise scaling of content compare to stage:
+ - 0 or 1 means that when resizing the window, content may not be sized or positioned exactly the same in relation to stage (which doesn't rounds its dimensions)
+ - But fractional font-size may sometimes results in artifacts in rendering, like uneven, blurry lines.
+ */
