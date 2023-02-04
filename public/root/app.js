@@ -6,22 +6,8 @@ import { cycleValueWithin, sleep, strIf }
 
 const fs = screenfull // embeded / global
 const PRES = [0,1] // presentation galery indices
-const NIGHT_MODES = [0,1,2]
 
 class App extends VisionStage {
-
-	constructor(){
-		super()
-		//this.registerSW()
-		navigator.serviceWorker.getRegistrations()
-		.then( registrations => {
-			if( registrations.length){
-				for( let registration of registrations){
-					registration.unregister()
-				}
-			}
-		})
-	}
 
 	onConnected = () => this.render()
 
@@ -62,7 +48,10 @@ class App extends VisionStage {
 
 		</header>
 
-		${ this.page!==null && cache( this[(this.page||'home')]() ) }
+		<section id='app-content' class='rel' flow='col top stretch grow'>
+			<!-- <vs-modal type='full'></vs-modal> -->
+			${ this.page !== null && cache( this[ this.page||'home' ]() ) }
+		</section>
 
 		<footer id='app-footer' flow='row' class='sth-scaling rel'>
 
@@ -234,15 +223,6 @@ class App extends VisionStage {
 	`
 
 	onPageChanged( page, prev){
-		//log('info', 'page:', page, this.params)
-		if( page===prev) return // just changed language
-		if( this.params)
-			for( let [p,val] of this.params){
-				if( p in this && val){
-					//log('check', 'set hash param on this:', p)
-					this[ p] = val
-				}
-			}
 		this.menu_open = false
 	}
 }
@@ -261,26 +241,20 @@ App.strings = {
 }
 
 App.properties = {
-	dark_mode: {
-		value: 0, // unset = user pref; once set is cycling 1,2,3 ->
-		attribute: ['night-mode', 'auto'],
-		watcher( val){ document.body.classList.toggle('night-mode', val===2)}
-	},
 	pres_index: {
 		value: 0,
 		watcher( val){
 			log('check', 'pres index:', val)
 		},
 	},
-	menu_open: { value: false, class: 'menu-open'},
 }
 
 App.aspects = {
 	// Below the 'portrait' aspect ratio,
 	// the vertical space (rem) is extended
-	// as the content now scales to fit width
-	// unless limited by portrait_min,
-	// which will look weird, i.e. not recommended…
+	// as the content now scales to fit width.
+	// This v-extension can be limited by portrait_min,
+	// which will look weird; i.e. not recommended…
 
 	// portrait_min: 	.37,	// max vertical space in portrait
 	portrait: 		.6,		// min horizontal space in portrait
@@ -291,7 +265,5 @@ App.aspects = {
 	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
 	height: 40,					// rem - base vertical space
 }
-
-App.dev = true // load components locally, else will load from Web (visionstage.dev/_components)
 
 define( 'vision-stage', App)

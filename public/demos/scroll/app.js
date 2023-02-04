@@ -1,4 +1,4 @@
-import { VisionStage, html, cache, define, log, icon, setConfig }
+import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
@@ -6,9 +6,7 @@ import { cycleValueWithin, sleep, strIf }
 
 const fs = screenfull // embeded / global
 
-const config = setConfig() // { night_modes: [0,1,2] }
-
-class App extends VisionStage { /** callbacks: onFirstRendered, onRendered, onResized, onPageChanged */
+class App extends VisionStage {
 
 	onConnected = () => this.render()
 	onPageChanged = (page, prev) => this.menu_open = false
@@ -138,7 +136,7 @@ App.languages = ['en', 'fr']
 
 App.pages = {
 	'': 		["Home", "Accueil"],
-	test: {titles:["test"], path:"test/a=1/b=yes/c=true/d=maybe/night_mode=1"}
+	params: { titles:["Params"], path:"test/a=1/b=yes/c=true/d=maybe/night_mode=1" }
 }
 
 App.strings = {
