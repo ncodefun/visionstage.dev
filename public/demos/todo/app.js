@@ -1,17 +1,10 @@
-import { VisionStage, html, define, log, icon, cache, maybe, setConfig, clearStores }
+import { VisionStage, html, define, log, icon, cache, maybe, config, clearStores }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, strIf, nextFrame, q, sleep }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull
-
-const config = setConfig({ sw: '/demos/todo/sw.js' })
-// {
-// 	update_check_min: 30,
-// 	font_size_decimals: 0,
-// 	night_modes: [0,1],
-// }
 
 class App extends VisionStage {
 
@@ -195,7 +188,7 @@ class App extends VisionStage {
 			</section>
 
 			<button self='bottom'
-				@click=${ this.testModal }>Toggle modal</button>
+				@pointerdown=${ this.testModal }>Toggle modal</button>
 
 			<!-- <button id='test-update-btn'>Test update SW</button> -->
 		</main>
@@ -236,11 +229,10 @@ App.strings = {
 }
 
 App.pages = {
-	'': 					["Home", "Accueil"],
-	'/vision-stage': 	['Vision Stage', 'Vision Stage'],
-	'/todo': 			['Todo', 'Todo'],
-	'/test': 			['Components', 'Composantes'],
-	'/triads': 			['Guitar', 'Guitare']
+	'': 							["Home", "Accueil"],
+	'/demos/todo': 			['Todo'],
+	'/demos/vs-selector': 	['Components', 'Composantes'],
+	'/demos/guitar-vision':	['Guitar Vision']
 }
 
 App.properties = {
@@ -265,4 +257,10 @@ App.properties = {
 	},
 }
 
-define( 'vision-stage', App, ['vs-selector', 'vs-modal'])
+define( 'vision-stage', App, ['vs-selector', 'vs-modal'], { sw: '/demos/todo/sw.js' })
+
+// {
+// 	update_check_min: 30,
+// 	font_size_decimals: 0,
+// 	night_modes: [0,1],
+// }
