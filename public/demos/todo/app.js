@@ -257,7 +257,7 @@ App.properties = {
 	},
 }
 
-define( 'vision-stage', App, ['vs-selector', 'vs-modal'], { sw: '/demos/todo/sw.js' })
+define('vision-stage', App, ['vs-selector', 'vs-modal'], { sw: '/demos/todo/sw.js' })
 
 // {
 // 	update_check_min: 30,
