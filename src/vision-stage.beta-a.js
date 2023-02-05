@@ -676,15 +676,10 @@ export class VisionStage extends Component {
 		window.addEventListener('appinstalled', () => this._onInstalled)
 	}
 
+
 	connectedCallback(){
 		this.onConnected && this.onConnected()
-		const page = decodeURI( location.hash.slice(1).split('/')[0])
-		const title = this.$doc_title || this.$title
-		if (title)
-			document.title = title + ' • ' + page
-		else if (page)
-			document.title = page
-
+		this.updateDocTitle()
 		if( ctor( this).sounds)
 			this.setupSounds() // playSound( name), stopSound( name)
 
@@ -694,6 +689,19 @@ export class VisionStage extends Component {
 				this.registerSW()
 			})
 		}
+	}
+
+	updateDocTitle(){
+		const page = decodeURI( location.hash.slice(1).split('/')[0])
+		//const p = .title
+		//log('err', 'page === p?:', page, p)
+		const title = this.$doc_title || this.$title
+		const doc_title = title ? (title + ' • ' + page) : page
+		//log('pink', 'doc_title:', doc_title)
+		// log('pink', 'page:', page, 'title:', title)
+
+		document.title = doc_title
+
 	}
 
 	async getActiveSW(){
@@ -745,6 +753,7 @@ export class VisionStage extends Component {
 
 	#onHashChanged(){
 		this.#setPageFromHash()
+
 	}
 
 	#setPageFromHash(){ // sets this.page name (coresp to [page] attribute)
@@ -754,8 +763,7 @@ export class VisionStage extends Component {
 				//log('err', 'set page empty')
 				this.page = ''
 			}
-			if( this.$doc_title)
-				document.title = this.$doc_title
+			this.updateDocTitle()
 			return
 		}
 		// find corresp. path in pages to get key
@@ -787,10 +795,7 @@ export class VisionStage extends Component {
 		}
 
 		this.page = page_name
-
-		let {title} = this.getPage()
-		if (this.$doc_title)
-			document.title = this.$doc_title + ' • ' + title
+		this.updateDocTitle()
 	}
 
 	/**
@@ -818,7 +823,9 @@ export class VisionStage extends Component {
 	getPageLink (page, postfix='', clss=''){
 		if( !this.pages) return ''
 		//log('check', 'page link:', page)
-		let pre = page.startsWith('/') ? '/' : './#'
+		let pre = page.startsWith('/') ? '/' : // abs path
+			page.startsWith('./') ? '' : // rel path
+			'./#' // bare path -> virtual page
 		let p = this.getPage( page)
 		if( pre === '/'){
 			p.path = page.slice(1)
@@ -826,7 +833,7 @@ export class VisionStage extends Component {
 		//let clss = btn ? ' button' : ''
 		return postfix ?
 			html`<a class=${ strIf('selected', page === this.page)}
-				href='${ pre }${ page ? p.path : '' }'>${ p.title }</a><span class='nav-sep'>${ postfix }</span>`
+				href='${ page && pre }${ page ? p.path : '' }'>${ p.title }</a><span class='nav-sep'>${ postfix }</span>`
 			:
 			html`<a class=${strIf('selected', page === this.page) + ' ' + clss}
 				href='${ pre }${ page ? p.path : '' }'>${ p.title }</a>`
@@ -1289,13 +1296,12 @@ VisionStage._properties = {
 
 			if( this.pages && this.page){
 				// update hash / page title for current lang
-				let {path, title} = this.getPage()
+				let {path} = this.getPage()
 				let new_page = path.split('/')[0]
 				let h = decodeURI( location.hash.slice(1))
 				let [old_page, ...params] = h.split('/')
 				location.hash = new_page + '/' + params.join('/')
-				if( this.$doc_title)
-					document.title = this.$doc_title + ' • ' + title
+				this.updateDocTitle()
 			}
 			log('info', 'lang, country:', lang, country)
 		},
