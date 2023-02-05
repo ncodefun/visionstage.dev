@@ -1,20 +1,21 @@
 @import '/vision-stage/colors.css';
 
+:root {
+	--header-height: calc(var(--sth) / 12);
+}
 html {
 	--scrollbar-bg-color: #0001;
 	--scrollbar-handle-color: #FFF5;
 	--blue-gray-darker: hsl(215, 11%, 22%);
 }
 body {
-	color: hsl(267, 100%, 96%);
+	/* color: hsl(267, 100%, 96%); */
+	color: hsl(250deg 100% 89%);
 	background: hsl(224deg, 23%, 31%);
 }
 vision-stage {
 	background: url(/_assets/images/textures/paper-opaque-8bit.png);
 	/* color: var(--blue-gray-darker, #272727); */
-}
-.equal-deco {
-
 }
 
 *, *::after, *::before {
@@ -102,6 +103,88 @@ vision-stage.has-margins {
 #app[night-mode='2'] .scroll.shadow::after {
 	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color), #0000);
 }
+
+#veil {
+	pointer-events: auto; /* is .layer... */
+	/* top: var(--header-height); */
+	/* height: calc(100% - var(--header-height)); */
+	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
+	filter: saturate(1.5) contrast(0.5) brightness(.46);
+	height: 100%;
+	z-index: 2;
+	will-change: opacity, visibility;
+}
+#app[night-mode] #veil {
+  background-blend-mode: overlay;
+  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
+  filter: saturate(3) contrast(0.8) brightness(0.7);
+}
+#app[night-mode] #veil.show {
+  opacity: .95;
+}
+
+#settings:not(.show) {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s;
+}
+
+/* always delayed fade-out for #veil (delay while menu or settings are fading out) */
+#veil:not(.show){
+	transition: opacity .5s .2s ease, visibility .7s;
+	visibility: hidden;
+	opacity: 0;
+}
+
+/* wait after menu has slided away OR #settings has faded */
+#app[hidding='menu'] main {
+  transition: filter .5s .2s ease;
+}
+#veil.show {
+	opacity: .9;
+	transition: opacity .3s ease;
+}
+#settings.show {
+  transition: opacity .3s .15s ease;
+}
+#app:is(.show-menu, .show-settings) main {
+  filter: blur(5px);
+  transition: filter .3s ease;
+}
+
+.fadable { /* showing */
+  transition: opacity .5s .15s ease;
+}
+.fadable.delayed-fade-in {
+  transition: opacity .5s .2s ease;
+}
+.fadable.faded {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease, visibility .3s;
+}
+
+
+
+.vs-box, .vs-box-inv {
+  padding: 1rem;
+}
+:is(.vs-box, .vs-box-inv).rounded {
+  border-radius: 1rem;
+}
+:is(.vs-box, .vs-box-inv).rounded > :is(.vs-box, .vs-box-inv).rounded {
+  border-radius: .6rem;
+}
+.vs-box > .vs-box {
+  border-width: .2rem;
+  padding: .75rem;
+  background: #0002;
+}
+#app[night-mode] .vs-box > .vs-box {
+  background: #ffffff19;
+}
+
+
 /** SCROLL **/
 	.scroll {
 		touch-action: pan-y;
@@ -452,10 +535,8 @@ body {
 
 
 
-#app[night-mode='1'],
-#app[night-mode='2'] {
+#app[night-mode] {
 	--hue: 276deg;
-
 	/* --primary: hsl(276, 79%, 74%); */
 	--primary: hsl(276, 93%, 79%);
 	--primary-hl: hsl(276, 100%, 83%);
