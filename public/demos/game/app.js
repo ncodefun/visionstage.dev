@@ -18,6 +18,10 @@ class App extends VisionStage {
 	onPageChanged( page, prev){
 		// log('info', 'onPageChanged; page, params:', page, this.params)
 		if (!page) this.show_menu = true
+		else {
+			this.show_menu = false
+			this.show_settings = false
+		}
 	}
 
 	// onFirstRendered = () =>
@@ -180,10 +184,10 @@ class App extends VisionStage {
 	`
 
 	home = () => html`
-		<main flow='col grow' >
+		<main flow='col grow'>
 			<h2>${ this.getPage( this.page).title }</h2>
 			<p>Hello </p>
-			<button self='bottom'
+			<button style='margin: 2rem 0'
 				@pointerdown=${ this.testModal }>Toggle modal</button>
 		</main>
 	`
@@ -203,14 +207,14 @@ class App extends VisionStage {
 App.languages = ['en', 'fr']
 
 App.pages = {
-	'home': 		["Home", "Accueil"],
+	'home': 		["Page One", "Page un"],
 	'two': 		["Page Two", "Page deux"],
 	// about: ['About', 'À propos'], // -> /#About | /#À propos
 	// '/vision-stage': 	['Vision Stage', 'Vision Stage'],
 }
 
 App.strings = {
-	title: ["My Game", "Mon Jeu"],
+	title: ["MY GAME", "MON JEU"],
 	home: 			["Home", "Accueil"],
 	fullscreen: 	["Fullscreen", "Plein écran"],
 	settings: ["Settings","Réglages"],
