@@ -3,15 +3,13 @@
 /// gallery w/ prev / next (see /vision-stage)
 /// input, text-area, bare input
 
-import { VisionStage, Component, html, cache, define, log, icon }
+import { VisionStage, Component, html, cache, define, log, icon, config }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleValueWithin, sleep, strIf, labelAsClassMapper, options }
+import { cycleValueWithin, sleep, strIf, labelAsClassMapper, labelOptionsMapper }
 	from '/vision-stage/utils.js'
 
-const NIGHT_MODES = [0,1]
 const fs = screenfull // embeded / global
-// window.UPDATE_CHECK_MIN = 1
 
 // log('info', 'Updated 2022.07.29')
 
@@ -23,6 +21,7 @@ const fs = screenfull // embeded / global
 // const opts = [
 // 	{ label: ''|['en-label','fr-label'], details?: '', value?: '', class?: '' } | 'label/value'
 // ]
+// label string can contain implicit details with pipe separator: 'my label | more infos…'
 
 const STATE_DEMO2_OPTIONS = [
 	{ label:['Hello','Allo'], details:'(Hi !)', value:'hello' },
@@ -36,7 +35,9 @@ const STATE_DEMO3_OPTIONS = [
 	{ label:['Banana', 'Bannane'] },
 ]
 const DEMO_TYPES = [
-	{label:'default', value:''}, {label:'led', value:'led-round'}, 'led-square', 'checkbox', 'led-bar'
+	{label:'default', value:''},
+	{label:'led', value:'led-round'},
+	'led-square', 'checkbox', 'led-bar'
 ]
 const DEMO_COLORS = [
 	'primary',
@@ -46,14 +47,12 @@ const DEMO_COLORS = [
 
 // log('pink', 'STATE_DEMO3_OPTIONS:', STATE_DEMO3_OPTIONS)
 
-const THEMES = options([
-	['',0], ['yellow-green',1], ['yellow',2], ['green',3]
-])
+const THEMES = ['', 'yellow-green', 'yellow', 'green']
 
-// pre-contruct options object to use values in cycler (prop().nextIn())
 const STEPPER_DEMO_OPTS = [
-	{label:['Oneeeeeeeeeeee','Un'], value: 'one'}, 'two', 'three', 'four', 'five'
-]
+	{label:['Oneeeeeeeeeeee','Un'], value: 'one'}, ['two','deux'], 'three', 'four', 'five'
+].map( labelOptionsMapper)
+
 
 const ICON_GRID_OPTS = [
 	{icon:'pointer', value:'select'},
@@ -103,8 +102,7 @@ class App extends VisionStage {
 
 				<button id='theme-toggle' class='square bare'
 					@pointerdown=${ e => {
-						this.theme_index = cycleValueWithin(this.theme_index, THEMES.values)
-						this.theme = THEMES.labels[this.theme_index]
+						this.theme = cycleValueWithin( this.theme, THEMES)
 					}}>
 					🎨
 				</button>
@@ -161,25 +159,11 @@ class App extends VisionStage {
 			class='grow text-center scroll shadow'
 			flow='row baseline divide wrap gaps-small'>
 
+			<!-- divide: > div,p,h1...,article,section, all are made full width to act as dividers -->
+			<!-- while everything else flows in a flex row. Simply use empty div as a divider. -->
+
 			<h1>&lt;vs-selector&gt;</h1>
 
-			<!-- <button
-				class={ this.active_object ? 'primary' : '' }
-				@click={ e => this.prop('active_object').toggleSelect( active) /** toggleSelect is a helper method on prop() returned object -> set or unset active{} as active_object and render */ }
-				>
-				toggle
-			</button>
-			<span>
-				{ maybe(this.active_object).title || 'inactive' }
-			</span>
-
-			<div></div> -->
-
-
-
-			<!-- range slider -->
-			<!-- num input -->
-			<!-- text input (subtype='email|password') -->
 
 			<button class=${ this.state_demo1===true ? 'primary' : '' }
 				@click=${ e => this.state_demo1 = !this.state_demo1 }>
@@ -226,10 +210,6 @@ class App extends VisionStage {
 				>
 				State demo 1
 			</vs-selector>
-
-			<!-- <h2>With Options</h2> -->
-
-			<!-- <h3>Horizontal – Tabs / Radio buttons</h3> -->
 
 			<div></div>
 
@@ -358,7 +338,6 @@ class App extends VisionStage {
 
 	onPageChanged( page, prev){
 		if( page===prev) return // only changed language (or mod url) -> using a different page.path
-
 		this.menu_open = false
 	}
 }
@@ -389,13 +368,12 @@ App.properties = {
 		// 	return val
 		// }
 	},
-	theme_index: 0,
 	theme: {
 		value: '',
-		attribute: 'highlight'
+		attribute: ['highlight', 'auto'] // auto: remove attr if falsy value
 	},
 	demo_type: DEMO_TYPES[1].value,
-	state_demo1: { value: false, storable:true },
+	state_demo1: { value: true, storable:true },
 	state_demo2: { value: STATE_DEMO2_OPTIONS[0].value, storable:false },
 	state_demo3: {
 		value: STATE_DEMO3_OPTIONS.slice(2).map( o => o.label[0]),
