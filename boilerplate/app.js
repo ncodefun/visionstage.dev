@@ -109,9 +109,9 @@ App.aspects = {
 App.sounds = [
 	// Note: volume will jump if multiple sounds with different volumes
 	// are played at the same time…
-	['good',		'/vision-stage/_assets/sounds/good.wav'],
-	['wrong',	'/vision-stage/_assets/sounds/wrong.wav', { volume:.6 }],
-	['win',		'/vision-stage/_assets/sounds/win.mp3'],
+	['good',		'/_assets/sounds/good.wav'],
+	['wrong',	'/_assets/sounds/wrong.wav', { volume:.6 }],
+	['win',		'/_assets/sounds/win.mp3'],
 ]
 
 App.strings = {
