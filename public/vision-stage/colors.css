@@ -303,7 +303,7 @@ a:hover, button.bare:hover { color: var(--link-color-hl) }
 /* button.bare { color: var(--link-color-hl) } */
 
 
-/* :is( button.bare, a).selected,
+:is( button.bare, a).selected,
 :is( button.bare, a):hover {
 	color: var(--link-color-hl);
-} */
+}
