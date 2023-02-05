@@ -1,6 +1,6 @@
 html {
-	--modal-bg-color: hsl(240deg 100% 50%);
-	--modal-dark-bg-color: hsl(258, 12%, 34%);
+	--modal-bg: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
+	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
 }
 vs-modal {
 	position: absolute;
@@ -82,12 +82,11 @@ vs-modal.show {
 	opacity: 1;
 }
 vs-modal .bg {
-	background: url(/_assets/images/textures/brushed-alum.png) var(--modal-bg-color);
+	background: var(--modal-bg);
 	filter: var(--modal-bg-filter, saturate(1.5) contrast(0.5) brightness(.46));
 	opacity: var(--modal-bg-opacity, .9);
 	z-index: -1;
 }
-
 
 vs-modal ~ * {
 	transition: filter .3s .25s ease;
@@ -118,11 +117,9 @@ vs-modal.show .content {
 	/* opacity: 1; */
 }
 
-
-
 #app[night-mode] vs-modal .bg {
-	background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
-	background-blend-mode: var(--modal-bg-blend-mode, overlay);
+	background: var(--modal-dark-bg, url(/_assets/images/textures/brushed-alum-black.png) #33302b);
+	background-blend-mode: var(--modal-dark-bg-blend-mode, overlay);
 	filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
 	opacity: var(--modal-dark-bg-opacity, .95);
 }

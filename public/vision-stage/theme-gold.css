@@ -1,6 +1,5 @@
-/*! file most load after components to override their default styles…
-! not easy... maybe we should use a more specific body[theme='gold']
-*/
+/*! components styles will load after this; we must use more specific selectors… */
+
 
 :root {
 	--nav-bg: hsl(60, 7%, 22%);
@@ -62,7 +61,7 @@ body.night-mode-1 {
 	color: #000a;
 }
 
-h1 {
+#app-header h1 {
 	color: hsl(45deg 100% 76%);
 	-webkit-text-stroke: 1px hsla(0, 100%, 4%, 0.4);
 	text-shadow: 0 .1rem .4rem hsla(45, 29%, 33%, .7);
@@ -78,10 +77,6 @@ h1 {
   filter: saturate(3) contrast(0.8) brightness(0.7);
 }
 
-vs-modal .bg {
-  /* opacity: 1; */
-  filter: contrast(1.4) brightness(0.7);
-}
 vs-modal .content {
   mix-blend-mode: hard-light; /* overlay is cool too... */
 }
@@ -90,8 +85,14 @@ vs-modal .content {
   background: hsl(50deg 7% 42%);
 }
 #app vs-modal {
-	--modal-bg-color: #b3ab8f;
-	--modal-dark-bg-color: #45423d;
+	--modal-bg: url(/_assets/images/textures/brushed-alum.png) #b3ab8f;
+	--modal-bg-filter: contrast(1.4) brightness(0.7);
+	--modal-bg-blend-mode: overlay;
+
+	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) #45423d;
+	--modal-dark-bg-filter: saturate(3) contrast(0.8) brightness(0.7);
+	--modal-dark-bg-blend-mode: overlay;
+
 }
 
 /* .vs-box */
@@ -107,9 +108,6 @@ body #app[night-mode] .vs-box {
   background: hsl(40deg 12% 13% / 70%);
 }
 
-#page-btn {
-  -webkit-text-stroke: 1px hsl(47deg 71% 71% / 40%);
-}
 svg.fanion {
 	color: hsl(45, 85%, 79%);
 	z-index: -1;
@@ -119,4 +117,8 @@ svg.fanion {
 }
 #title nav {
 	background: hsl(45, 10%, 25%);
+}
+#page-btn,
+#title nav a.button {
+  -webkit-text-stroke: 1px hsl(47deg 71% 71% / 40%);
 }
