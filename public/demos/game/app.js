@@ -24,16 +24,10 @@ class App extends VisionStage {
 		}
 	}
 
-	// onFirstRendered = () =>
-	// onRendered = () =>
-	// onResized = () =>
-
 	// Templates -----------------------------------------------
 
 
-	template = () => {
-		// log('err', 'this.page:', this.page)
-		return html`
+	template = () => html`
 		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
 
 			<span
@@ -69,12 +63,6 @@ class App extends VisionStage {
 					${ useSVG('fanion','fanion layer', 'none') }
 				</button>
 
-				<!-- <button id='close-settings-btn'
-					class='abs bare square ${ strIf('hide', !this.show_settings) }'
-					>
-					<span class='vs-icon x-large'>✖</span>
-				</button> -->
-
 				<nav
 					flow='col'
 					class='abs ${ strIf('show', this.show_menu) }'
@@ -88,9 +76,20 @@ class App extends VisionStage {
 					}}
 					>
 					${ this.pages && this.pages.map( ([page_name],i) => {
-						let p = this.getPage( page_name) // only page (sub)obj for current lang
+						const pre =
+							!page_name ? '':
+							page_name.startsWith('/') ? '/' : // abs path
+							page_name.startsWith('./') ? '' : // rel path
+							'#' // bare path -> virtual page
+
+						const p = this.getPage(page_name)
+						let path = p.path
+						if( pre === '/')
+							path = page.slice(1) // pre has it
+						// log('red', 'path:', path)
+
 						return html`
-							<a href=${ '#' + p.path }
+							<a href='${ pre }${ page_name ? path : '' }'
 								class='button ${ strIf('selected', page_name === this.page) }'
 								>
 								<span>${ p.title }</span>
@@ -156,7 +155,7 @@ class App extends VisionStage {
 			${ this.settingsTemplate() }
 			${ this.page !== null && cache( this[ this.page||'home' ]() ) }
 		</section>
-	`}
+	`
 
 	settingsTemplate = () => html`
 		<aside id='settings' class='layer ${ strIf('show', this.show_settings) }' flow='col top'>
@@ -185,7 +184,7 @@ class App extends VisionStage {
 
 	home = () => html`
 		<main flow='col grow'>
-			<h2>${ this.getPage( this.page).title }</h2>
+			<h2>${ this.getPage(this.page).title }</h2>
 			<p>Hello </p>
 			<button style='margin: 2rem 0'
 				@pointerdown=${ this.testModal }>Toggle modal</button>
@@ -209,17 +208,16 @@ App.languages = ['en', 'fr']
 App.pages = {
 	'home': 		["Page One", "Page un"],
 	'two': 		["Page Two", "Page deux"],
-	// about: ['About', 'À propos'], // -> /#About | /#À propos
-	// '/vision-stage': 	['Vision Stage', 'Vision Stage'],
+	'./gold.html':	["Gold Theme", "Theme 'gold'"],
 }
 
 App.strings = {
-	title: ["MY GAME", "MON JEU"],
+	title: 			["MY GAME", "MON JEU"],
 	home: 			["Home", "Accueil"],
 	fullscreen: 	["Fullscreen", "Plein écran"],
-	settings: ["Settings","Réglages"],
-	menu: ["Menu","Menu"],
-	next_page: ["Next game","Jeu suivant"],
+	settings: 		["Settings","Réglages"],
+	menu: 			["Menu","Menu"],
+	next_page: 		["Next game","Jeu suivant"],
 }
 
 App.properties = {
