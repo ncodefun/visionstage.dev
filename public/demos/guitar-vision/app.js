@@ -6,7 +6,7 @@
 import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleValueWithin, tempClass, sleep }
+import { cycleValueWithin, tempClass, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = screenfull // embeded / global

@@ -1,8 +1,8 @@
 import { Component, html, define }
-	from '../vision-stage/vision-stage.min.js'
+	from '/vision-stage/vision-stage.min.js'
 
-import { q, range }
-	from '../vision-stage/utils.js'
+import { range }
+	from '/vision-stage/utils.js'
 
 const POSITIONS = {
 	C: [0,5],
