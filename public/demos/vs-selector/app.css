@@ -9,37 +9,42 @@ button, input, a.button {
 	--primary: hsl(150deg, 90%, 62%);
 }
 
-#app[highlight='yellow-green'] {
+body #app[highlight='yellow-green'] {
 	--hue: 95deg;
-	--link-color: rgb(165, 236, 22);
+	--link-color: hsl(80, 85%, 51%);
+	--link-color-hl: hsl(80, 98%, 56%);
+
 	/* --primary: hsl(95deg, 90%, 72%); */
 }
-#app[highlight='yellow-green'] button.primary {
+body #app[highlight='yellow-green'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 90%, 72%);
 }
 
-#app[highlight='yellow'] button.primary {
+body #app[highlight='yellow'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 85%, 70%);
 }
-#app[highlight='yellow'] {
+body #app[highlight='yellow'] {
 	--hue: 80deg;
-	--primary: hsl(80deg, 85%, 70%);
-	--link-color: rgb(217, 255, 0);
+	--primary: hsl(80deg 85% 70%);
+	--link-color: hsl(72deg 100% 66%);
+	--link-color-hl: hsl(72deg 100% 66%);
 }
 
-#app[highlight='green'] button.primary {
+body #app[highlight='green'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 85%, 70%);
 }
-#app[highlight='green'] {
+body #app[highlight='green'] {
 	--hue: 115deg;
 	--primary: hsl(115deg, 80%, 70%);
-	--link-color: rgb(104, 219, 62);
+	--link-color: hsl(104, 69%, 55%);
+	--link-color-hl: hsl(104, 76%, 60%);
+
 }
 
 
 /** LINKS **/
-#app[highlight='yellow-green'].bright-bg,
-#app[highlight='yellow-green'].dark-bg {
+body #app[highlight='yellow-green'].bright-bg,
+body #app[highlight='yellow-green'].dark-bg {
 	--link-color: hsla(var(--hue), 68%, 60%);
 	--link-color-hl: hsl(var(--hue), 93%, 70%);
 }
@@ -73,14 +78,14 @@ main { padding-bottom: 5rem }
 
 
 /**
-#app[night-mode='2'] h1 {
+body[night-mode='2'] h1 {
 	color: hsl(344, 67%, 64%);
 	text-shadow: 0 0.16rem 0.5rem hsl(330deg 63% 45%);
 	-webkit-text-stroke: #fff4 .1rem;
 }
-#app[night-mode='2'] .vivid { color: hsl(345, 80%, 75%) }
-#app[night-mode='2'] .soft { color: hsl(346, 100%, 82%) }
-#app[night-mode='2'] .filter { filter: hue-rotate(208deg) }
+body[night-mode='2'] .vivid { color: hsl(345, 80%, 75%) }
+body[night-mode='2'] .soft { color: hsl(346, 100%, 82%) }
+body[night-mode='2'] .filter { filter: hue-rotate(208deg) }
 */
 
 /* .grid-2x3 {

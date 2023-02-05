@@ -1,9 +1,7 @@
 @import '/vision-stage/colors.css';
 
-:root {
-	--header-height: calc(var(--sth) / 12);
-}
 html {
+	--header-height: calc(var(--sth) / 12);
 	--scrollbar-bg-color: #0001;
 	--scrollbar-handle-color: #FFF5;
 	--blue-gray-darker: hsl(215, 11%, 22%);
@@ -15,7 +13,6 @@ body {
 }
 vision-stage {
 	background: url(/_assets/images/textures/paper-opaque-8bit.png);
-	/* color: var(--blue-gray-darker, #272727); */
 }
 
 *, *::after, *::before {
@@ -89,20 +86,20 @@ vision-stage.has-margins {
 }
 .scroll.shadow::before {
 	/* top:  */
-	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
+	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color, red), #0000);
 	/* mix-blend-mode: color-burn; */
 }
 .scroll.shadow:after {
-	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color), #0000);
+	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color, red), #0000);
 	bottom: var(--app-footer-height);
 }
 
-#app[night-mode='2'] .scroll.shadow::before {
+/* body[night-mode='2'] .scroll.shadow::before {
 	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
 }
-#app[night-mode='2'] .scroll.shadow::after {
+body[night-mode='2'] .scroll.shadow::after {
 	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color), #0000);
-}
+} */
 
 #veil {
 	pointer-events: auto; /* is .layer... */
@@ -114,12 +111,12 @@ vision-stage.has-margins {
 	z-index: 2;
 	will-change: opacity, visibility;
 }
-#app[night-mode] #veil {
+body[night-mode] #veil {
   background-blend-mode: overlay;
   background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
   filter: saturate(3) contrast(0.8) brightness(0.7);
 }
-#app[night-mode] #veil.show {
+body[night-mode] #veil.show {
   opacity: .95;
 }
 
@@ -180,7 +177,7 @@ vision-stage.has-margins {
   padding: .75rem;
   background: #0002;
 }
-#app[night-mode] .vs-box > .vs-box {
+body[night-mode] .vs-box > .vs-box {
   background: #ffffff19;
 }
 
@@ -397,35 +394,6 @@ hr.split {
 [flow~='col'][flow~='inline-gaps-x-large'] { row-gap: 3em }
 
 
-/* #app[orientation='portrait'] [flow~='col-port']{
-	flex-direction: column !important;
-} */
-/*! TODO - adjust for all other directional values that need to flip... */
-
-
-/*
-[even-gaps] > button:hover,
-[even-gaps] > button {
-	background-clip: padding-box;
-	--border-opacity: .33;
-}
-[even-gaps] > *:not(button) {
-	border: .12rem solid transparent;
-}
-[even-gaps='tiny'] > *:not(button) {
-	border: .06rem solid transparent;
-}
-[even-gaps='medium'] > *:not(button) {
-	border: .18rem solid transparent;
-}
-[even-gaps='large'] > *:not(button) {
-	border: .24rem solid transparent;
-}
-[even-gaps='x-large'] > *:not(button) {
-	border: .3rem solid transparent;
-}
-*/
-
 span.vs-icon {
 	height: 1em;
 	width: 1em;
@@ -446,7 +414,6 @@ span.vs-icon.x-large { font-size: 1.37em }
 span.vs-icon.xx-large { font-size: 1.5em }
 span.vs-icon.xxx-large { font-size: 1.75em }
 
-/** MY STYLE **/
 
 /* @font-face {
 	font-family: 'Open Sans';
@@ -507,17 +474,22 @@ span.vs-icon.xxx-large { font-size: 1.75em }
 }
 
 
-html {
+#app {
 	--scrollbar-handle-color: hsl(247, 70%, 67%);
 	--sea-green: hsl(150, 100%, 83%);
-	--sea-green-white: hsl(150, 65%, 82%) }
-#app[night-mode] {
-	--scrollbar-handle-color: hsl(252, 25%, 44%);
+	--sea-green-white: hsl(150, 65%, 82%)
 }
-body {
-	background: hsl(194, 18%, 52%) }
+body[night-mode] #app {
+	--scrollbar-handle-color: hsl(252, 25%, 44%);
+	--hue: 276deg;
+	--primary: hsl(276, 93%, 79%);
+	--primary-hl: hsl(276, 100%, 83%);
+	--link-color: hsla(276, 100%, 82%, 1);
+	--link-color-hl: hsl(276, 100%, 85%);
+
+}
+body { background: hsl(194, 18%, 52%) }
 #app {
-	/* color: #fffc; */
 	--floor: 56%;
 	background-color:  hsl(256, 88%, 40%);
 	background-image:
@@ -533,20 +505,10 @@ body {
 			hsla(0, 0%, 69%, 0))
 }
 
-
-
-#app[night-mode] {
-	--hue: 276deg;
-	/* --primary: hsl(276, 79%, 74%); */
-	--primary: hsl(276, 93%, 79%);
-	--primary-hl: hsl(276, 100%, 83%);
-	--link-color: hsla(276, 100%, 82%, 1);
-	--link-color-hl: hsl(276, 100%, 85%);
-}
-#app[night-mode='1'] {
+body[night-mode='1'] #app {
 	background-color: hsl(255, 24%, 27%);
 }
-#app[night-mode='2'] {
+body[night-mode='2'] #app {
 	background-color: hsl(45, 8%, 9%);
 	background-image:
 		linear-gradient( to bottom,
@@ -575,13 +537,12 @@ body {
 
 
 #app {
+	font: 1rem/1.5 Josefin Sans, serif;
 	--app-footer-height: 3em;
-	font: 400 1rem/1.5 Josefin Sans, serif;
 	--base-color: hsl(251, 100%, 96%);
-	/* text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6); */
 }
 
-a, button, .strong { font-weight:400 }
+/* a, button, .strong { font-weight:400 } */
 
 main:not(.no-fade-in) {
 	/** auto fade-in page when its rendered */
@@ -594,48 +555,47 @@ main:not(.no-fade-in) {
 
 /** .main-has-scrollbar is toggled automatically in app.js */
 
-#app[night-mode].main-has-scrollbar #app-header {
+body[night-mode] #app.main-has-scrollbar #app-header {
 	box-shadow: 0 .25rem .33rem hsl(256 20% 25% / 75%);
 	/* hsla(0, 0%, 0%, .5); */
 }
-#app[night-mode].main-has-scrollbar #app-footer {
+body[night-mode] #app.main-has-scrollbar #app-footer {
 	box-shadow: 0 -.25rem .33rem hsl(256 20% 25% / 75%);
 }
-#app:not([night-mode]).main-has-scrollbar #app-header {
+body:not([night-mode]) #app.main-has-scrollbar #app-header {
 	/* background: var(--scrolls-header-background); */
 	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
 }
-#app:not([night-mode]).main-has-scrollbar #app-footer {
+body:not([night-mode]) #app.main-has-scrollbar #app-footer {
 	/* background: var(--scrolls-footer-background); */
 	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
 }
 #app {
-	--scrolls-over-shadow-top-color: hsl(256deg 88% 40% / 75%);
-	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 45%);
+	--scrolls-over-shadow-top-color: hsl(256deg 88% 33% / 75%);
+	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 37% / 75%);
 	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
 	/* --scrolls-shadow-bottom-color: hsl(256deg 82% 35% / 50%); */
 	--scrolls-header-background: #0001;
-	/* hsl(256deg 62% 40% / 42%); */
 	--scrolls-footer-background: hsl(256deg 62% 40% / 33%);
 }
-#app[night-mode='2'] {
+body[night-mode='2'] {
 	--scrolls-over-shadow-top-color: hsla(332, 8%, 10%, 0.5);
 	--scrolls-over-shadow-bottom-color: hsla(332, 7%, 15%, 0.5);
 }
-#app[night-mode='1'] .scroll.shadow::before,
-#app[night-mode='1'] .scroll.shadow::after {
+body[night-mode='1'] .scroll.shadow::before,
+body[night-mode='1'] .scroll.shadow::after {
 	opacity: .6;
 	filter: saturate(.25);
 }
-body.night-mode-1 {
+body[night-mode='1'] {
 	background: hsl(260deg 15% 52%);
 }
-body.night-mode-2 {
+body[night-mode='2'] {
 	background: hsl(340, 7%, 18%);
 }
 #app-header, #app-footer { z-index: 2 }
 #app-header {
-	font-family: Open Sans, sans-serif;
+	/* font-family: Open Sans, sans-serif; */
 	background: #0001;
 	padding: .5em 1em;
 }
@@ -876,9 +836,11 @@ button.underline.selected {
 	text-decoration-color: var(--link-color);
 }
 
-[flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,article):not(.inline) { flex:1 0 100% }
+[flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,section,article):not(.inline) { flex:1 0 100% }
 .inline { display: inline-block }
 
+/* With this there's no need to wrap sections in otherwise useless containers which only adds noise… Plus we can simply hide empty div for example on mobile / narrow screens and make a more compact flow, which would be impossible by using containers!
+*/
 
 /* @keyframes step-pulse {
 	0% {

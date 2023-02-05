@@ -173,11 +173,11 @@ vs-selector button .led {
 	/* filter:  brightness(.75) contrast(1.5) saturate(.6); */
 }
 
-#app[night-mode='1'] vs-selector button .led {
+body[night-mode='1'] vs-selector button .led {
 	--lum: 76%;
 	filter: brightness(1.33) saturate(.42);
 }
-#app[night-mode='1'] vs-selector button.selected .led {
+body[night-mode='1'] vs-selector button.selected .led {
 	filter: none;
 }
 /* night-mode=1|2 -> hue=pink -> brighter led: bg --lum & filter */
@@ -209,10 +209,10 @@ vs-selector button.selected .led {
 		radial-gradient(at 56% 35%, white, transparent 90%),
 		radial-gradient(closest-side, hsl(var(--hue), 100%, 51%), hsl(var(--hue), 100%, 63%));
 }
-#app[night-mode='1'].dark-components vs-selector button .led {
+body[night-mode='1'].dark-components vs-selector button .led {
 	filter: brightness(1) contrast(1.25) saturate(.3);
 }
-#app[night-mode='1'].dark-components vs-selector button.selected .led {
+body[night-mode='1'].dark-components vs-selector button.selected .led {
 	filter:  brightness(.9) contrast(1.33);
 }
 

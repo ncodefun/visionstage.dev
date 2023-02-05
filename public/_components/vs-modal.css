@@ -117,7 +117,7 @@ vs-modal.show .content {
 	/* opacity: 1; */
 }
 
-#app[night-mode] vs-modal .bg {
+body[night-mode] vs-modal .bg {
 	background: var(--modal-dark-bg, url(/_assets/images/textures/brushed-alum-black.png) #33302b);
 	background-blend-mode: var(--modal-dark-bg-blend-mode, overlay);
 	filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
@@ -133,6 +133,6 @@ vs-modal.show .content {
 } */
 
 
-/* #app[night-mode] vs-modal .content {
+/* body[night-mode] vs-modal .content {
 	background: var(--modal-dark-bg-color, #2f2f2f);
 } */

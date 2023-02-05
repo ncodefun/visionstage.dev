@@ -13,8 +13,8 @@
 body {
   background: hsl(60, 7%, 22%);
 }
-body.night-mode-1 {
-	background: hsl(50deg 7% 42%);
+body[night-mode='1'] {
+	background-color: hsl(50deg 7% 42%);
 }
 #app {
 	color: hsl(45deg 20% 20%);
@@ -22,18 +22,18 @@ body.night-mode-1 {
 	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
 	background-blend-mode: overlay;
 }
-#app[night-mode] {
+body[night-mode] #app {
   color: hsl(45deg 20% 80%);
 }
-#app[night-mode='1'] {
+body[night-mode='1'] #app {
 	background-color: hsl(40, 10%, 11%);
 }
-#app, #app[night-mode] {
+#app, body[night-mode] #app {
 	--hue:45deg;
 	--link-color: hsla(45, 100%, 76%, .85);
 	--link-color-hl: hsl(45, 100%, 76%);
 }
-/* #app[night-mode] {
+/* body[night-mode] {
 	--hue: 45deg;
 	--primary: hsl(45, 93%, 79%);
 	--primary-hl: hsl(45, 100%, 83%);
@@ -49,7 +49,7 @@ body.night-mode-1 {
 #night-mode-toggle {
   filter: contrast(0.15) sepia(2) hue-rotate(7deg) contrast(2) brightness(1.07) saturate(.9);
 }
-#app[night-mode] #night-mode-toggle {
+body[night-mode] #night-mode-toggle {
   filter: contrast(.7) sepia(2) hue-rotate(0deg) saturate(1.75) brightness(1.07);
 }
 
@@ -71,7 +71,7 @@ body.night-mode-1 {
 	background: url(/_assets/images/textures/brushed-alum.png) #b3ab8f;
 	filter: contrast(1.4) brightness(0.7);
 }
-#app[night-mode] #veil {
+body[night-mode] #veil {
   background-blend-mode: overlay;
   background: url(/_assets/images/textures/brushed-alum-black.png) #33302b;
   filter: saturate(3) contrast(0.8) brightness(0.7);
@@ -80,7 +80,7 @@ body.night-mode-1 {
 vs-modal .content {
   mix-blend-mode: hard-light; /* overlay is cool too... */
 }
-#app[night-mode] vs-modal .content {
+body[night-mode] vs-modal .content {
   mix-blend-mode: normal; /* overlay is cool too... */
   background: hsl(50deg 7% 42%);
 }
@@ -100,11 +100,11 @@ vs-modal .content {
   background: hsla(39, 21%, 76%, 0.7);
   border: solid .3rem #0002;
 }
-body #app[night-mode] .vs-box-inv {
+body body[night-mode] .vs-box-inv {
   background: hsla(39, 19%, 85%, 0.7);
 }
 #app .vs-box-inv,
-body #app[night-mode] .vs-box {
+body body[night-mode] .vs-box {
   background: hsl(40deg 12% 13% / 70%);
 }
 
@@ -112,7 +112,7 @@ svg.fanion {
 	color: hsl(45, 85%, 79%);
 	z-index: -1;
 }
-#app[night-mode] #title nav {
+body[night-mode] #title nav {
 	background: hsl(46deg 32% 49%);
 }
 #title nav {
