@@ -6,13 +6,14 @@ const CACHED_URLS = [
 	'./index.html',
   './app.js',
 	'./app.css',
+  './manifest.json',
+
 	'/vision-stage/vision-stage.min.js',
 	'/vision-stage/vision-stage.css',
 	'/vision-stage/z-console.js',
 	'/vision-stage/utils.js',
 	'/vision-stage/colors.css',
 
-  '/manifest.json',
   '/_components/vs-selector.js',
   '/_components/vs-selector.css',
   '/_components/vs-slider.js',
