@@ -50,11 +50,10 @@ import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, 
 export { log, html, svg, unsafeHTML, ifDefined, repeat, live, guard, cache }
 
 
-
 // z-console is kept out of the bundle by rollup externals option;
 // we need to set it as a blackboxed file in chrome TO GET REAL LINE NUMBERS in console!
 import log from './z-console.js'
-log('info','•• Vision Stage ••', VERSION, '(w/ lit-html 1.4.1)')
+log('info','✦✦ Vision Stage ✦✦', VERSION, '(w/ lit-html 1.4.1)')
 
 
 const stores = {}
@@ -676,7 +675,6 @@ export class VisionStage extends Component {
 		window.addEventListener('appinstalled', () => this._onInstalled)
 	}
 
-
 	connectedCallback(){
 		this.onConnected && this.onConnected()
 		this.updateDocTitle()
@@ -703,9 +701,6 @@ export class VisionStage extends Component {
 			document.title = title
 		}
 		// else: keep the static title in index.html
-		else {
-			log('red', 'no title', )
-		}
 	}
 
 	async getActiveSW(){
@@ -808,7 +803,7 @@ export class VisionStage extends Component {
 	getPage (page_name=null){
 
 		if (!this.pages){
-			log('warn', 'no pages yet')
+			// log('warn', 'no pages yet')
 			return null
 		}
 		let p_name = (page_name===null ? this.page : page_name)
@@ -1324,15 +1319,16 @@ VisionStage._properties = {
 	},
 	night_mode: {
 		value: 0,
-		sync_to_url_param: true, //! what happens with stored value??
+		sync_to_url_param: true, // if url param is passed, will override stored value
 		storable: '/', // shared accross all apps
 		attribute: ['night-mode', 'auto'], // auto -> remove if falsy, otherwise use value
 		init_watcher: true,
 		watcher( val){
-			document.body.classList.toggle('night-mode-1', val===1)
-			document.body.classList.toggle('night-mode-2', val===2)
-			//this.classList.toggle('has-dark-bg', !!val)
-			//this.switchClasses('has-bright-bg', 'has-dark-bg', val==='whitish')
+			if (val)
+				document.body.setAttribute('night-mode', val)
+			else
+				document.body.removeAttribute('night-mode')
+			document.body.style.setProperty('color-scheme', val ? 'dark' : 'light')
 		}
 	},
 	menu_open: {
