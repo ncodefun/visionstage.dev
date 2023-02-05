@@ -33,6 +33,14 @@ export const classes = (...classes) => classes.filter( c => c).join(' ')
 export const labelAsClassMapper = o =>
 	typeof o === 'string' ? {label:o, class:o} : {...o, class:o.label}
 
+export const labelOptionsMapper = o =>
+	typeof o === 'string' ? {label: o, value: o} :
+	Array.isArray(o) ? {label: o, value: o[0]} :
+	o;
+export const labelValueOptionsMapper = o =>
+	!Array.isArray(o) ? o : { label: o[0] , value: o[1] }
+
+
 /** [ option (label || [label,value]) ] */
 /**
  * create an options object for vs-selector
@@ -88,7 +96,14 @@ export const createOptions = opts => ({
 		o.label === undefined ? opts[0].selected_class : undefined
 	),
 })
-
+export const aggregateOptions = options =>
+	options.reduce((obj,item) => {
+		obj.labels.push(item.label)
+		obj.values.push(item.value)
+		return obj
+	} ,
+	{ labels:[], values:[] }
+)
 /**
  * Get an adjascent value in an array from a starting value (plus/minus step)
  * @param {any} from_val value to start from
