@@ -145,7 +145,7 @@ vision-stage.has-margins {
 	transition: opacity .3s ease;
 }
 #settings.show {
-  transition: opacity .3s .15s ease;
+  transition: all .3s .15s ease; /* opacity, but filter also when blurred by modal */
 }
 #app:is(.show-menu, .show-settings) main {
   filter: blur(5px);
