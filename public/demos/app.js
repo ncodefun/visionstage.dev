@@ -1,14 +1,18 @@
-import { VisionStage, html, cache, define, log, icon, config }
+import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded / global
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 
 class App extends VisionStage {
 
-	onConnected = () => this.render()
+	onConnected = () => {
+		//log('err', 'this.config===App.config', this.config===App.config)
+		this.render()
+	}
 
 	template = () => html`
 		<!-- Lang btns in the middle -->
@@ -84,14 +88,18 @@ class App extends VisionStage {
 	}
 }
 
+// App.config = {
+// 	update_check_min: 5,
+// }
+
 App.languages = ['en', 'fr']
 
 App.pages = {
-	'': 		["Home", "Accueil"],
-	'./todo':	["Todo", "Tâches"],
-	'./game':	["Game", "Jeu"],
-	'./vs-selector': ["vs-selector"],
-	'./guitar-vision': ["Guitar Vision"],
+	'': 					["Home", "Accueil"],
+	'./todo':			["Todo", "Tâches"],
+	'./game':			["Game", "Jeu"],
+	'./vs-selector': 	["vs-selector"],
+	'./guitar-vision':["Guitar Vision"],
 
 }
 
@@ -133,4 +141,4 @@ App.properties = {
 
 }
 
-define( 'vision-stage', App, [], { /*sw:'/sw.js'*/ })
+define('vision-stage', App, [])

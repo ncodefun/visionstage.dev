@@ -1,12 +1,11 @@
-import { VisionStage, html, cache, define, log, icon, useSVG, config }
+import { VisionStage, html, cache, define, log, icon, useSVG }
 	from '/vision-stage/vision-stage.min.js'
 
 import { q, cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded script / global
-
-log('info', 'Updated 2022.xx.xx')
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 
 // thinsp:" "
 // hairsp:" "
@@ -211,6 +210,18 @@ App.pages = {
 	'./gold.html':	["Gold Theme", "Theme 'gold'"],
 }
 
+App.aspects = {
+	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
+	portrait: 		.5,		// min horizontal space in portrait
+	portrait_max: 	.65,		// max horizontal space in portrait
+	// threshold: 		1.2,
+	landscape: 		1.39,		// min horizontal space in landscape
+	landscape_max: 16/9,		// max horizontal space in landscape
+	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
+	height: 40,					// rem - base vertical space
+	portrait_height: 64,
+}
+
 App.strings = {
 	title: 			["MY GAME", "MON JEU"],
 	home: 			["Home", "Accueil"],
@@ -248,18 +259,6 @@ App.properties = {
 		}
 	},
 
-}
-
-App.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
-	portrait: 		.5,		// min horizontal space in portrait
-	portrait_max: 	.65,		// max horizontal space in portrait
-	// threshold: 		1.2,
-	landscape: 		1.39,		// min horizontal space in landscape
-	landscape_max: 16/9,		// max horizontal space in landscape
-	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
-	height: 40,					// rem - base vertical space
-	portrait_height: 64,
 }
 
 define( 'vision-stage', App, ['vs-selector', 'vs-modal'])

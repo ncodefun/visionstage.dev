@@ -3,13 +3,14 @@
 /// gallery w/ prev / next (see /vision-stage)
 /// input, text-area, bare input
 
-import { VisionStage, Component, html, cache, define, log, icon, config }
+import { VisionStage, Component, html, cache, define, log, icon}
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf, labelAsClassMapper, labelOptionsMapper }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded / global
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 
 // log('info', 'Updated 2022.07.29')
 

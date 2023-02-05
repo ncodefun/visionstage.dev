@@ -1,10 +1,11 @@
-import { VisionStage, html, cache, define, log, icon, config }
+import { VisionStage, html, cache, define, log, icon}
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded / global
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 const PRES = [0,1] // presentation galery indices
 
 class App extends VisionStage {

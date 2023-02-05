@@ -2,13 +2,14 @@
 
 const VERSION = '1.0.0'
 
-/** See infos for each option at `define(…)` */
-export const config = {
+let config = {
 	sw: null,
-	components_dir: '/_components/',
+	paths: {
+		components: '/_components/',
+		icons: '/_assets/images/icons.svg',
+	},
 	update_check_min: 30,
 	font_size_decimals: 0,
-	icons_path: '/_assets/images/icons.svg',
 	icons_mappings: {
 		delete: 'trash',
 		remove: 'cross',
@@ -24,6 +25,7 @@ export const config = {
 	},
 	night_modes: [0,1], // CSS [night-mode='1|2'] styles are pre-defined
 }
+
 
 /// lit-html 1.4.1
 // Bare imports: this file is intended to be bundled w/ rollup from node_modules
@@ -44,7 +46,7 @@ import { cache }
 // import { templateContent }
 // 	from 'lit-html/directives/template-content.js'
 
-import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, nextFrame, cleanNum, is_iOS, is_safari, clamp, strIf  }
+import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, nextFrame, cleanNum, is_iOS, is_safari, clamp, strIf, mergeDeep  }
 	from './utils-core.js'
 
 export { log, html, svg, unsafeHTML, ifDefined, repeat, live, guard, cache }
@@ -68,7 +70,7 @@ const loaded_components = new Set()
 
 let app, after_resize_timeout, aspect_ratios, active_sw, redundant
 
-/** Component base class, to be extended by our components **/
+/// Component base class ///
 export class Component extends HTMLElement {
 
 	constructor(){
@@ -566,7 +568,7 @@ export class Component extends HTMLElement {
 	 * @return {Promise<ModuleNamespaceObject>} an object that describes all exports from a module
 	 */
 	static async load( file_path){
-		// log('err', 'config.components_dir:', config.components_dir)
+		// log('err', 'config.paths.components:', config.paths.components)
 		if( debug.load)
 			log('ok','load() file_path:', file_path)
 
@@ -602,12 +604,12 @@ export class Component extends HTMLElement {
 		if (/^\./.test( css))
 			css = location.pathname + css.replace(/^\.\//,'') // if starts with dot, remove it
 		else if (! /^\./.test( css))
-			css = `${ config.components_dir }${ css }`
+			css = `${ config.paths.components }${ css }`
 
 		if (/^\./.test( js))
 			js = location.pathname + js.replace(/^\.\//,'') // if starts with dot, remove it
 		else
-			js = `${ config.components_dir }${ js }`
+			js = `${ config.paths.components }${ js }`
 
 		if (debug.load)
 			log('purple', 'load js, css :', js, css)
@@ -622,7 +624,7 @@ export class Component extends HTMLElement {
 	}
 }
 
-/** App Component **/
+/// App Component ///
 export class VisionStage extends Component {
 
 	constructor(){
@@ -676,9 +678,10 @@ export class VisionStage extends Component {
 	}
 
 	connectedCallback(){
+
 		this.onConnected && this.onConnected()
 		this.updateDocTitle()
-		if( ctor( this).sounds)
+		if (ctor(this).sounds)
 			this.setupSounds() // playSound( name), stopSound( name)
 
 		if (config.sw){
@@ -1268,7 +1271,32 @@ export class VisionStage extends Component {
 				}, 1000 * 60 * config.update_check_min)
 			})
 	}
+
+	/**
+		* Custom config; all props are optional, use default values
+		* @param {object} user_config
+		* @param {string} [user_config.sw=null] Path of service worker
+		* @param {object} [user_config.paths]
+		* @param {string} [user_config.paths.components] - Path of the components directory
+		* @param {string} [user_config.paths.icons] - Path to the icons file
+		* @param {number} [user_config.update_check_min]  - Number of minutes for checking sw.js update
+		* @param {number} [user_config.font_size_decimals] - Integer. How many decimal places to use when setting html font-size.
+		* @param {object} [user_config.icons_mappings]
+		* 	maps alternative (reprensentative rather than descriptive)
+		* 	icon names to the real svg ids
+		* @param {object} [user_config.icons_viewbox]
+		* @param {string[]} [user_config.night_modes]
+	*/
+	static set config( user_config) {
+		config = mergeDeep( config, user_config)
+		log('check', 'user config:', config)
+	}
+
+	static get config(){
+		return config
+	}
 }
+
 
 // these next static properties are underscore prefixed
 // so they are merged instead of overriden next by > MyApp.properties
@@ -1459,24 +1487,10 @@ export const P = {
 /**
  * Defines a custom element (window.customElements.define) and return whenDefined promise
  * @param {string[]} components wait and load required components before define
- * @param {object} config_obj Custom config; all props are optional, use default values
- * @param {string} config_obj.sw Path of service worker
- * @param {string} config_obj.components_dir - Path of the components directory
- * @param {number} config_obj.update_check_min  - Number of minutes for checking sw.js update
- * @param {number} config_obj.font_size_decimals - Integer. How many decimal places to use when setting html font-size.
- * @param {string} config_obj.icons_path Path to the icons file
- * @param {object} config_obj.icons_mappings
- * 	maps alternative (reprensentative rather than descriptive)
- * 	icon names to the real svg ids
- * @param {object} config_obj.icons_viewbox
- * @param {string[]} night_modes
  * @return whenDefined's promise
  * @usage `define('my-comp', MyCompClass, [])`
  */
-export async function define( tag_name, clss, components=null, config_obj=null){
-
-	if (config_obj && tag_name === 'vision-stage')
-		Object.assign(config, config_obj)
+export async function define( tag_name, clss, components=null){
 
 	// import comps (js & css) dependencies (when required right from the start)
 	if (components && components.length){ // app is not defined yet
@@ -1505,10 +1519,10 @@ export async function define( tag_name, clss, components=null, config_obj=null){
 
 /**	=> html`<svg><use src='#'>...</svg>` */
 export function useSVG( id, clss, ar){
-	let src = config.icons_path
+	let src = config.paths.icons
 	// proxy names
 	if( config.icons_mappings[id])
-		id = icons_mappings[id]
+		id = config.icons_mappings[id]
 	let vb = config.icons_viewbox[id] || '0 0 32 32'
 
 	return html`<svg class=${clss ? 'icon '+clss : 'icon'} viewBox=${vb} preserveAspectRatio=${ ifDefined( ar) }>

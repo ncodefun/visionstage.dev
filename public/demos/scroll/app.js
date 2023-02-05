@@ -4,7 +4,8 @@ import { VisionStage, html, cache, define, log, icon }
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded / global
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 
 class App extends VisionStage {
 
@@ -139,6 +140,17 @@ App.pages = {
 	params: { titles:["Params"], path:"test/a=1/b=yes/c=true/d=maybe/night_mode=1" }
 }
 
+App.aspects = {
+	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
+	portrait: 		.6,		// min horizontal space in portrait
+	portrait_max: 	.6,		// max horizontal space in portrait
+	landscape: 		4/3,		// min horizontal space in landscape
+	landscape_max: 1.85,		// max horizontal space in landscape
+	threshold: 		1.2,
+	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
+	height: 40,					// rem - base vertical space
+}
+
 App.strings = {
 	tagline: ['The Intuitive Web Framework', 'Le framework Web intuitif'],
 }
@@ -149,17 +161,6 @@ App.properties = {
 	b: { value:null, sync_to_url_param: true },
 	c: { value:null, sync_to_url_param: true, storable: true }, /** params will override a stored value */
 	more: false,
-}
-
-App.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
-	portrait: 		.6,		// min horizontal space in portrait
-	portrait_max: 	.6,		// max horizontal space in portrait
-	landscape: 		4/3,		// min horizontal space in landscape
-	landscape_max: 1.85,		// max horizontal space in landscape
-	threshold: 		1.2,
-	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
-	height: 40,					// rem - base vertical space
 }
 
 define( 'vision-stage', App)

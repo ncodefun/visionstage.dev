@@ -9,16 +9,13 @@ import { VisionStage, html, cache, define, log, icon }
 import { cycleValueWithin, tempClass, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded / global
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 
 // log('info', 'Updated 2022.07.29')
 
-
 /// thinsp:" "
 /// hairsp:" "
-
-
-const NIGHT_MODES = [0,1,2]
 
 const POSITIONS = ['C', 'A', 'G', 'E', 'D']
 const KEYS = ['C','G','D','A','E']

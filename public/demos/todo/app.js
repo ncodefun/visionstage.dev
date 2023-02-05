@@ -1,10 +1,11 @@
-import { VisionStage, html, define, log, icon, cache, maybe, config, clearStores }
+import { VisionStage, html, define, log, icon, cache, maybe, clearStores }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, strIf, nextFrame, q, sleep }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull
+const fs = window.screenfull
+const config = VisionStage.config
 
 class App extends VisionStage {
 
@@ -257,7 +258,9 @@ App.properties = {
 	},
 }
 
-define('vision-stage', App, ['vs-selector', 'vs-modal'], { sw: '/demos/todo/sw.js' })
+App.config = { sw: '/demos/todo/sw.js' }
+
+define('vision-stage', App, ['vs-selector', 'vs-modal'])
 
 // {
 // 	update_check_min: 30,
