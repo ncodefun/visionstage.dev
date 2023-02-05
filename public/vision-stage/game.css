@@ -1,0 +1,145 @@
+@font-face {
+  font-family: 'Luckiest Guy';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/_assets/fonts/LuckiestGuyX2.woff') format('woff');
+}
+#connection input {
+  border-radius: .2rem;
+}
+#close-settings-btn {
+  top: 3.6rem;
+  right: 1rem;
+  font-weight: bold;
+  animation: fade-in .6s .3s ease;
+  animation-fill-mode: backwards;
+}
+.fade-in {
+  animation: fade-in .5s 0s ease;
+  animation-fill-mode: backwards;
+}
+#app-header {
+  height: var(--header-height);
+  z-index: 4;
+  /* box-shadow: 0 .25rem .5rem hsla(0, 0%, 0%, .15); */
+}
+#settings h2 {
+  margin: 0rem 0 1rem;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+#settings h2:first-of-type {
+  margin-top: 0;
+}
+#page-btn,
+#title nav a.button {
+  -webkit-text-stroke: 1px hsla(260, 71%, 71%, 0.4);
+}
+#page-btn {
+  min-width: 11em;
+  color: #000c;
+  top: 2.6rem;
+  padding: .4em 2em .5em;
+  font-family: Luckiest Guy;
+  text-transform: uppercase;
+  /* transition: opacity .3s .5s ease; */
+}
+
+#title nav {
+	background: hsl(250deg 42% 61%);
+	border: .12rem solid hsla(0, 0%, 0%, 0.25);
+	color: hsl(0, 0%, 100%);
+	top: 2.75rem;
+	min-width: 12em;
+	padding: .5em 1em .5em;
+	border-radius: .5em;
+	box-shadow: 0 0.5rem 1.2rem -0.3rem rgb(0 0 0 / 42%);
+	z-index: 22;
+	transition:
+		transform .42s .23s cubic-bezier(0.18, 0.89, 0.32, 1.28),
+		opacity .42s .23s ease;
+}
+#title nav:not(.show) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(calc(-100% - 3.75rem));
+  transition:
+    transform .52s cubic-bezier(.42,-0.54,.58,1),
+    opacity .42s ease,
+    visibility .42s;
+}
+/* #app[night-mode] #title nav {
+	background: hsl(286, 32%, 49%);
+} */
+
+
+#page-btn,
+#title nav a.button {
+  font-size: 1rem;
+	font-weight: 600;
+  line-height: 1.1;
+}
+#title nav a.button {
+  font-family: Luckiest Guy;
+  text-transform: uppercase;
+  /* -webkit-text-stroke: 1px hsl(47deg 71% 71% / 40%); */
+  color: #000c;
+  position: relative;
+  min-width: 14em;
+	min-height: 2.4em;
+	margin: .2em 0;
+	padding: .5em 2em .75em;  /*!! padding zone is unclickable ?? */
+}
+#title nav a.button > * {
+  pointer-events: none;
+}
+
+#title nav a.button.selected::after,
+#title nav a.button.selected::before {
+  content: '•';
+  font-size: 2em;
+  line-height: 1rem;
+  opacity: .85;
+  width: 1.5rem;
+  position: relative;
+  top: .1rem;
+}
+
+svg.fanion {
+	color: hsl(257deg 85% 79%);
+	z-index: -1;
+}
+/* #app[night-mode] svg.fanion {
+	color: hsl(275deg 85% 79%);
+} */
+
+
+#title {
+  line-height: 1;
+}
+
+#settings {
+  padding: 5rem 1rem 1rem;
+  z-index: 2;
+  animation: fade-in .6s .3s ease;
+  animation-fill-mode: backwards;
+}
+
+#app-header h1 {
+	color: hsl(250, 73%, 84%);
+	margin: 0;
+	font: 2rem/1 'Luckiest Guy';
+	transition: transform .4s ease;
+}
+#app.show-settings #app-header h1 {
+	transform: translateY(.2rem);
+}
+/* Make sides equal width so title is perfect center */
+#app-header > span:first-child {
+  flex: 0 0 10rem;
+}
+#app-header > span:last-child {
+  flex: 0 0 10rem;
+}

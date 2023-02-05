@@ -1,0 +1,122 @@
+/*! file most load after components to override their default styles…
+! not easy... maybe we should use a more specific body[theme='gold']
+*/
+
+:root {
+	--nav-bg: hsl(60, 7%, 22%);
+	--nav-border: hsl(60, 7%, 17%);
+	--menu-borders: hsl(60, 7%, 17%);
+	--blue-gray-light: hsl(60, 7%, 22%);
+	--menu-section-color: hsl(60, 7%, 22%) !important;
+	--menu-section-border-top: hsl(60, 7%, 33%) !important;
+	--menu-section-border-bottom: hsl(60, 7%, 12%) !important;
+}
+body {
+  background: hsl(60, 7%, 22%);
+}
+body.night-mode-1 {
+	background: hsl(50deg 7% 42%);
+}
+#app {
+	color: hsl(45deg 20% 20%);
+	background-color: hsl(45deg 7% 40%);
+	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
+	background-blend-mode: overlay;
+}
+#app[night-mode] {
+  color: hsl(45deg 20% 80%);
+}
+#app[night-mode='1'] {
+	background-color: hsl(40, 10%, 11%);
+}
+#app, #app[night-mode] {
+	--hue:45deg;
+	--link-color: hsla(45, 100%, 76%, .85);
+	--link-color-hl: hsl(45, 100%, 76%);
+}
+/* #app[night-mode] {
+	--hue: 45deg;
+	--primary: hsl(45, 93%, 79%);
+	--primary-hl: hsl(45, 100%, 83%);
+	--link-color: hsla(45, 100%, 82%, 1);
+	--link-color-hl: hsl(45, 100%, 85%);
+} */
+
+.icon.moon:not(.night) {
+  /* undo v-s default for purple theme */
+  filter: none;
+}
+
+#night-mode-toggle {
+  filter: contrast(0.15) sepia(2) hue-rotate(7deg) contrast(2) brightness(1.07) saturate(.9);
+}
+#app[night-mode] #night-mode-toggle {
+  filter: contrast(.7) sepia(2) hue-rotate(0deg) saturate(1.75) brightness(1.07);
+}
+
+::placeholder {
+  color: hsl(var(--hue, 150deg), 21%, 53%);
+}
+::selection {
+	background-color: hsl(var(--hue, 150deg), 100%, 64%);
+	color: #000a;
+}
+
+h1 {
+	color: hsl(45deg 100% 76%);
+	-webkit-text-stroke: 1px hsla(0, 100%, 4%, 0.4);
+	text-shadow: 0 .1rem .4rem hsla(45, 29%, 33%, .7);
+}
+
+#veil {
+	background: url(/_assets/images/textures/brushed-alum.png) #b3ab8f;
+	filter: contrast(1.4) brightness(0.7);
+}
+#app[night-mode] #veil {
+  background-blend-mode: overlay;
+  background: url(/_assets/images/textures/brushed-alum-black.png) #33302b;
+  filter: saturate(3) contrast(0.8) brightness(0.7);
+}
+
+vs-modal .bg {
+  /* opacity: 1; */
+  filter: contrast(1.4) brightness(0.7);
+}
+vs-modal .content {
+  mix-blend-mode: hard-light; /* overlay is cool too... */
+}
+#app[night-mode] vs-modal .content {
+  mix-blend-mode: normal; /* overlay is cool too... */
+  background: hsl(50deg 7% 42%);
+}
+#app vs-modal {
+	--modal-bg-color: #b3ab8f;
+	--modal-dark-bg-color: #45423d;
+}
+
+/* .vs-box */
+#app .vs-box {
+  background: hsla(39, 21%, 76%, 0.7);
+  border: solid .3rem #0002;
+}
+body #app[night-mode] .vs-box-inv {
+  background: hsla(39, 19%, 85%, 0.7);
+}
+#app .vs-box-inv,
+body #app[night-mode] .vs-box {
+  background: hsl(40deg 12% 13% / 70%);
+}
+
+#page-btn {
+  -webkit-text-stroke: 1px hsl(47deg 71% 71% / 40%);
+}
+svg.fanion {
+	color: hsl(45, 85%, 79%);
+	z-index: -1;
+}
+#app[night-mode] #title nav {
+	background: hsl(46deg 32% 49%);
+}
+#title nav {
+	background: hsl(45, 10%, 25%);
+}
