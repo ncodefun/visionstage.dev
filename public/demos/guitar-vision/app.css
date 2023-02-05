@@ -93,20 +93,7 @@ h3 { margin: 0 }
 .has-dark-bg :is(h2, h3) { font-weight: 300 } /** light text **/
 .has-bright-bg :is(h2, h3) { font-weight: 400 }
 
-/* h2,h3 { display:none } */
-/* main { padding-bottom: 5rem } */
 
-
-/**
-#app[night-mode='2'] h1 {
-	color: hsl(344, 67%, 64%);
-	text-shadow: 0 0.16rem 0.5rem hsl(330deg 63% 45%);
-	-webkit-text-stroke: #fff4 .1rem;
-}
-#app[night-mode='2'] .vivid { color: hsl(345, 80%, 75%) }
-#app[night-mode='2'] .soft { color: hsl(346, 100%, 82%) }
-#app[night-mode='2'] .filter { filter: hue-rotate(208deg) }
-*/
 
 .grid-2x3 {
 	display: grid !important;

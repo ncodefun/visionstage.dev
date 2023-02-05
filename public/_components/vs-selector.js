@@ -64,7 +64,7 @@ export default class Selector extends Component {
 				this.setAttribute('flow', this.flow)
 			}
 
-		this.opts = this.options
+		this.opts = this.options//.map( o => isArray(o) ? {label:o} : o)
 
 		// if not folding (so no header/label for "please select...")
 		// and nothing selected -> auto select first option
