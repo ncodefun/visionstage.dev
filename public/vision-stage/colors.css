@@ -290,7 +290,8 @@ input:focus, textarea:focus {
 }
 
 .has-dark-bg,
-.dark-bg, .dark-components .auto-bg {
+.dark-bg,
+.dark-components .auto-bg {
 	color: var(--text-color-light);
 	--link-color: hsla(var(--hue), 90%, 70%, .85);
 	--link-color-hl: hsl(var(--hue), 90%, 70%);
@@ -306,4 +307,9 @@ a:hover, button.bare:hover { color: var(--link-color-hl) }
 :is( button.bare, a).selected,
 :is( button.bare, a):hover {
 	color: var(--link-color-hl);
+}
+
+body[night-mode] textarea {
+	background: field;
+	color: fieldText;
 }
