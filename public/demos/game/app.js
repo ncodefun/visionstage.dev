@@ -59,7 +59,7 @@ class App extends VisionStage {
 							this.show_menu = !this.show_menu
 					}}
 					>
-					<div>${ this.pages && this.getPage( this.page).title }</div>
+					<div>${ this.pages && this.getPage( this.page).title || '--'}</div>
 					${ useSVG('fanion','fanion layer', 'none') }
 				</button>
 
