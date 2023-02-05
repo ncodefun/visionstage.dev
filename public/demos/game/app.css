@@ -30,7 +30,7 @@ input:focus, textarea:focus {
 	outline-offset: 3px;
 }
 
-#veil {
+#veil, vs-modal .bg {
   border-bottom-left-radius: .5rem;
   border-bottom-right-radius: .5rem;
 }
