@@ -11,8 +11,7 @@ module.exports = {
         "sourceType": "module"
     },
     "rules": {
-        "no-irregular-whitespace": {
-            "skipTemplates": true
-        }
+        "no-irregular-whitespace": "off",
+        "no-unused-vars": "off",
     }
 }
