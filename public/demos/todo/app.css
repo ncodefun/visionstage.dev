@@ -16,9 +16,8 @@
 	font-weight: 500;
 	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-500.woff2) format('woff2');
 }
-:root {
-	--header-height: calc(var(--sth) / 12);
-}
+
+
 #app {
 	font: 1rem/1.5 Open Sans, serif;
 	color: var(--text-color-light);
