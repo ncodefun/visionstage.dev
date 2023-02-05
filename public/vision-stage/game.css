@@ -70,9 +70,6 @@
     opacity .42s ease,
     visibility .42s;
 }
-/* #app[night-mode] #title nav {
-	background: hsl(286, 32%, 49%);
-} */
 
 
 #page-btn,
@@ -111,9 +108,6 @@ svg.fanion {
 	color: hsl(257deg 85% 79%);
 	z-index: -1;
 }
-/* #app[night-mode] svg.fanion {
-	color: hsl(275deg 85% 79%);
-} */
 
 
 #title {
