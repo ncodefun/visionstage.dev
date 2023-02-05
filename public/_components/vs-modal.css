@@ -1,65 +1,65 @@
 html {
-  --modal-bg-color: hsl(240deg 100% 50%);
-  --modal-dark-bg-color: rgb(82, 76, 96);
+	--modal-bg-color: hsl(240deg 100% 50%);
+	--modal-dark-bg-color: hsl(258, 12%, 34%);
 }
 vs-modal {
-  position: absolute;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  text-align: center;
-  /* background: hsla(217, 100%, 56%, .92); */
-  color: white;
-  padding: 1rem 2rem;
-  border-radius: inherit;
-  transition: transform .25s linear;
-  will-change: transform;
-  cursor: default;
+	position: absolute;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	text-align: center;
+	/* background: hsla(217, 100%, 56%, .92); */
+	color: white;
+	padding: 1rem 2rem;
+	border-radius: inherit;
+	transition: transform .25s linear;
+	will-change: transform;
+	cursor: default;
 }
 vs-modal header {
-  font-size: 1.33rem;
-  line-height: 1.33;
-  font-weight: 400;
-  margin: .1rem 1rem .3rem;
-  letter-spacing: 1px;
+	font-size: 1.33rem;
+	line-height: 1.33;
+	font-weight: 400;
+	margin: .1rem 1rem .3rem;
+	letter-spacing: 1px;
 }
 vs-modal small {
-  font-size: 1rem;
-  line-height: 1.5;
-  display: block;
+	font-size: 1rem;
+	line-height: 1.5;
+	display: block;
 }
 vs-modal i {
-  /* letter-spacing: 0; */
-  /* color: rgba(255, 255, 255, 0.85); */
-  font-family: Roboto Condensed;
+	/* letter-spacing: 0; */
+	/* color: rgba(255, 255, 255, 0.85); */
+	font-family: Roboto Condensed;
 }
 vs-modal button {
-  margin: .2rem .5rem;
+	margin: .2rem .5rem;
 }
 vs-modal .buttons {
-  margin-top: 1.25rem;
+	margin-top: 1.25rem;
 }
 vs-modal .buttons button {
-  font-family: Roboto, sans-serif;
-  font-weight: 500;
-  margin: 0 .75rem;
-  min-width: 6rem;
+	font-family: Roboto, sans-serif;
+	font-weight: 500;
+	margin: 0 .75rem;
+	min-width: 6rem;
 }
 vs-modal h1 {
-  margin: 0;
-  font-size: 1.75rem;
-  font-family: inherit;
+	margin: 0;
+	font-size: 1.75rem;
+	font-family: inherit;
 }
 vs-modal a {
-  color: white;
+	color: white;
 }
 vs-modal input {
-  font-size: 1.25rem;
-  background: #fffc;
-  border: 2px solid #fff;
-  padding: .25rem .5ch;
-  margin: 1rem 0;
+	font-size: 1.25rem;
+	background: #fffc;
+	border: 2px solid #fff;
+	padding: .25rem .5ch;
+	margin: 1rem 0;
 }
 
 /* vs-modal[type='minimal'], vs-modal:not([type]) {
@@ -67,83 +67,75 @@ vs-modal input {
 } */
 
 vs-modal {
-  pointer-events: auto; /* is .layer... */
-  width: 100%;
-  height: 100%;
-  z-index: 3;
+	pointer-events: auto; /* is .layer... */
+	width: 100%;
+	height: 100%;
+	z-index: 3;
 	visibility: hidden;
 	opacity: 0;
 	will-change: opacity, visibility;
-	transition: opacity var(--modal-fadeout-duration, .4s) var(--modal-fadeout-delay, 0s) ease, visibility .6s var(--modal-fadeout-delay, 0s);
+	transition: opacity .4s .25s ease, visibility .7s;
 }
 vs-modal.show {
 	visibility: visible;
-	transition: opacity var(--modal-fadeout-duration, .25s) ease, visibility 0s;
-  opacity: 1;
+	transition: opacity .3s ease, visibility 0s;
+	opacity: 1;
 }
 vs-modal .bg {
-	background: url(/_assets/images/textures/brushed-alum.png) var(--modal-bg-color, #b3ab8f);
-  filter: var(--modal-bg-filter, saturate(1.5) contrast(0.5) brightness(.46));
+	background: url(/_assets/images/textures/brushed-alum.png) var(--modal-bg-color);
+	filter: var(--modal-bg-filter, saturate(1.5) contrast(0.5) brightness(.46));
 	opacity: var(--modal-bg-opacity, .9);
-  z-index: -1;
+	z-index: -1;
 }
 
 
-/** Modal next siblings transition will be overriden when showing menu or settings */
+vs-modal ~ * {
+	transition: filter .3s .25s ease;
+}
 vs-modal.show ~ * {
-  filter: blur(5px);
-  transition: filter .3s ease;
+	filter: blur(5px);
+	transition: filter .3s ease;
 }
-#app[hidding='modal'] vs-modal ~ * {
-  transition: filter .3s .2s ease-in;
-}
+
 vs-modal .content {
-  background: #282828;
-  mix-blend-mode: luminosity;
-  padding: 1rem 2.5rem;
-  border-radius: .5rem;
-  box-shadow: 0 .3rem 1rem #0006;
-  transform: translateY(130%);
-  /* transition: opacity .3s ease, transform .3s ease; */
-  transition:
-    opacity .7s ease,
-    transform .7s cubic-bezier(.42,-0.54,.58,1);
-  opacity: 0;
+	background: #282828;
+	mix-blend-mode: luminosity;
+	padding: 1rem 2.5rem;
+	border-radius: .5rem;
+	box-shadow: 0 .3rem 1rem #0006;
+	transform: translateY(170%);
+	transition:
+		/* opacity .6s ease, */
+		/* transform .6s cubic-bezier(.42,-0.54,.58,1); */
+		transform .5s cubic-bezier(.68, -.28, .82, .11);
+	/* opacity: 0; */
 }
 vs-modal.show .content {
-  transition:
-    opacity .4s ease,
-    transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-  transform: translateY(0);
-  opacity: 1;
+	transition:
+		/* opacity .4s ease, */
+		transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+	transform: translateY(0);
+	/* opacity: 1; */
 }
 
-#app[theme='gold'] vs-modal .bg {
-  /* opacity: 1; */
-  filter: contrast(1.4) brightness(0.7);
-}
-#app[theme='gold'] vs-modal .content {
-  mix-blend-mode: hard-light; /* overlay is cool too... */
-}
+
+
 #app[night-mode] vs-modal .bg {
-  background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
-  background-blend-mode: var(--modal-bg-blend-mode, overlay);
-  filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
-  opacity: var(--modal-dark-bg-opacity, .95);
+	background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
+	background-blend-mode: var(--modal-bg-blend-mode, overlay);
+	filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
+	opacity: var(--modal-dark-bg-opacity, .95);
 }
-#app[theme='gold'][night-mode] vs-modal .content {
-  mix-blend-mode: normal; /* overlay is cool too... */
-  background: hsl(50deg 7% 42%);
-}
+
 
 /* #app[theme='gold'][night-mode] vs-modal .bg {
-  background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
-  background-blend-mode: var(--modal-bg-blend-mode, overlay);
-  filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
-  opacity: var(--modal-dark-bg-opacity, .95);
+	background: url(/_assets/images/textures/brushed-alum-black.png) var(--modal-dark-bg-color, #33302b);
+	background-blend-mode: var(--modal-bg-blend-mode, overlay);
+	filter: var(--modal-dark-bg-filter, saturate(3) contrast(0.8) brightness(0.7));
+	opacity: var(--modal-dark-bg-opacity, .95);
 } */
 
 
 /* #app[night-mode] vs-modal .content {
-  background: var(--modal-dark-bg-color, #2f2f2f);
+	background: var(--modal-dark-bg-color, #2f2f2f);
 } */
