@@ -1,4 +1,4 @@
-import { VisionStage, html, cache, define, log, icon }
+import { VisionStage, html, cache, define, log, icon, config }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
@@ -73,6 +73,8 @@ class App extends VisionStage {
 	home = () => html`
 		<main id='home' class='text-center rel' flow='col top full'>
 			<h1>Vision <small>✦</small> Stage</h1>
+
+			<textarea name='' id='' cols='30' rows='10'></textarea>
 		</main>
 	`
 

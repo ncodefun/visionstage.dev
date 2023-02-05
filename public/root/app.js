@@ -1,4 +1,4 @@
-import { VisionStage, html, cache, define, log, icon }
+import { VisionStage, html, cache, define, log, icon, config }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
@@ -236,19 +236,6 @@ App.pages = {
 	learn:	["Learn", "Apprendre"],
 }
 
-App.strings = {
-	tagline: ['The Intuitive Web Framework', 'Le framework Web intuitif'],
-}
-
-App.properties = {
-	pres_index: {
-		value: 0,
-		watcher( val){
-			log('check', 'pres index:', val)
-		},
-	},
-}
-
 App.aspects = {
 	// Below the 'portrait' aspect ratio,
 	// the vertical space (rem) is extended
@@ -264,6 +251,21 @@ App.aspects = {
 	threshold: 		1.2,
 	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
 	height: 40,					// rem - base vertical space
+}
+
+// App.config = {}
+
+App.strings = {
+	tagline: ['Simple, intuitive Web apps & components', 'Des applis et composante Web, simples & intuitives'],
+}
+
+App.properties = {
+	pres_index: {
+		value: 0,
+		watcher( val){
+			log('check', 'pres index:', val)
+		},
+	},
 }
 
 define( 'vision-stage', App)
