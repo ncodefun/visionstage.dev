@@ -29,8 +29,8 @@ My name is Josef, I live in Montréal and speak French. And apparently, I kinda 
 Peace. ✌️
 
 ---
-- [Get started](get-started.md)
-- [Motivation](motivation.md)
+- [Get started](docs/get-started.md)
+- [Motivation](docs/motivation.md)
 - [Implications](implications) (Todo)
 ---
 
