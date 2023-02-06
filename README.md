@@ -1,49 +1,39 @@
 # Vision Stage
-## Minimalist, intuitive Web components, zero friction.
 
-Vision stage is what happens when you make a Web <q>*framework*</q> placing developer experience *above everything else*…
+## The simple, intuitive way to make Web apps
+### *✦ Zero friction ⇢ Pure focus ! ✦*
 
-You end up with a minimalist, ultra intuitive workflow that eliminates all the friction and frustration from Web development **(No. Build. Step. | No weird concepts | Natural Code Flow)**. You won't bang your head on the wall because you can't figure out how to make simple things; everything is pure JS+HTML, and lifecycle events are easy to follow (onConnected, onRendered, onFirstRendered, onResize, etc.). ***IT JUST WORKS!***
+**Vision Stage is a work of Love.**
 
-Surprisingly enough, the price to pay is not that much given that we have a framework that's lightweight, fast, and has the core features for modern Web development.
+This is what happens when someone builds a framework, looking only for elegance and simplicity; you create a superb developer experience. Yes, you won't have some goodies that modern tooling can provide, but on the plus side hand, you don't have any tooling to deal with… Nor do you have to deal with an overly complex framework, with so many barriers and nerdy concepts you *must* learn and use, for your own good my child… God forbid you should shoot yourself in the foot! Like everyone is building a freaky monster app à la Facebook !
 
-The one goodie that's missing here is hot module reload, but the benefits here I beleive, totally outweight this small loss…
+Save yourself a sea of endless confusion and frustrations, keep it simple, **focused**, and see how far you can go when you care more about freedom and lightness than about conformity and tightness.
 
-The one thing it has over every other framework, though, is that it's totally vanilla, thus easily extendable, and future-proof!
+We may say that Vision Stage is for quickly and easily prototyping a Web app, but you'll wonder why on earth you should then redo your app in way more time, and way less fun - for minimal gains, and probably for reassuring weak and worrying minds that demand conformity. 🤷
 
-## How is it made?
+Obviously, this is not for everyone, especially not if you have a boss ! You have to be at least a bit adventurous to use such an "experimental" framework; yet it's not like it's a huge investment of time to give it a try. Plus with such a simple framework, if you find yourself limited, you can easily add to it or modify it without a PHD in nuclear physic… Anyway, I bet there's enough free minds around making personal projects to try it out, so I guess it's worth sharing my baby at last !
 
-Components are extended custom elements using lit-html for dynamic templates rendering. [more on lit-html] They can have reactive properties that will trigger rendering and which may be watched, transformed (for validation), and have an associated CSS class or HTML attribute. These can also be stored locally and automatically recalled on load.
+Clearly, Vision Stage is a work of art, of the nature of Love, not an engineer's toy. This is the word of an artist, the fruit of years of decisions and redoing, always looking ahead for the clearest path. I hope you find the same joy using it as the joy I had and still have developing it.
 
-Components also can have localized strings easily accessed by using the $ prefix : this.$title, shorthand for this.string('title'). For longer texts, you can use elements with the lang attribute, and they will automatically be shown or hidden according to the current language.
+❤️
 
-There's zero system around components; there's no binding, and no limitation either. They're just elements, and if a component needs to pass data in another way than props, you just grab (query) the target element to read or set a value on it; reactive properties are setup as setters directly on the component/element, so you just write: this.x = 0 or elem.y = 0. The rendering engine takes care of what needs to be updated, but sometimes we want a component A to render based on a property on a component B; in that case we can use a utility method of components:
-```js
-this.uses([ [compElem|selector,propA,propB…] ])
-```
+---
 
-There's a stage component which serves as the app container visually and logically for managing app specific / global properties and methods. The very unique particularity of this stage component is that it frames / constrain content inside user-specified aspect ratios, and virtually scales content by scaling the rem value (HTML font-size) so it continually fit the stage. This not only is superb for full-page apps, but also has the advantage of naturally fit small screens without or with minimal adjustments.
-
-## Virtual pages (SPA)
-You can define virtual pages (hash navigation: /#page) to simply render a different cached template with a smooth fade in transition. These virtual pages have localized titles, and are linked to as follows:
-```js
-app.getPageLink( pageName)
-```
-This uses <code>app.getPage( pageName)</code> to get the page object and then return a link :
-```html
-<a class='selected (if current)' href='${ page.path }'>${ page.title }</a>
-```
-Here <code>app</code> is the <code>&lt;vision-stage></code> app element; you normally will use virtual page links in the app component itself, so you will use <code>this.getPageLink()</code>. Otherwize the app component/element will have to be queried.
+*Currently, I'm in the process of documenting Vision Stage properly, making examples and (forever) cleaning and refining styles.*
 
 
-## Server SPA behavior
+Having something to say boot that little gravity-defying project? Get in touch ! I really hope to find nice people to collaborate with, even – yes – you damn overthinking engineers… 😋 I do respect smart people, and love the making of systems – it's the reason I made this little framework – I just think they often are more of a hindrance than of help to us, regular Joe developers out there, but I have hope ! See, I'm of those who beleive the future is bright. 😎
 
-Since we use client-side hash navigation (#) to navigate in our app, we don't need special server config for rewriting all paths to a single page, and that means we can use multiple different apps or real pages normally.
+My name is Josef, I live in Montréal and speak French. And apparently, I kinda lost my mind… 🤯
 
-In addition, here, because we use Firebase hosting, we make use of its particular way to rewrite – it doesn't rewrite if the path exists – so we use rewrite like a SPA, to redirect all nonexistent paths to a single page: <code>redirect.html</code>
-This file contains a script with a map of paths + regexp to catch possible misspellings or variations and redirect either to a matching path or to 404.html. Note that because of this setup, redirects within the firebase.json file won't work, we have to do all redirects within the redirect.html code.
+Peace. ✌️
 
+---
+- [Get started](get-started.md)
+- [Motivation](motivation.md)
+- [Implications](implications) (Todo)
+---
 
-## Let's do this!
+## To doc
 
-[Get started](get-started.md)
+### Ideal for…
