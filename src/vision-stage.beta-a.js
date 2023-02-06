@@ -7,6 +7,7 @@ let config = {
 	paths: {
 		components: '/_components/',
 		icons: '/_assets/images/icons.svg',
+		sounds: '/_assets/sounds/',
 	},
 	update_check_min: 30,
 	font_size_decimals: 0,
@@ -924,16 +925,16 @@ export class VisionStage extends Component {
 		// true also if we specify only portrait
 		const is_portrait = (aspect_ratios.portrait && AR.now < threshold) || !aspect_ratios.landscape
 
-		if( this.is_portrait !== is_portrait) // is reactive
+		if (this.is_portrait !== is_portrait) // is reactive
 			this.is_portrait = is_portrait
 
 		// defines what relative height we want (in rem)
 		let height_rem = // aspect_ratios.height ||
 			this.is_portrait
 				? (aspect_ratios.portrait_height || aspect_ratios.height || 40)
-				: (aspect_ratios.landscape_height || aspect_ratios.height || 40)
+				: (aspect_ratios.height || 40)
 		// log('warn', 'rem height:', height_rem)
-		if( this.is_portrait){
+		if (this.is_portrait){
 			AR.min = aspect_ratios.portrait_min
 			AR.base = aspect_ratios.portrait
 			AR.max = aspect_ratios.portrait_max
@@ -945,6 +946,7 @@ export class VisionStage extends Component {
 			AR.max = aspect_ratios.landscape_max||11 	// 0 = 11 => virtually no limit
 			AR.wide = AR.base
 		}
+		// log('pink', 'AR:', AR)
 
 		let margin = 0,
 			above_landscape_max = AR.now > AR.max,
@@ -966,7 +968,7 @@ export class VisionStage extends Component {
 			ar < aspect_ratios.threshold 		? 'portrait-max'	: // between portrait_max & threshold
 			ar < aspect_ratios.landscape 		? 'landscape-min'	: // between threshold & landscape
 			ar < aspect_ratios.landscape_max ? 'landscape-mid'	: // between landscape and landscape_max
-			'landscape-max' // above landscape_max
+														  'landscape-max'	  // above landscape_max
 		this.setAttribute('aspect-range', asp)
 
 		if( typeof margin === 'string') // assumes %, implicit or explicit
@@ -978,13 +980,14 @@ export class VisionStage extends Component {
 				h -= (margin * 2)
 			w = Math.floor( h * AR.max) // smallest of: window width or max AR
 		}
-		else if( AR.base && AR.now < AR.base){ // was (AR.base||AR.min) ?
+		else if( AR.base && AR.now < AR.base){
 			if( margin)
 				w -= margin * 2
 			// if( this.margin)
 			// 	h -= margin * 2
 			// cap height (h) to base AR
 			const MIN_AR = 1 / (AR.wide || AR.min)
+
 			h = Math.floor( Math.min( w * MIN_AR, h)) // smallest of: window height (h) or base AR
 		}
 		// else if( this.margin){
@@ -997,15 +1000,23 @@ export class VisionStage extends Component {
 		this.stw = w
 		this.AR = w/h
 
-
+		log('pink', 'AR:', AR)
 		// limit stage's height based on portrait_min AR
-		const base_h = !this.is_portrait ? h : Math.min( h, w * (1/AR.base))
+		let base_h =
+			!this.is_portrait ? h :
+			Math.min(h, w * (1/AR.base))
+
 		root.style.setProperty('--stw',w+'px')
 		root.style.setProperty('--sth',h+'px')
 		let fs = Math.floor( base_h / height_rem * 10**FSD) / 10**FSD
 		root.style.fontSize = fs + 'px'
 
-		let fs2 = Math.floor( h / height_rem * 10**FSD) / 10**FSD
+		let alt = aspect_ratios.portrait_alt
+		let s = alt && this.AR < alt ?
+			Math.min(h, w * (1/alt)) / height_rem :
+			h / height_rem
+
+		let fs2 = Math.floor( s * 10**FSD) / 10**FSD
 		root.style.setProperty('--sth-based-fs', fs2 + 'px')
 		// em to allow super-scaling (follow parent if it's scaled)
 		root.style.setProperty('--sth-based-fs-em', fs2/fs + 'em')
@@ -1047,30 +1058,30 @@ export class VisionStage extends Component {
 			xtra = Math.max( 0, Math.min( 1, xtra))
 			//log('info', '--extra (-tall progress):', xtra)
 		}
-		this.style.setProperty('--extra', xtra===null ? 0 : xtra) //[0,1]
+		this.style.setProperty('--extra', !xtra ? 0 : xtra) //[0,1]
 	}
 
 	#updateAspect (ratios){
-
-		if(!this.initial_ratios)
+		// log('info', 'aspects:', ratios)
+		if (!this.initial_ratios)
 			this.initial_ratios = ratios
 
-		if( aspect_ratios)
-			Object.assign( aspect_ratios, ratios)
+		if (aspect_ratios)
+			Object.assign(aspect_ratios, ratios)
 		else
 			aspect_ratios = ratios
 
-		if( aspect_ratios.portrait){
-			if( !aspect_ratios.portrait_min)
-				aspect_ratios.portrait_min = .01 /// can't be 0...
-			if( !aspect_ratios.portrait_max)
+		if (aspect_ratios.portrait){
+			if (!aspect_ratios.portrait_min)
+				aspect_ratios.portrait_min = .01 // can't be 0...
+			if (!aspect_ratios.portrait_max)
 				aspect_ratios.portrait_max = aspect_ratios.portrait
 		}
 
-		if( !aspect_ratios.threshold)
+		if (!aspect_ratios.threshold)
 			aspect_ratios.threshold = 1
 
-		if( !aspect_ratios.cross_margin)
+		if (!aspect_ratios.cross_margin)
 			aspect_ratios.cross_margin = 0
 
 		this.resize()
@@ -1098,18 +1109,24 @@ export class VisionStage extends Component {
 	 */
 	setupSounds (){
 		log('info', 'setupSounds')
-		const sounds_data = ctor( this).sounds
+		let sounds_data = ctor( this).sounds
 		if( !sounds_data)
 			return
 
+		sounds_data = Object.entries(sounds_data).map(
+			([name, value]) =>  typeof value === 'string' ? [name, value] : [name, ...value ])
+		//log('info', 'sounds_data:', sounds_data)
 		this.sounds = {}
 		window.AudioContext = window.AudioContext || window.webkitAudioContext
 		this.audio_context = new window.AudioContext()
 		this.gain_node = this.audio_context.createGain() // global volume control
-		// more verbose, eventually delete...
-		if( is_iOS || is_safari){
+
+		const getFilePath = file => /^\.?\//.test(file) ? file : config.paths.sounds + file
+
+		//! more verbose, eventually delete...
+		if( is_iOS || is_safari)
 			return Promise.all(
-				sounds_data.map( ([name, url, options={}]) => fetch( url)
+				sounds_data.map( ([name, file, options={}]) => fetch( getFilePath(file))
 					.then( response => response.arrayBuffer())
 					.then( array_buffer => {
 						this.audio_context.decodeAudioData( array_buffer, audio_buffer => {
@@ -1119,10 +1136,9 @@ export class VisionStage extends Component {
 					})
 				)
 			)
-		}
 		else
 			return Promise.all(
-				sounds_data.map( ([name, url, options={}]) => fetch( url)
+				sounds_data.map( ([name, file, options={}]) => fetch( getFilePath(file))
 					.then( response => response.arrayBuffer())
 					.then( array_buffer => this.audio_context.decodeAudioData( array_buffer))
 					.then( audio_buffer => this.sounds[ name] = { audio_buffer, options })
@@ -1288,19 +1304,109 @@ export class VisionStage extends Component {
 		* @param {string[]} [user_config.night_modes]
 	*/
 	static set config( user_config) {
-		config = mergeDeep( config, user_config)
+		config = mergeDeep(config, user_config)
 		log('check', 'user config:', config)
 	}
 
 	static get config(){
 		return config
 	}
+
+	/**
+	 * Array of languages (lang codes) we want to use for strings, pages and others (like options.labels for vs-selector), e.g. 'en', 'fr' etc.
+	 * @type {string[]}
+	 */
+	static languages;
+
+	/**
+	 * Defines virtual pages (#) and links;
+	 * - Key format:
+	 * 	- bare name for a virual page; use the name to define a method for its template (if using the default code for multi-templates)
+	 * 	- '/name' or './name for abs or rel links
+	 * 	- 'http...' for ext links //! todo
+	 * - Value format: an array with at least one title, following the `VisionStage.languages` order;
+	 * 	The title is used for links (`getPageLink(page)`) and in the case of virtual pages, for the url hash and `document.title`.
+	 * @type {pages}
+	 */
+	static pages;
+
+	/**
+	 * Aspect-ratios constraints for the stage. All properties are optional.
+	 * @prop {number} [portrait_min]
+	 * @prop {number} [portrait_alt]
+	 * @prop {number} [portrait]
+	 * @prop {number} [portrait_max]
+	 * @prop {number} [landscape]
+	 * @prop {number} [landscape_max]
+	 * @prop {number} [threshold=1]
+	 * @prop {number} [height=40]
+	 * @prop {number} [portrait_height=40]
+	 * @prop {string} [cross_margin='0']
+	 *
+	 * @type {aspects}
+	 */
+	static aspects;
+
+	/**
+	 * Sounds to use
+	 * @type {Object.<string, (string|object)>}
+	 * @usage
+	 * - `VisionStage.sounds = { name: 'file' | ['file', { volume: 1 }]};`
+	 * - App -> `this.playSound( name); this.stopSound()`
+	 *
+	 * Note: volume will jump if multiple sounds with different volumes are overlapping…
+	 */
+	static sounds;
+
+	/**
+	 * Localized strings; follow the `VisionStage.languages` order.
+	 *
+	 * @type {strings}
+	 * @usage
+	 * - `VisionStage.strings = { name: [ strEN, strFR, … ], … }`
+	 */
+	static strings;
+
+	/**
+	 * Reactive properties
+	 *
+	 * A property will at least trigger this.render(),
+	 * and may have many options:
+	 * @type {properties}
+	 */
+	static properties;
 }
 
+/**
+ * @typedef {object} properties
+ * @type {Object.<string, propObject>}
+ * @memberof VisionStage
+ */
+
+/**
+ * Prop Object
+ * @typedef propObject
+ * @type {Object}
+ * @property {String} value - Initial value
+ * @property {Boolean} [storable] - Is storable
+ * @prop {Function} [watcher] (value, prev) - Function to call when prop changes
+ * @prop {bool} [init_watcher] Trigger the watcher once when app starts
+ * @prop {string} [class] Name of CSS class to toggle following the truthiness of value
+ * @prop {(string|[])} [attribute] Name for an attribute to set the value on | [name,'bool'|'auto']
+ * @prop {bool} [sync_to_url_param=false] Two way binding to URL param (`myapp/#pageA/night_mode=true`)
+ * @prop {bool} [reactive=true] Set to false to disable auto-render on change [@todo: rename that!]
+ * @prop {bool} [force_render=false] Do render even if value is the same
+ * @prop {function} [getter] To (re)compute a value each time we `get` this prop
+ * - 'bool': to use with bool value type to add or remove valueless attribute accordingly.
+ * - 'auto': to add attribute and set the value if truthy, or remove it if falsy.
+ * @memberof VisionStage
+ */
 
 // these next static properties are underscore prefixed
 // so they are merged instead of overriden next by > MyApp.properties
-
+/**
+ * @type {properties}
+ */
 VisionStage._properties = {
 	is_portrait: null,
 	title: '',
@@ -1349,7 +1455,7 @@ VisionStage._properties = {
 		value: 0,
 		sync_to_url_param: true, // if url param is passed, will override stored value
 		storable: '/', // shared accross all apps
-		attribute: ['night-mode', 'auto'], // auto -> remove if falsy, otherwise use value
+		//attribute: ['night-mode', 'auto'], // auto -> remove if falsy, otherwise use value
 		init_watcher: true,
 		watcher( val){
 			if (val)
@@ -1385,10 +1491,46 @@ VisionStage._properties = {
 	},
 }
 
+/**
+ * @typedef {object} strings
+ * @type {Object.<string, string[]>}
+ * @memberof VisionStage
+ */
+/**
+ * @type {strings}
+ */
 VisionStage._strings = {
 	fullscreen: ["Fullscreen", "Plein écran"],
 	night_mode: ["Night Mode", "Mode nuit"],
 }
+
+/**
+ * @typedef {object} pages
+ * @type {Object.<string, string[]>}
+ * @memberof VisionStage
+ */
+/**
+  	 * @typedef aspects
+ 	 * @type {Object}
+	 * @prop {number} [portrait_min]	- Max vertical space in portrait.
+	 * - Narrower than this will create empty space above and below the stage - normally we don't want that…
+	 * @prop {number} [portrait_alt]	- Alternative min horizontal space in portrait
+	 * - Use a lower ratio than portrait.
+	 * - This apply to elem.alt-scaling and children using em based sizing. We can exclude elements that we want to scale like content simply by using rem based sizing instead.
+	 * - Allows offsetting the scaling down for content which can remain bigger (have enought space) on narrower screens.
+	 * - Demos use this for #app-header and #app-footer so buttons and links remain bigger relative to content, since there's enough room; the ratio where it's getting too narrow is the value we should use here.
+	 * @prop {number} [portrait]		- Min horizontal space in portrait
+	 * @prop {number} [portrait_max]	- Max horizontal space in portrait
+	 * @prop {number} [threshold=1]	- Ratio where the shift between landscape & portrait happens.
+	 * - We could set this to > 1 to switch to portrait before having huge empty space top/bottom - we're better with full height / larger scale when we have a portrait layout anyway.
+	 * @prop {number} [landscape]		- Min horizontal space in landscape
+	 * @prop {number} [landscape_max] - Max horizontal space in landscape
+	 * @prop {string} [cross_margin='0'] - Percentage of margin to add on opposite side of "black bars"
+	 * - This is to counter the letterbox effect, which happens in landscape when the window's AR is > than landscape_max or < than landscape
+	 * @prop {number} [height=40] 	- Vertical space in rem
+	 * @prop {number} [portrait_height=40] - Vertical space in rem for portrait mode
+*/
+
 
 /**
  * Helper object which is setup and returned by this.prop()

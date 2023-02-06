@@ -1,22 +1,19 @@
-import { VisionStage, html, cache, define, log, icon }
+import { VisionStage as VS, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
+const config = VS.config // for read only
 
-class App extends VisionStage {
+class App extends VS {
 
-	onConnected = () => {
-		//log('err', 'this.config===App.config', this.config===App.config)
-		this.render()
-	}
+	onConnected = () => this.render()
 
 	template = () => html`
 		<!-- Lang btns in the middle -->
-		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
+		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
 
 			<span flow='row left gaps' id='lang-bar'>
 				<vs-selector id='lang-selector'
@@ -56,7 +53,7 @@ class App extends VisionStage {
 		</section>
 
 		<!-- footer pages nav -->
-		<footer id='app-footer' flow='row' class='sth-scaling rel'>
+		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
 				@pointerdown=${ e => this.menu_open = !this.menu_open }
@@ -88,57 +85,50 @@ class App extends VisionStage {
 	}
 }
 
-// App.config = {
-// 	update_check_min: 5,
-// }
+VS.config = {
+	// sw:'/my-app/sw.js'
+}
 
-App.languages = ['en', 'fr']
+VS.aspects = {
+	portrait_alt: .5,
+	portrait: 		.6,
+	landscape: 		4/3,
+	landscape_max: 1.85,
+	threshold: 		1.2,
+	cross_margin: '1.23%',
+}
 
-App.pages = {
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
+
+VS.languages = ['en', 'fr']
+
+VS.pages = {
 	'': 					["Home", "Accueil"],
 	'./todo':			["Todo", "Tâches"],
 	'./game':			["Game", "Jeu"],
 	'./vs-selector': 	["vs-selector"],
 	'./guitar-vision':["Guitar Vision"],
-
 }
 
-App.aspects = {
-	// Below the 'portrait' aspect ratio,
-	// the vertical space (rem) is extended
-	// as the content now scales to fit width.
-	// This v-extension can be limited by portrait_min,
-	// which will look weird; i.e. not recommended…
-
-	// As content scales to fit width on narrow screens
-	// you may want to keep element scaling to be based on stage's height
-	// like the #app-header elements (when there's enough breathing room to do so)
-	// Then add the class .sth-scaling to the parent element or individual elements
-
-	// portrait_min: 	.37,	// max vertical space in portrait
-	portrait: 		.6,		// min horizontal space in portrait
-	portrait_max: 	.6,		// max horizontal space in portrait
-	landscape: 		4/3,		// min horizontal space in landscape
-	landscape_max: 1.85,		// max horizontal space in landscape
-	threshold: 		1.2,
-	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
-	height: 40,					// rem - base vertical space
+VS.strings = {
+	title: ['Demos', 'Démos'],
 }
 
-App.sounds = [
-	// Note: volume will jump if multiple sounds with different volumes
-	// are played at the same time…
-	['good',		'/_assets/sounds/good.wav'],
-	['wrong',	'/_assets/sounds/wrong.wav', { volume:.6 }],
-	['win',		'/_assets/sounds/win.mp3'],
-]
+VS.properties = {
+	one: {
+		value: null,
+		storable: true,
+		watcher(){
 
-App.strings = {
-	title: ['Demos', 'Démos']
+		},
+
+
+	}
 }
 
-App.properties = {
-
-}
 
 define('vision-stage', App, [])

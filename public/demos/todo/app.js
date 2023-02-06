@@ -1,13 +1,13 @@
-import { VisionStage, html, define, log, icon, cache, maybe, clearStores }
+import { VisionStage as VS, html, define, log, icon, cache, maybe, clearStores }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, strIf, nextFrame, q, sleep }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull
-const config = VisionStage.config
+const config = VS.config
 
-class App extends VisionStage {
+class App extends VS {
 
 	onConnected = () => {
 		// clearStores()
@@ -20,7 +20,7 @@ class App extends VisionStage {
 	}
 
 	template = () => html`
-		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
+		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
 
 			<span flow='row left gaps' id='lang-bar'>
 				<vs-selector id='lang-selector'
@@ -60,7 +60,7 @@ class App extends VisionStage {
 			${ cache( this[ this.page||'home' ]() ) }
 		</section>
 
-		<footer id='app-footer' class='sth-scaling rel' flow='row'>
+		<footer id='app-footer' class='alt-scaling rel' flow='row'>
 
 			<button id='nav-toggle' class='square bare'
 				@pointerdown=${ e => this.menu_open = !this.menu_open }
@@ -210,7 +210,11 @@ const newTodo = title => ({
 	created: Date.now()
 })
 
-App.aspects = {
+VS.config = {
+	sw: '/demos/todo/sw.js'
+}
+
+VS.aspects = {
 	portrait:.6,
 	portrait_max:1,
 	landscape:1,
@@ -218,9 +222,22 @@ App.aspects = {
 	cross_margin: '1.23%'
 }
 
-App.languages = ['en', 'fr']
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
 
-App.strings = {
+VS.languages = ['en', 'fr']
+
+VS.pages = {
+	'': 							["Home", "Accueil"],
+	'/demos/todo': 			['Todo'],
+	'/demos/vs-selector': 	['Components', 'Composantes'],
+	'/demos/guitar-vision':	['Guitar Vision']
+}
+
+VS.strings = {
 	title: 				["Title", "Titre"],
 	details: 			["Details", "Détails"],
 	more_infos: 		["More informations", "Plus d'informations"],
@@ -229,14 +246,7 @@ App.strings = {
 	todo: 				["To do", "À faire"]
 }
 
-App.pages = {
-	'': 							["Home", "Accueil"],
-	'/demos/todo': 			['Todo'],
-	'/demos/vs-selector': 	['Components', 'Composantes'],
-	'/demos/guitar-vision':	['Guitar Vision']
-}
-
-App.properties = {
+VS.properties = {
 	todos: {
 		value: [],
 		storable: true
@@ -257,8 +267,6 @@ App.properties = {
 		//getter: () => this.show_menu || this.show_settings
 	},
 }
-
-App.config = { sw: '/demos/todo/sw.js' }
 
 define('vision-stage', App, ['vs-selector', 'vs-modal'])
 

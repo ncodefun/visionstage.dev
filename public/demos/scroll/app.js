@@ -1,20 +1,20 @@
-import { VisionStage, html, cache, define, log, icon }
+import { VisionStage as VS, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
+const config = VS.config
 
-class App extends VisionStage {
+class App extends VS {
 
 	onConnected = () => this.render()
 	onPageChanged = (page, prev) => this.menu_open = false
 
 	// App template
 	template = () => html`
-		<header id='app-header' class='sth-scaling lang-center'>
+		<header id='app-header' class='alt-scaling lang-center'>
 
 			<span></span>
 
@@ -58,7 +58,7 @@ class App extends VisionStage {
 			${ this.page!==null && cache( this[ this.page||'home' ]() ) }
 		</section>
 
-		<footer id='app-footer' flow='row' class='sth-scaling rel'>
+		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
 				@pointerdown=${ e => this.menu_open = !this.menu_open }
@@ -133,14 +133,11 @@ class App extends VisionStage {
 	`
 }
 
-App.languages = ['en', 'fr']
-
-App.pages = {
-	'': 		["Home", "Accueil"],
-	params: { titles:["Params"], path:"test/a=1/b=yes/c=true/d=maybe/night_mode=1" }
+VS.config = {
+	// sw:'/my-app/sw.js'
 }
 
-App.aspects = {
+VS.aspects = {
 	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
 	portrait: 		.6,		// min horizontal space in portrait
 	portrait_max: 	.6,		// max horizontal space in portrait
@@ -151,11 +148,24 @@ App.aspects = {
 	height: 40,					// rem - base vertical space
 }
 
-App.strings = {
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
+
+VS.languages = ['en', 'fr']
+
+VS.pages = {
+	'': 		["Home", "Accueil"],
+	params: { titles:["Params"], path:"test/a=1/b=yes/c=true/d=maybe/night_mode=1" }
+}
+
+VS.strings = {
 	tagline: ['The Intuitive Web Framework', 'Le framework Web intuitif'],
 }
 
-App.properties = {
+VS.properties = {
 	menu_open: { value: false, class: 'menu-open'},
 	a: { value:null, sync_to_url_param: true },
 	b: { value:null, sync_to_url_param: true },

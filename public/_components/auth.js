@@ -35,7 +35,11 @@ class Auth extends Component {
 
 	}
 
-	template = () => cache( this.user_is_auth ? templateAuth() : this.signup ? templateSignUp() : templateSignIn() )
+	template = () => cache(
+		this.user_is_auth ? this.templateAuth() :
+		this.signup ? this.templateSignUp() :
+		this.templateSignIn()
+	)
 
 	templateSignIn = () => html`
 		<section id='auth-message' flow>

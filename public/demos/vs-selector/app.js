@@ -3,14 +3,14 @@
 /// gallery w/ prev / next (see /vision-stage)
 /// input, text-area, bare input
 
-import { VisionStage, Component, html, cache, define, log, icon}
+import { VisionStage as VS, Component, html, cache, define, log, icon}
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf, labelAsClassMapper, labelOptionsMapper }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
+const config = VS.config
 
 // log('info', 'Updated 2022.07.29')
 
@@ -65,7 +65,7 @@ const ICON_GRID_OPTS = [
 ]
 // getLabel
 
-class App extends VisionStage {
+class App extends VS {
 
 	onConnected = () => {
 		//this.observed = {'Selector':['type']}
@@ -77,7 +77,7 @@ class App extends VisionStage {
 	}
 
 	template = () => html`
-		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
+		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
 
 			<span flow='row left gaps' id='lang-bar'>
 				<vs-selector id='lang-selector'
@@ -139,7 +139,7 @@ class App extends VisionStage {
 
 		${ cache( this[(this.page||'home')]() ) }
 
-		<footer id='app-footer' class='sth-scaling rel' flow='row'>
+		<footer id='app-footer' class='alt-scaling rel' flow='row'>
 
 			<button id='nav-toggle' class='square bare'
 				@pointerdown=${ e => this.menu_open = !this.menu_open }
@@ -343,9 +343,30 @@ class App extends VisionStage {
 	}
 }
 
-App.languages = ['en', 'fr']
+VS.config = {
+	// sw:'/my-app/sw.js'
+}
 
-App.pages = {
+VS.aspects = {
+	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
+	portrait: 		.7,		// min horizontal space in portrait
+	portrait_max: 	1,			// max horizontal space in portrait
+	// threshold: 		1.2,
+	landscape: 		1,			// min horizontal space in landscape
+	landscape_max: 16/9,		// max horizontal space in landscape
+	cross_margin: '1.33%', 	// margins opposite to "black bars" to detach the stage visually
+	height: 40,					// rem - base vertical space
+}
+
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
+
+VS.languages = ['en', 'fr']
+
+VS.pages = {
 	'': 		["Home", "Accueil"],
 	// about: ['About', 'À propos'], // -> /#About | /#À propos
 	'/vision-stage': 	['Vision Stage', 'Vision Stage'],
@@ -354,13 +375,13 @@ App.pages = {
 	'/triads': ['Guitar', 'Guitare']
 }
 
-App.strings = {
+VS.strings = {
 	home: 			["Home", "Accueil"],
 	fullscreen: 	["Fullscreen", "Plein écran"],
 
 }
 
-App.properties = {
+VS.properties = {
 	sel_icons: {
 		value: ['cut','move'],
 		// transformer( val){
@@ -405,17 +426,6 @@ App.properties = {
 		}
 	},
 	stepper_val: 'two'
-}
-
-App.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
-	portrait: 		.7,		// min horizontal space in portrait
-	portrait_max: 	1,			// max horizontal space in portrait
-	// threshold: 		1.2,
-	landscape: 		1,			// min horizontal space in landscape
-	landscape_max: 16/9,		// max horizontal space in landscape
-	cross_margin: '1.33%', 	// margins opposite to "black bars" to detach the stage visually
-	height: 40,					// rem - base vertical space
 }
 
 define( 'vision-stage', App)//, ['vs-selector'])

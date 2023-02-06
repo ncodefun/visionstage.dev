@@ -1,19 +1,20 @@
-import { VisionStage, html, cache, define, log, icon}
+import { VisionStage as VS, html, cache, define, log, icon}
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
+const config = VS.config
+
 const PRES = [0,1] // presentation galery indices
 
-class App extends VisionStage {
+class App extends VS {
 
 	onConnected = () => this.render()
 
 	template = () => html`
-		<header id='app-header' class='sth-scaling lang-center'>
+		<header id='app-header' class='alt-scaling lang-center'>
 
 			<span></span>
 
@@ -54,7 +55,7 @@ class App extends VisionStage {
 			${ this.page !== null && cache( this[ this.page||'home' ]() ) }
 		</section>
 
-		<footer id='app-footer' flow='row' class='sth-scaling rel'>
+		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
 				@pointerdown=${ e => this.menu_open = !this.menu_open }
@@ -156,7 +157,7 @@ class App extends VisionStage {
 				</div>
 
 				<div flow='row gaps' id='btns-presentation'
-					class='sth-scaling'
+					class='alt-scaling'
 					style='margin: .25rem 0 0'>
 
 					<button ?disabled=${ this.pres_index===0 }
@@ -228,16 +229,11 @@ class App extends VisionStage {
 	}
 }
 
-App.languages = ['en', 'fr']
-
-App.pages = {
-	'': 		["Home", "Accueil"],
-	//why:		["Why", "Pourquoi"],
-	how: 		["How", "Comment"],
-	learn:	["Learn", "Apprendre"],
+VS.config = {
+	// sw:'/my-app/sw.js'
 }
 
-App.aspects = {
+VS.aspects = {
 	// Below the 'portrait' aspect ratio,
 	// the vertical space (rem) is extended
 	// as the content now scales to fit width.
@@ -254,13 +250,26 @@ App.aspects = {
 	height: 40,					// rem - base vertical space
 }
 
-// App.config = {}
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
 
-App.strings = {
+VS.languages = ['en', 'fr']
+
+VS.pages = {
+	'': 		["Home", "Accueil"],
+	//why:		["Why", "Pourquoi"],
+	how: 		["How", "Comment"],
+	learn:	["Learn", "Apprendre"],
+}
+
+VS.strings = {
 	tagline: ['Simple, intuitive Web apps & components', 'Des applis et composante Web, simples & intuitives'],
 }
 
-App.properties = {
+VS.properties = {
 	pres_index: {
 		value: 0,
 		watcher( val){

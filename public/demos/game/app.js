@@ -1,16 +1,13 @@
-import { VisionStage, html, cache, define, log, icon, useSVG }
+import { VisionStage as VS, html, cache, define, log, icon, useSVG }
 	from '/vision-stage/vision-stage.min.js'
 
 import { q, cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
+const config = VS.config
 
-// thinsp:" "
-// hairsp:" "
-
-class App extends VisionStage {
+class App extends VS {
 
 	onConnected = () => this.render()
 
@@ -27,7 +24,7 @@ class App extends VisionStage {
 
 
 	template = () => html`
-		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
+		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
 
 			<span
 				id='lang-bar'
@@ -202,15 +199,11 @@ class App extends VisionStage {
 	}
 }
 
-App.languages = ['en', 'fr']
-
-App.pages = {
-	'home': 		["Page One", "Page un"],
-	'two': 		["Page Two", "Page deux"],
-	'./gold.html':	["Gold Theme", "Theme 'gold'"],
+VS.config = {
+	// sw:'/my-app/sw.js'
 }
 
-App.aspects = {
+VS.aspects = {
 	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
 	portrait: 		.5,		// min horizontal space in portrait
 	portrait_max: 	.65,		// max horizontal space in portrait
@@ -222,7 +215,21 @@ App.aspects = {
 	portrait_height: 64,
 }
 
-App.strings = {
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
+
+VS.languages = ['en', 'fr']
+
+VS.pages = {
+	'home': 		["Page One", "Page un"],
+	'two': 		["Page Two", "Page deux"],
+	'./gold.html':	["Gold Theme", "Theme 'gold'"],
+}
+
+VS.strings = {
 	title: 			["MY GAME", "MON JEU"],
 	home: 			["Home", "Accueil"],
 	fullscreen: 	["Fullscreen", "Plein écran"],
@@ -231,7 +238,7 @@ App.strings = {
 	next_page: 		["Next game","Jeu suivant"],
 }
 
-App.properties = {
+VS.properties = {
 	show_menu: {
 		value: false,
 		class: 'show-menu',
@@ -260,5 +267,6 @@ App.properties = {
 	},
 
 }
+
 
 define( 'vision-stage', App, ['vs-selector', 'vs-modal'])

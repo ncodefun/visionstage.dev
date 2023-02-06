@@ -4,7 +4,8 @@ import { VisionStage, html, cache, define, log, icon }
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-const fs = screenfull // embeded / global
+const fs = window.screenfull // embeded / global
+const config = VisionStage.config
 
 class App extends VisionStage {
 
@@ -121,5 +122,8 @@ App.strings = {
 App.properties = {
 
 }
+
+// App.config = {}
+
 
 define( 'vision-stage', App, [], { /*sw:'/sw.js'*/ })

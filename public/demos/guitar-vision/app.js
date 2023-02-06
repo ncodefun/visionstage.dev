@@ -3,19 +3,14 @@
 /// - custom chord sequence
 /// - custom chords ?
 
-import { VisionStage, html, cache, define, log, icon }
+import { VisionStage as VS, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, tempClass, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
-
-// log('info', 'Updated 2022.07.29')
-
-/// thinsp:" "
-/// hairsp:" "
+const config = VS.config
 
 const POSITIONS = ['C', 'A', 'G', 'E', 'D']
 const KEYS = ['C','G','D','A','E']
@@ -24,7 +19,7 @@ const CHORDS = ['I','II','III','IV','V','VI','VII']
 const PLAY_MODES = ['normal','reverse','alternate']
 const SCALES = ['diatonic','harmonic minor']
 
-class App extends VisionStage {
+class App extends VS {
 
 	onConnected = () => {
 		// log('info', 'this.position:', this.position)
@@ -36,7 +31,7 @@ class App extends VisionStage {
 		// log('check', 'this.position:', this.position)
 
 		return html`
-		<header id='app-header' flow='row space-between' class='sth-scaling text-center'>
+		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
 
 			<span flow='row left' id='lang-bar'>
 				<vs-selector id='lang-selector'
@@ -69,7 +64,7 @@ class App extends VisionStage {
 
 		${ cache( this[(this.page||'home')]() ) }
 
-		<footer id='app-footer' class='sth-scaling rel' flow='row'>
+		<footer id='app-footer' class='alt-scaling rel' flow='row'>
 
 			<button id='nav-toggle' class='square bare'
 				@pointerdown=${ e => this.menu_open = !this.menu_open }
@@ -286,9 +281,30 @@ class App extends VisionStage {
 	}
 }
 
-App.languages = ['en', 'fr']
+VS.config = {
+	// sw:'/my-app/sw.js'
+}
 
-App.pages = {
+VS.aspects = {
+	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
+	portrait: 		.5,		// min horizontal space in portrait
+	portrait_max: 	1.1,		// max horizontal space in portrait
+	threshold: 		1.1,
+	landscape: 		1.1,		// min horizontal space in landscape
+	landscape_max: 16/9,		// max horizontal space in landscape
+	cross_margin: '1.33%', 	// margins opposite to "black bars" to detach the stage visually
+	height: 40,					// rem - base vertical space
+}
+
+VS.sounds = {
+	// good: 'good.wav',
+	// wrong: ['wrong.wav', { volume: 0.6 }],
+	// win:	'win.mp3',
+}
+
+VS.languages = ['en', 'fr']
+
+VS.pages = {
 	'': 		["Home", "Accueil"],
 	about: ['About', 'À propos'], // -> /#About | /#À propos
 	// '/vision-stage': 	['Vision Stage', 'Vision Stage'],
@@ -297,13 +313,12 @@ App.pages = {
 	// '/triads': ['Guitar', 'Guitare']
 }
 
-App.strings = {
+VS.strings = {
 	home: 			["Home", "Accueil"],
 	fullscreen: 	["Fullscreen", "Plein écran"],
-
 }
 
-App.properties = {
+VS.properties = {
 	position: {
 		value: 'C',
 		storable: true,
@@ -364,16 +379,6 @@ App.properties = {
 	}
 }
 
-App.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
-	portrait: 		.5,		// min horizontal space in portrait
-	portrait_max: 	1.1,			// max horizontal space in portrait
-	threshold: 		1.1,
-	landscape: 		1.1,			// min horizontal space in landscape
-	landscape_max: 16/9,		// max horizontal space in landscape
-	cross_margin: '1.33%', 	// margins opposite to "black bars" to detach the stage visually
-	height: 40,					// rem - base vertical space
-}
 
 define( 'vision-stage', App, ['vs-selector', 'vs-slider', 'vs-number-input', './fret-board'])
 
