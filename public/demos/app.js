@@ -56,7 +56,7 @@ class App extends VS {
 		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
-				@pointerdown=${ e => this.menu_open = !this.menu_open }
+				@pointerup=${ e => this.menu_open = !this.menu_open }
 				>
 				${ icon('navicon-round', 'x-large') }
 			</button>
