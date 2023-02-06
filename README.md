@@ -11,9 +11,9 @@ Spare yourself a sea of endless confusion and frustrations, keep it simple, **fo
 
 We may say that Vision Stage is for quickly and easily prototyping a Web app, but you'll wonder why on earth you should then redo your app in way more time, and way less fun - for minimal gains, and probably for reassuring weak and worrying minds that demand conformity. 🤷
 
-Obviously, this is not for everyone, especially not if you have a boss ! You have to be at least a bit adventurous to use such an "experimental" framework; yet it's not like it's a huge investment of time to give it a try. Plus with such a simple framework, if you find yourself limited, you can easily add to it or modify it without a PHD in nuclear physic… Anyway, I bet there's enough free minds around making personal projects to try it out, so I guess it's worth sharing my baby at last !
+Obviously, this is not for everyone, especially not if you have a boss ! You have to be at least a bit adventurous to use such an "experimental" framework; yet it's not like it's a huge investment of time to give it a try. Plus, with such a simple framework, if you find yourself limited, you can easily add to it or modify it without a PHD in nuclear physic… Anyway, I bet there's enough free minds around making personal projects to try it out, so I guess it's worth sharing at last !
 
-Clearly, Vision Stage is a work of art, of the nature of Love, not an engineer's toy. This is the word of an artist, the fruit of years of decisions and redoing, always looking ahead for the clearest path. I hope you find the same joy using it as the joy I had and still have developing it.
+Clearly, Vision Stage is a work of art, and not an engineer's toy. This is the word of an artist, the fruit of years of decisions and redoing, always looking ahead for the clearest path. I hope you find the same joy using it as the joy I had and still have developing it.
 
 ❤️
 
