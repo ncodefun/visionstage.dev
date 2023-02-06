@@ -27,10 +27,9 @@
 	/* --primary: hsl(150deg, 90%, 62%); */
 }
 
-#app-header {
-	height: var(--header-height);
-	/* grid-template-columns: 1fr max-content 1fr; */
-}
+/* #app-header {
+	grid-template-columns: 1fr max-content 1fr;
+} */
 
 form {
 	margin: .25rem 0 1rem;

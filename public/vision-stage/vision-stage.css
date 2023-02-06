@@ -1,7 +1,7 @@
 @import '/vision-stage/colors.css';
 
 html {
-	--header-height: calc(var(--sth) / 12);
+	--app-header-height: 3.5em; /* calc(var(--sth) / 12) */
 	--scrollbar-bg-color: #0001;
 	--scrollbar-handle-color: #FFF5;
 	--blue-gray-darker: hsl(215, 11%, 22%);
@@ -42,6 +42,7 @@ vision-stage {
 	height: var(--sth);
 	position: relative;
 	transition: opacity 1s .1s ease; /** delay, let #loading fade out first */
+	overflow: hidden; /* to hide bottom nav menu */
 }
 /* vision-stage.faded {
 	opacity: 0;
@@ -58,12 +59,8 @@ vision-stage.has-margins {
 [shift='1'], .shift-down-1 { top: .02rem }
 [shift='2'], .shift-down-2 { top: .04rem }
 
-/** .sth-scaling (sth = stage height)
- * this will continue to scale relative to stage height, even under portrait ratio,
- *	so content will not scaled down as much as other content on narrow screens
- */
-  /** from portrait-min is when we start scaling down content to fit width */
-#app[aspect-range*='portrait'] .sth-scaling {
+
+#app[orientation='portrait'] .alt-scaling {
 	/** uses em to allow super-scaling adjustments from parents */
 	font-size: var(--sth-based-fs-em) !important;
 }
@@ -538,7 +535,7 @@ body[night-mode='2'] #app {
 
 #app {
 	font: 1rem/1.5 Josefin Sans, serif;
-	--app-footer-height: 3em;
+	--app-footer-height: 3.5em;
 	--base-color: hsl(251, 100%, 96%);
 }
 
@@ -595,9 +592,13 @@ body[night-mode='2'] {
 }
 #app-header, #app-footer { z-index: 2 }
 #app-header {
+	height: var(--app-header-height);
 	/* font-family: Open Sans, sans-serif; */
 	background: #0001;
 	padding: .5em 1em;
+}
+#app-header :is(button,a.button){
+	/* font-size: 1em; */
 }
 #app-header h1 {
 	margin: 0;
@@ -649,16 +650,17 @@ nav {
 	/* font-size: .9em; */
 	opacity: .5;
 }
-#app[aspect-range*='portrait'] .nav-sep {
+#app[orientation='portrait'] .nav-sep {
 	display: none;
 }
 /** vertical menu */
 
-#app[aspect-range*='portrait'] #app-footer nav.v-menu {
+#app[orientation='portrait'] #app-footer nav.v-menu {
 	flex-direction: column;
 	gap: 1rem;
 	position: absolute;
-	top: 5rem;
+	top: var(--app-footer-height);
+	/* top: 0; */
 	border-radius: .5rem;
 	padding: 1rem 2.5rem;
 	align-items: stretch;
@@ -670,17 +672,17 @@ nav {
 	/* inverse: 1-C, 1-D, 1-A, 1-B -> A:0.18, B:0.89, C:0.32, D:1.28 =
 		 1-.32, 1-1.28, 1-.18 , 1-.89 => .68, -.28, .82, .11  */
 }
-#app[aspect-range*='portrait'].menu-open #app-footer nav.v-menu {
+#app[orientation='portrait'].menu-open #app-footer nav.v-menu {
 	transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 	position: absolute;
 	transform: translateY(calc(-100% - 6rem));
 }
-#app[aspect-range*='portrait'] #app-footer nav.v-menu a {
+#app[orientation='portrait'] #app-footer nav.v-menu a {
 	border: 1px solid hsl(161deg 54% 25%);
 	padding: .4rem 2rem;
 	background: hsl(164deg 20% 20%)
 }
-#app[aspect-range*='portrait'] #nav-toggle {
+#app[orientation='portrait'] #nav-toggle {
 	display: inline-flex;
 }
 
@@ -779,7 +781,7 @@ a.button {
 	/* font-weight: 500; */
 }
 button, a.button {
-	font-size: 1rem;
+	font-size: 1em;
 	/* min-height: 2em; */
 	border-radius: .42rem;
 	padding: 0 1ch;
@@ -798,12 +800,12 @@ body.using-mouse *::-moz-focus-inner {
 }
 body.using-mouse button { outline: none }
 
-button.mini, button.xx-small { font-size: .7rem;}
-button.small { font-size: .85rem; }
-button.smaller, button.x-small { font-size: .75rem }
-button.medium { font-size: 1.125rem }
-button.big, button.large { font-size: 1.25rem }
-button.bigger, button.x-large { font-size: 1.5rem }
+button.mini, button.xx-small { font-size: .7em;}
+button.small { font-size: .85em; }
+button.smaller, button.x-small { font-size: .75em }
+button.medium { font-size: 1.125em }
+button.big, button.large { font-size: 1.25em }
+button.bigger, button.x-large { font-size: 1.5em }
 
 button.round, button.square {
 	width: 2em;

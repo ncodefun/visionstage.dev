@@ -19,7 +19,6 @@
   animation-fill-mode: backwards;
 }
 #app-header {
-  height: var(--header-height);
   z-index: 4;
   /* box-shadow: 0 .25rem .5rem hsla(0, 0%, 0%, .15); */
 }
