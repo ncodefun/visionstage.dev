@@ -4,7 +4,7 @@
   "id": "/",
   "icons": [
     {
-      "src": "./_assets/images/app-icons/android-chrome-192x192.png",
+      "src": "/_assets/images/app-icons/android-chrome-192x192.png",
       "type": "image/png",
       "sizes": "192x192"
     }
