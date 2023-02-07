@@ -57,7 +57,8 @@ class App extends VS {
 		<section id='app-content' class='rel' flow='col top grow'>
 			<!-- Inside middle section: will not overlay header & footer -->
 			<vs-modal type='full'></vs-modal>
-			${ cache( this[ this.page||'home' ]() ) }
+			<!-- cache when we're switching template to prevent destroying / rebuilding -->
+			${ cache( this[this.page||'home']() ) }
 		</section>
 
 		<footer id='app-footer' class='alt-scaling rel' flow='row'>
