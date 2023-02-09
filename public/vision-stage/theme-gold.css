@@ -122,3 +122,8 @@ body[night-mode] #title nav {
 #title nav a.button {
   -webkit-text-stroke: 1px hsl(47deg 71% 71% / 40%);
 }
+
+body:not(.using-mouse) #title nav a:focus-visible svg.fanion {
+	color: hsl(45, 100%, 78%);
+	stroke: #d1a100;
+}
