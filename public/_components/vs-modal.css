@@ -83,7 +83,7 @@ vs-modal.show {
 }
 vs-modal .bg {
 	background: var(--modal-bg);
-	filter: var(--modal-bg-filter, saturate(1.5) contrast(0.5) brightness(.46));
+	filter: contrast(0.22) saturate(10) brightness(0.7);
 	opacity: var(--modal-bg-opacity, .9);
 	z-index: -1;
 }
@@ -98,23 +98,23 @@ vs-modal.show ~ * {
 
 vs-modal .content {
 	background: #282828;
-	mix-blend-mode: luminosity;
+	mix-blend-mode: plus-lighter;
 	padding: 1rem 2.5rem;
 	border-radius: .5rem;
 	box-shadow: 0 .3rem 1rem #0006;
-	transform: translateY(170%);
-	transition:
-		/* opacity .6s ease, */
-		/* transform .6s cubic-bezier(.42,-0.54,.58,1); */
-		transform .5s cubic-bezier(.68, -.28, .82, .11);
-	/* opacity: 0; */
+	will-change: transform;
+	animation: slide-down .5s cubic-bezier(.68, -.28, .82, .11) forwards;
 }
 vs-modal.show .content {
-	transition:
-		/* opacity .4s ease, */
-		transform .4s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-	transform: translateY(0);
-	/* opacity: 1; */
+	animation: slide-up .4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
+}
+@keyframes slide-up {
+	0% { transform: translateY(160%) }
+	100% { transform: translateY(0) }
+}
+@keyframes slide-down {
+	0% { transform: translateY(0) }
+	100% { transform: translateY(160%) }
 }
 
 body[night-mode] vs-modal .bg {
