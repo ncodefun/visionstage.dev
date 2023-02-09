@@ -1,11 +1,17 @@
 import { VisionStage, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
+import { gameHeader }
+	from '/_templates/templates/gameHeader.js'
+
+import { navFooter }
+	from '/_templates/templates/navFooter.js'
+
+
 import { cycleValueWithin, sleep, strIf }
 	from '/vision-stage/utils.js'
 
 const fs = window.screenfull // embeded / global
-const config = VisionStage.config
 
 class App extends VisionStage {
 
@@ -13,41 +19,7 @@ class App extends VisionStage {
 
 	template = () => html`
 		<!-- Lang btns in the middle -->
-		<header id='app-header' class='sth-scaling lang-center'>
-
-			<span></span>
-
-			<span flow='row gaps' id='lang-bar'>
-				<span class='equal-deco'> = </span>
-				${ this.languages.map( (lang,i) => html`
-					<button
-						@pointerdown=${ e => this.lang = lang }
-						class='bare uppercase underline josefin-400 ${ strIf('selected', this.lang === lang) }'
-						>
-						${ lang.toUpperCase() }
-					</button>
-					<span class='equal-deco'> = </span>
-				`)}
-			</span>
-
-			<span flow='row right gaps'>
-
-				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
-					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
-				</button>
-
-				<button id='fullscreen-toggle'
-					class='square bare'
-					aria-label=${ this.$fullscreen }
-					@click=${ async e => { fs.isEnabled && fs.toggle() ; await sleep(100) ; this.render() } }
-					>
-					${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, 'large') }
-				</button>
-
-			</span>
-
-		</header>
+		${ gameHeader() }
 
 		<section id='app-content' class='rel' flow='col top stretch grow'>
 			<!-- <vs-modal type='full'></vs-modal> -->
@@ -55,21 +27,7 @@ class App extends VisionStage {
 		</section>
 
 		<!-- footer pages nav -->
-		<footer id='app-footer' flow='row' class='sth-scaling rel'>
-
-			<button id='nav-toggle' class='square bare'
-				@pointerdown=${ e => this.menu_open = !this.menu_open }
-				>
-				${ icon('navicon-round', 'x-large') }
-			</button>
-
-			<nav flow='row gaps-large' class='v-menu nowrap'>
-				${ this.pages && this.pages.map( ([page],i) =>
-					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
-				)}
-			</nav>
-
-		</footer>
+		<!-- ${ navFooter() } -->
 	`
 
 	home = () => html`
@@ -79,8 +37,11 @@ class App extends VisionStage {
 	`
 
 	onPageChanged( page, prev){
-		this.menu_open = false // for normal-type apps
-		// if (!page) this.show_menu = true // for game-type apps (asking to chose a scene/page)
+		this.show_menu = false // for normal-type apps
+
+		// if (!page) this.show_menu = true
+		// for apps where we're asking to chose a page to start
+		// because each mini-game / scene has its own name in url; home has none
 	}
 }
 
