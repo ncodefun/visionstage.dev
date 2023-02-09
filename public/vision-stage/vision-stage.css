@@ -100,10 +100,8 @@ body[night-mode='2'] .scroll.shadow::after {
 
 #veil {
 	pointer-events: auto; /* is .layer... */
-	/* top: var(--header-height); */
-	/* height: calc(100% - var(--header-height)); */
 	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
-	filter: saturate(1.5) contrast(0.5) brightness(.46);
+	filter: contrast(0.22) saturate(10) brightness(0.7);
 	height: 100%;
 	z-index: 2;
 	will-change: opacity, visibility;
@@ -202,6 +200,7 @@ body[night-mode] .vs-box > .vs-box {
 			width: .67rem;
 			overflow: hidden;
 		}
+		#app.main-has-scrollbar #app-content.scroll,
 		#app.main-has-scrollbar main.scroll {
 			padding-left: .67rem;
 		}
@@ -212,6 +211,7 @@ body[night-mode] .vs-box > .vs-box {
 		.scroll.tiny::-webkit-scrollbar {
 			width: .2rem;
 		}
+		#app.main-has-scrollbar #app-content.scroll.tiny,
 		#app.main-has-scrollbar main.scroll.tiny {
 			padding-left: .2rem;
 		}
@@ -395,6 +395,7 @@ span.vs-icon {
 	height: 1em;
 	width: 1em;
 	line-height: 1;
+	display: inline-block;
 }
 span.vs-icon svg {
 	height: 100%;
@@ -481,8 +482,8 @@ body[night-mode] #app {
 	--hue: 276deg;
 	--primary: hsl(276, 93%, 79%);
 	--primary-hl: hsl(276, 100%, 83%);
-	--link-color: hsla(276, 100%, 82%, 1);
-	--link-color-hl: hsl(276, 100%, 85%);
+	--link-color: hsla(276, 100%, 83%, 1);
+	--link-color-hl: hsl(276, 100%, 88%);
 
 }
 body { background: hsl(194, 18%, 52%) }
@@ -568,8 +569,8 @@ body:not([night-mode]) #app.main-has-scrollbar #app-footer {
 	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
 }
 #app {
-	--scrolls-over-shadow-top-color: hsl(256deg 88% 33% / 75%);
-	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 37% / 75%);
+	--scrolls-over-shadow-top-color: hsl(256deg 88% 33% / 65%);
+	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 37% / 65%);
 	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
 	/* --scrolls-shadow-bottom-color: hsl(256deg 82% 35% / 50%); */
 	--scrolls-header-background: #0001;
@@ -619,7 +620,6 @@ body[night-mode='2'] {
 #app-footer nav {
 	padding: 0 1rem;
 	z-index: 2;
-
 }
 nav small { opacity: .7 }
 #nav-toggle { display: none }
@@ -644,7 +644,8 @@ nav { user-select: none }
 	display: inline-block;
 }
 nav {
-	color: hsl(var(--hue), 100%, 83%);
+	/* color: hsl(var(--hue), 100%, 83%); */
+	color: var(--link-color);
 }
 .nav-sep {
 	/* font-size: .9em; */
@@ -655,15 +656,22 @@ nav {
 }
 /** vertical menu */
 
-#app[orientation='portrait'] #app-footer nav.v-menu {
+nav.v-menu a:not(.selected) {
+	text-decoration-color: hsla(var(--hue), 90%, 83%, .66);
+}
+nav.v-menu a:not(.selected):hover {
+	text-decoration-color: hsla(var(--hue), 90%, 83%, 1);
+}
+
+#app[orientation='portrait'] nav.v-menu {
 	flex-direction: column;
+	align-items: stretch !important;
 	gap: 1rem;
 	position: absolute;
 	top: var(--app-footer-height);
 	/* top: 0; */
 	border-radius: .5rem;
 	padding: 1rem 2.5rem;
-	align-items: stretch;
 	text-align: center;
 	box-shadow: 0 .4rem 1rem #0004;
 	background-color: hsl(150deg 13% 17%);
@@ -672,19 +680,64 @@ nav {
 	/* inverse: 1-C, 1-D, 1-A, 1-B -> A:0.18, B:0.89, C:0.32, D:1.28 =
 		 1-.32, 1-1.28, 1-.18 , 1-.89 => .68, -.28, .82, .11  */
 }
-#app[orientation='portrait'].menu-open #app-footer nav.v-menu {
+#app[orientation='portrait'].show-menu nav.v-menu {
 	transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 	position: absolute;
-	transform: translateY(calc(-100% - 6rem));
+	transform: translateY(calc(-100% - var(--app-footer-height) - 1rem));
 }
-#app[orientation='portrait'] #app-footer nav.v-menu a {
+
+nav.v-menu a {
+	padding: 0 .25rem;
+}
+nav.v-menu a:focus {
+	outline: 1px solid var(--link-color-hl);
+	outline-offset: .4rem;
+}
+#app[orientation='portrait'] nav.v-menu a {
 	border: 1px solid hsl(161deg 54% 25%);
 	padding: .4rem 2rem;
-	background: hsl(164deg 20% 20%)
+	background: hsl(164deg 22% 34%);
+	border-radius: .23rem;
 }
 #app[orientation='portrait'] #nav-toggle {
 	display: inline-flex;
 }
+
+body[night-mode] #app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(278, 13%, 17%);
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(270deg 25% 41%);
+	background: hsl(265deg 19% 22%);
+}
+
+nav.v-menu a {
+	width: 100%;
+}
+nav.v-menu .marker:empty { display: none }
+
+nav.v-menu .marker {
+	pointer-events: none;
+	display: inline-block;
+	line-height: .7;
+	position: absolute;
+
+	font-size: .9em;
+	bottom: -.5rem;
+	/* margin-left: 1rem; */
+}
+nav.v-menu .marker.ext {
+	bottom: -.75rem;
+}
+nav.v-menu span.link {
+	position: relative;
+}
+#app[orientation='portrait'] nav.v-menu .marker {
+	right: .3rem;
+	bottom: auto;
+	top: .2rem;
+}
+
 
 #app-header.lang-center {
 	display: grid;
@@ -730,6 +783,7 @@ input[type='email']::placeholder,
 input[type='password']::placeholder {
 	font-style: italic;
 }
+vs-text-input + button,
 input[type='text'] + button,
 input[type='email'] + button,
 input[type='password'] + button {
@@ -798,7 +852,7 @@ body.using-mouse *::-moz-focus-outer,
 body.using-mouse *::-moz-focus-inner {
 	border: 0;
 }
-body.using-mouse button { outline: none }
+body.using-mouse button, body.using-mouse a { outline: none !important }
 
 button.mini, button.xx-small { font-size: .7em;}
 button.small { font-size: .85em; }
@@ -836,6 +890,9 @@ button.underline {
 }
 button.underline.selected {
 	text-decoration-color: var(--link-color);
+}
+body[night-mode] button.underline:not(.selected) {
+	text-decoration-color: hsla(var(--hue), 50%, 70%, .7);
 }
 
 [flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,section,article):not(.inline) { flex:1 0 100% }
