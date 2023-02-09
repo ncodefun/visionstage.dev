@@ -202,11 +202,20 @@ body:not(.using-mouse) button:not(.bare):focus {
 	background-color: var(--btn-bg-color-hl);
 	border-color: var(--btn-border-color-hl);
 }
+
+body:not(.using-mouse) nav a:-webkit-any-link:focus-visible {
+	outline-offset: .25rem;
+	border-radius: .12rem;
+}
+body:not(.using-mouse) #title nav a:focus-visible {
+	outline: none;
+}
+
 body:not(.using-mouse) button:focus {
 	outline-width: 2px;
 	outline-style: solid;
-	outline-offset: -3px;
 	outline-color: var(--btn-outline-color);
+	outline-offset: 3px;
 }
 body:not(.using-mouse) button.bare:focus {
 	outline-offset: 0;
