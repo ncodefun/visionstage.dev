@@ -22,7 +22,7 @@ class Modal extends Component {
 	template = () => html`
 		<div class='content'>
 			<header>${ this.message }</header>
-			${ this.mode === 'input' ? html`<input type='text'>` : '' }
+			${ this.mode === 'input' ? html`<vs-text-input></vs-text-input>` : '' }
 			<div class='buttons' flow='row' @pointerdown=${ this.onAnswer }>
 				${ this.options && this.options.map( opt =>
 						html`<button class='big'>${ opt }</button>`
@@ -100,7 +100,6 @@ class Modal extends Component {
 			this.resolve(answer)
 			this.show = false
 		}
-		this.mode = 'buttons'
 	}
 
 	onKey( e){
@@ -141,4 +140,4 @@ Modal.properties = {
 	},
 }
 
-define( 'vs-modal', Modal)
+define( 'vs-modal', Modal, ['vs-text-input'])
