@@ -1,28 +1,53 @@
 
 main {
 	font-size: 1.2rem;
+	position: relative;
 }
-.intro b {
-	font-weight: 400
-}
-.intro {
-	font-weight: 300;
-	color: hsl(250, 100%, 94%);
-}
+/* main::after {
+	content: '';
+	display: block;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	--step: 2rem;
+	background: repeating-linear-gradient(to bottom, transparent 1px var(--step), #4446 var(--step) calc(var(--step) + 1px));
+	mix-blend-mode: color-dodge;
+
+} */
 h1 {
 	font-size: 3rem;
-	line-height: 1.25;
+	line-height: 1;
 	text-align: center;
 	font-weight: 600;
 	color: hsl(250deg 100% 82%);
 	text-shadow: 0 0.08em 11px hsl(260, 100%, 69%);
 	-webkit-text-stroke: #fff7 0.1rem;
-	margin: 2.5rem 0 0;
+	margin: 3.7rem 0 0;
 }
 h2 {
-	margin: 1rem 0 0;
-	font-size: 1.7em;
+	line-height: 1;
+	font-weight: 400;
+	font-size: 1.7rem;
+	margin: 2rem 0 .3rem;
 }
+.intro strong {
+	font-weight: 400
+}
+main p {
+	line-height: 2rem;
+	max-width: 44rem;
+}
+.intro {
+	font-weight: 300;
+	color: hsl(250, 100%, 94%);
+}
+body[night-mode] .intro {
+	color: hsl(250deg 100% 92%);
+}
+.intro p {
+	margin-block: 0;
+}
+
 h1 small {
 	font-size: .72em;
 	opacity: .76;
@@ -32,7 +57,7 @@ h1 small {
 	font-size: 1.1em;
 	line-height: 1.5;
 	letter-spacing: .06em;
-	margin: 0rem 0 3.5rem;
+	margin: 0rem 0 2rem;
 	color: hsl(250, 100%, 88%);
 	text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6);
 }
@@ -52,6 +77,11 @@ hr.small {
 	color: hsl(160, 90%, 98%);
 	border-radius: .33rem;
 	text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6);
+}
+body[night-mode] .frame {
+	background: hsla(256, 100%, 80%, 0.37);
+	color: hsl(256deg 100% 92%);
+
 }
 
 main > footer a {
@@ -85,8 +115,4 @@ main > footer a {
 #app[aspect-range*='portrait'] #app-header.lang-center #lang-bar {
 	justify-content: start;
 	border: none;
-}
-
-main p {
-	max-width: 40rem;
 }
