@@ -1,4 +1,4 @@
-import { VisionStage as VS, html, cache, define, log, icon}
+import { VisionStage as VS, html, cache, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf }
@@ -22,7 +22,7 @@ class App extends VS {
 				<span class='equal-deco'> = </span>
 				${ this.languages.map( (lang,i) => html`
 					<button
-						@pointerdown=${ e => this.lang = lang }
+						@click=${ e => this.lang = lang }
 						class='bare uppercase underline josefin-400 ${ strIf('selected', this.lang === lang) }'
 						>
 						${ lang.toUpperCase() }
@@ -34,7 +34,7 @@ class App extends VS {
 			<span flow='row right gaps'>
 
 				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
+					@click=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
 					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 				</button>
 
@@ -50,7 +50,7 @@ class App extends VS {
 
 		</header>
 
-		<section id='app-content' class='rel' flow='col top stretch grow'>
+		<section id='app-content' class='scroll shadow' flow='col top stretch grow'>
 			<!-- <vs-modal type='full'></vs-modal> -->
 			${ this.page !== null && cache( this[ this.page||'home' ]() ) }
 		</section>
@@ -58,14 +58,14 @@ class App extends VS {
 		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
-				@pointerup=${ e => this.menu_open = !this.menu_open }
+				@click=${ e => this.show_menu = !this.show_menu }
 				>
 				${ icon('navicon-round', 'x-large') }
 			</button>
 
 			<nav flow='row gaps-large' class='v-menu nowrap'>
 				${ this.pages && this.pages.map( ([page],i) =>
-					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
+					this.getPageLink(page, i < this.pages.length-1 ? '✦' : '')
 				)}
 			</nav>
 
@@ -76,21 +76,21 @@ class App extends VS {
 		<main id='home' class='text-center rel' flow='col top full'>
 
 			<h1>Vision <small>✦</small> Stage</h1>
-			<div id='tagline'>— <em class='strong'>${ this.$tagline }</em> —</div>
+			<div id='tagline'><em class='strong'>${ this.$tagline }</em></div>
+
+			<h2><em>✦ Zero friction ⇢ Pure focus ! ✦</em></h2>
 
 			<div lang='en' class='intro'>
-				<strong>Prototypes and beyond&thinsp;:</strong>
-				<br>
-				Web apps with zero fuss <span class='portrait-break'>—</span>
-				the framework to start, <em>fast&hairsp;!</em>
+				<p class='nowrap'>
+					Go <em>vanilla,</em> with <wbr>super intuitive Web components, <wbr>100% pure JS/HTML, <wbr>thanks to lit-html templates. <wbr>No build step. <wbr>No strange, non-standard concepts. <wbr>No confusion, frustration and diversion… <wbr>Now you can stay in the flow, <wbr>and <strong>focus</strong> on what matter – <strong><em>your</em> app !
+				</p>
 			</div>
 
 			<div lang='fr' class='intro'>
-				<b>Prototypes et au delà</b>
-				<br>Des applis Web sans tracas <span class='portrait-break'>—</span> le framework pour commencer, vite&thinsp;!
+				<br>
 			</div>
 
-			<div id='presentation' class='rel' style='margin:auto 0 2.5rem ; top:.75rem'>
+			<!-- <div id='presentation' class='rel' style='margin:auto 0 2.5rem ; top:.75rem'>
 				<div style='margin: 0 1rem' class='frame strong' flow='col'>
 
 					<div class='rel ${ strIf('hide', this.pres_index !== 0) }'>
@@ -163,7 +163,7 @@ class App extends VS {
 					<button ?disabled=${ this.pres_index===0 }
 						id='btn-prev-presentation'
 						class='bare square'
-						@pointerdown=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, -1) }
+						@click=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, -1) }
 						>
 						${ icon('arrow-right-rounded', 'large') }
 					</button>
@@ -171,12 +171,12 @@ class App extends VS {
 					<button ?disabled=${ this.pres_index===1 }
 						id='btn-next-presentation'
 						class='bare square'
-						@pointerdown=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, 1) }
+						@click=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, 1) }
 						>
 						${ icon('arrow-right-rounded', 'large') }
 					</button>
 				</div>
-			</div>
+			</div> -->
 
 			<!-- <footer style='margin:0 0 1.2rem; font-size:.92em; '>
 				<a href='mailto:june@mystic.vision'>June@mystic.vision</a>
@@ -218,6 +218,7 @@ class App extends VS {
 			</div>
 		</main>
 	`
+
 	learn = () => html`
 		<main flow='col full'>
 			learn
@@ -225,7 +226,7 @@ class App extends VS {
 	`
 
 	onPageChanged( page, prev){
-		this.menu_open = false
+		this.show_menu = false
 	}
 }
 
@@ -266,7 +267,10 @@ VS.pages = {
 }
 
 VS.strings = {
-	tagline: ['Simple, intuitive Web apps & components', 'Des applis et composante Web, simples & intuitives'],
+	tagline: [
+		'Web apps, simply',
+		'Des applications Web, simplement'
+	],
 }
 
 VS.properties = {
