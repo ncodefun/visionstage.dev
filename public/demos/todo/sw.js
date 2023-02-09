@@ -1,4 +1,4 @@
-const VERSION = 5
+const VERSION = 14
 const CACHE_NAME = 'my-cache-v1'
 // This is the list of URLs to be cached by your Progressive Web App.
 const CACHED_URLS = [
@@ -19,7 +19,10 @@ const CACHED_URLS = [
   '/_components/vs-slider.js',
   '/_components/vs-slider.css',
   '/_components/vs-number-input.js',
-  '/_components/vs-number-input.css'
+  '/_components/vs-number-input.css',
+  '/_components/vs-text-input.js',
+  '/_components/vs-text-input.css'
+
 ]
 
 // Open cache on install.
