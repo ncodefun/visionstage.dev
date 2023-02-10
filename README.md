@@ -19,6 +19,7 @@ Vision Stage is a work of art; this is the word of an artist, the fruit of years
 
 ---
 
+
 *Currently, I'm in the process of documenting Vision Stage properly, making examples and (forever) cleaning and refining styles.*
 
 ---
