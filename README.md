@@ -3,7 +3,7 @@
 ## The simple, intuitive way to make Web apps
 ### *✦ Zero friction ⇢ Pure focus ! ✦*
 
-This is what happens when someone builds a framework, looking only for elegance and simplicity; you create a superb developer experience. Yes, you won't have some goodies that modern tooling can provide, but on the plus side hand, you don't have any tooling to deal with… Nor do you have to deal with an overly complex framework, with so many barriers and nerdy concepts you *must* learn and use, for your own good my child… God forbid you should shoot yourself in the foot! Like everyone is building a freaky monster app à la Facebook ! Here you have a simple base from which you can do what you want, without any artificial limits.
+This is what happens when someone builds a framework, looking only for elegance and simplicity; you create a superb developer experience. Yes, you won't have some goodies that modern tooling can provide, but on the plus side, you don't have any tooling to deal with… Nor do you have to deal with an overly complex framework, with so many barriers and nerdy concepts you *must* learn and use, for your own good my child… God forbid you should shoot yourself in the foot! Like everyone is building a freaky monster app à la Facebook ! Here you have a simple base from which you can do what you want, without any artificial limits.
 
 Spare yourself a sea of endless confusion and frustrations, keep it simple, **focused**, and see how far you can go when you care more about freedom and lightness than about conformity and tightness.
 
