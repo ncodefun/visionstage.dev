@@ -7,11 +7,9 @@ This is what happens when someone builds a framework, looking only for elegance 
 
 Spare yourself a sea of endless confusion and frustrations, keep it simple, **focused**, and see how far you can go when you care more about freedom and lightness than about conformity and tightness.
 
-We may say that Vision Stage is for quickly and easily prototyping a Web app, but you'll wonder why on earth you should then redo your app in way more time, and way less fun - for minimal gains, and probably for reassuring fearful, worrying minds that demand conformity. 🤷
+We may say that Vision Stage is for quickly and easily prototyping a Web app, but you'll wonder why on earth you should then redo your app in way more time, and way less fun - for minimal gains, and probably for reassuring fearful, worrying minds that demand conformity. 🤷 You have to be at least a bit adventurous to use Vision Stage; yet it's not like it's a huge investment of time to give it a try. Plus, with such a simple, "vanilla" framework, if you find yourself limited in any way, you can easily add to it or modify it without having to study all the intricacies of a monster library/framework… I'd call that *truly* agile and future-proof development.
 
-Obviously, this is not for everyone, especially not if you have a boss ! You have to be at least a bit adventurous to use such an "experimental" framework; yet it's not like it's a huge investment of time to give it a try. Plus, with such a simple framework, if you find yourself limited, you can easily add to it or modify it without a PHD in nuclear physic… Anyway, I bet there's enough free minds around making personal projects to try it out, so I guess it's worth sharing at last !
-
-Obviously, lots of things could be optimized, but the only goal until now was to build the most intuitive workflow / API possible. Not every use case has been taken into account, but I've made quite a lot of educational apps using it, which allowed me to catch a lot of issues, so in the end it's pretty well rounded frameword for relatively simple small / medium apps.
+Lots of things could be optimized, but the only goal until now was to build the most intuitive workflow / API possible. Not every use case has been taken into account, but I've made quite a lot of educational apps using it, which allowed me to catch a lot of issues, so in the end it's pretty well rounded frameword for relatively simple small / medium apps.
 
 Vision Stage is a work of art; this is the word of an artist, the fruit of years of decisions and redoing, always looking ahead for the clearest path. I hope you find the same joy using it as the joy I had and still have developing it.
 
