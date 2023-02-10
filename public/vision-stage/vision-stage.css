@@ -250,6 +250,11 @@ hr.split {
 .no-events { pointer-events: none }
 .events { pointer-events: auto !important }
 .nowrap { white-space: nowrap }
+@supports (-moz-appearance:none) {
+    .nowrap {
+        white-space: normal;
+    }
+}
 .pre { white-space: pre }
 .text-center {text-align: center}
 .text-left {text-align: left}
@@ -638,11 +643,16 @@ nav { user-select: none }
 	padding-bottom: .04em;
 	font-weight: 400;
 	font-family: serif;
-	color: var(--sea-green);
-	opacity: .15;
 	line-height: 1;
 	display: inline-block;
+	opacity: .15;
 }
+body:not([night-mode]) .equal-deco {
+	opacity: 1;
+	/* color: var(--sea-green); */
+	color:hsla(150deg, 100%, 70%, .25);
+}
+
 nav {
 	/* color: hsl(var(--hue), 100%, 83%); */
 	color: var(--link-color);
@@ -656,11 +666,42 @@ nav {
 }
 /** vertical menu */
 
-nav.v-menu a:not(.selected) {
-	text-decoration-color: hsla(var(--hue), 90%, 83%, .66);
+button.underline {
+	text-decoration: underline;
 }
-nav.v-menu a:not(.selected):hover {
-	text-decoration-color: hsla(var(--hue), 90%, 83%, 1);
+button.underline,
+nav.v-menu a {
+	color: hsla(150deg, 90%, 70%, .78);
+	text-decoration-color: hsla(150deg, 90%, 70%, .6);
+}
+button.underline.selected,
+nav.v-menu a.selected {
+	color: hsla(150deg, 90%, 70%, .95);
+	text-decoration-color: currentColor;
+}
+button.underline:hover,
+nav.v-menu a:hover {
+	color: hsla(150deg, 90%, 70%, 1);
+	text-decoration-color: currentColor;
+}
+body[night-mode] button.underline,
+body[night-mode] nav.v-menu a {
+	color: hsla(276deg, 42%, 75%, 1);
+	text-decoration-color: hsla(276deg, 45%, 72%, .86);
+}
+body[night-mode] button.underline.selected,
+body[night-mode] nav.v-menu a.selected {
+	color: hsla(276deg, 100%, 86%, 1);
+	text-decoration-color: currentColor;
+}
+body[night-mode] button.underline:hover,
+body[night-mode] nav.v-menu a:hover {
+	color: hsla(276deg, 100%, 90%, 1);
+	text-decoration-color: currentColor;
+}
+a + .vs-icon {
+	color: var(--link-color);
+	opacity: .75;
 }
 
 #app[orientation='portrait'] nav.v-menu {
@@ -696,7 +737,7 @@ nav.v-menu a:focus {
 #app[orientation='portrait'] nav.v-menu a {
 	border: 1px solid hsl(161deg 54% 25%);
 	padding: .4rem 2rem;
-	background: hsl(164deg 22% 34%);
+	background: hsl(164deg 21% 24%);
 	border-radius: .23rem;
 }
 #app[orientation='portrait'] #nav-toggle {
@@ -884,16 +925,7 @@ button.bare {
 	/* padding: 0; */
 	padding-block: .25em;
 }
-button.underline {
-	text-decoration: underline;
-	text-decoration-color: hsla(var(--hue), 60%, 60%, .5);
-}
-button.underline.selected {
-	text-decoration-color: var(--link-color);
-}
-body[night-mode] button.underline:not(.selected) {
-	text-decoration-color: hsla(var(--hue), 50%, 70%, .7);
-}
+
 
 [flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,section,article):not(.inline) { flex:1 0 100% }
 .inline { display: inline-block }
