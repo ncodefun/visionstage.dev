@@ -47,7 +47,7 @@ import { cache }
 // import { templateContent }
 // 	from 'lit-html/directives/template-content.js'
 
-import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, nextFrame, cleanNum, is_iOS, is_safari, clamp, strIf, mergeDeep  }
+import { q, debounce, isObject, ctor, clone, loadStyleSheetAsync, containsHTML, nextFrame, cleanNum, is_iOS, is_safari, clamp, strIf, mergeDeep, sleep  }
 	from './utils-core.js'
 
 export { log, html, svg, unsafeHTML, ifDefined, repeat, live, guard, cache, litRender }
@@ -73,6 +73,21 @@ let app, after_resize_timeout, aspect_ratios, active_sw, redundant
 
 /// Component base class ///
 export class Component extends HTMLElement {
+
+	/**
+	 * Callback; runs after component is rendered.
+	 * @type {function}
+	 */
+	onRendered;
+
+	/**
+	 * Callback; runs after app is resized.
+	 * @type {function}
+	 */
+	onResized;
+
+
+
 
 	constructor(){
 		// Note: this (Component ctor) runs *after* VisionStage (app) ctor
@@ -628,6 +643,11 @@ export class Component extends HTMLElement {
 /// App Component ///
 export class VisionStage extends Component {
 
+	/**
+	 * callback;
+	 */
+	onCacheUpdated;
+
 	constructor(){
 		super()
 		this.lang = this.lang // trigger watcher now
@@ -814,11 +834,11 @@ export class VisionStage extends Component {
 		let p_name = (page_name===null ? this.page : page_name)
 		let page = this.pages.find( ([name]) => p_name === name)
 		let lang = this.lang
-		if( page && !page[1][lang]){
+		if (page && !page[1][lang]){
 			//log('warn', 'Missing string for page with current lang: ' + p_name + ' -> ' + lang, 'Using default lang (en).')
 			lang = this.languages[0]
 		}
-		if( page && !page[1][lang])
+		if (page && !page[1][lang])
 			throw 'Missing string for page with default (en) lang: ' + p_name + ' -> ' + lang
 
 		return page ? page[1][lang] : {} // [1] == data
@@ -831,8 +851,8 @@ export class VisionStage extends Component {
 			!page ? '':
 			page.startsWith('/') ? '/' : // abs path
 			page.startsWith('./') ? '' : // rel path
+			page.startsWith('http') ? '' :
 			'#' // bare path -> virtual page
-
 
 		const p = this.getPage( page)
 		// log('red', 'page obj:', p)
@@ -880,7 +900,7 @@ export class VisionStage extends Component {
 					titles = titles.titles
 				}
 				// real path (not a virual page (#)) -> use name for path, not title…
-				else if (!name || name.startsWith('./') || name.startsWith('/')){
+				else if (!name || /^(\.?\/|http)/.test(name)){ // name.startsWith('./') || name.startsWith('/')
 					path = name
 				}
 				let obj = {}
@@ -912,14 +932,14 @@ export class VisionStage extends Component {
 		this.updateScrollbarClass()
 	}
 
-	//! this.main.scrollHeight > this.main.offsetHeight may be true even when no scrollbar
+	//! Warning: this.main.scrollHeight > this.main.offsetHeight may be true even when no scrollbar
 	//! some styles can mess this up ??
-	/** sets .main-has-scrollbar for app-header/footer shadows */
+	/** sets .content-has-scrollbar for app-header/footer shadows */
 	updateScrollbarClass(){
-		// log('pink', 'update scrollbar class')
+		// log('pink', 'update scrollbar class', this.main && this.main.classList.contains('scroll'), this.main.scrollHeight, '>', this.main.offsetHeight)
 		if (this.main && this.main.classList.contains('scroll')){
 			let has = this.main.scrollHeight > this.main.offsetHeight
-			this.classList.toggle('main-has-scrollbar', has)
+			this.classList.toggle('content-has-scrollbar', has)
 			//if( has) log('check', 'main has scrollbar; scroll height, main height:', this.main.scrollHeight, this.main.offsetHeight)
 		}
 	}
@@ -1239,9 +1259,9 @@ export class VisionStage extends Component {
 	 * Will render right after returning;
 	 * @return the result of computer if validator returns true, otherwise returns null
 	 */
-	validateAndCompute( value, validator, computer){
+	validateAndCompute (value, validator, computer){
 		setTimeout( t => this.render())
-		return validator( value) ? computer( value) : null
+		return validator(value) ? computer(value) : null
 	}
 
 	registerSW(){
@@ -1331,7 +1351,7 @@ export class VisionStage extends Component {
 		* @param {object} [user_config.icons_viewbox]
 		* @param {string[]} [user_config.night_modes]
 	*/
-	static set config( user_config) {
+	static set config (user_config) {
 		config = mergeDeep(config, user_config)
 		log('check', 'user config:', config)
 	}
@@ -1537,11 +1557,17 @@ VisionStage._properties = {
 	show_menu: {
 		value: false,
 		class: 'show-menu',
-		watcher( val){
-			if (!val){
+		async watcher(show){
+			if (!show){
 				this.setAttribute('hidding', 'menu')
-				setTimeout( () => this.removeAttribute('hidding'), 333)
+				this.q('nav.v-menu')?.style.removeProperty('pointer-events')
 			}
+			await sleep(333)
+
+			if (show)
+				this.q('nav.v-menu')?.style.setProperty('pointer-events', 'auto')
+			else
+				this.removeAttribute('hidding')
 		}
 	},
 	page: {
