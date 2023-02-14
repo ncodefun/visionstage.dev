@@ -1,11 +1,19 @@
-#app {
-	--hue: 150deg;
-	--text-color-dark: hsl(var(--hue), 20%, 17%);
-	--text-color-light: hsl(var(--hue), 56%, 88%);
+:root {
+	--link-color: hsl(217, 100%, 57%);
+	--link-color-hl: hsl(217, 100%, 64%);
+	--primary: hsl(217, 100%, 52%);
+	--primary-hl: hsl(217, 90%, 55%);
+	--primary-inactive: hsla(217, 20%, 50%, .5);
+	--hue: 217deg;
 }
-
-
-
+body {
+	background: #aaa;
+}
+body[night-mode] {
+	background: #1c1c1c;
+	--link-color: hsl(217, 100%, 60%);
+	--link-color-hl: hsl(217, 100%, 62%);
+}
 /**  Basic light and dark button colors  **/
 button {
 	--btn-bg-color: hsl(0, 0%, 96%);
@@ -14,16 +22,16 @@ button {
 	--btn-text-color-hl: hsl(0, 0%, 7%);
 	--btn-border-color: hsla(0, 0%, 100%, 0.5);
 	--btn-border-color-hl: hsla(0, 0%, 100%, 0.6);
-	--btn-border-color-darker: hsl(var(--hue), 12%, 88%); /*hsla(0, 0%, 70%, 0.5);*/
+	--btn-border-color-darker: hsl(var(--hue), 12%, 88%);
 	--btn-border-color-lighter: hsl(var(--hue), 12%, 100%);
-	--btn-outline-color: hsla(var(--hue), 90%, 62%, 0.5);
+	--btn-outline-color: hsla(var(--hue), 90%, 62%, 1);
 	--btn-outline-color: hsl(var(--hue), 37%, 64%);
 
 	box-shadow:
 		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 25%);
 		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
 }
-.dark-components button {
+.dark-components button:not(.primary):not(.bare) {
 	--btn-bg-color: #272727;
 	--btn-bg-color-hl: #303030;
 	--btn-text-color: #fffe;
@@ -34,28 +42,44 @@ button {
 	--btn-border-color-lighter: hsl(var(--hue), 0%, 19%);
 	--btn-outline-color: hsla(var(--hue), 90%, 62%, 0.5);
 
-	box-shadow:
-		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 50%);
-		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
+	box-shadow: 0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 50%);
 }
 
 :where(.dark-components) button:not(.bare) {
 	font-weight: 300;
 }
 
-/**  Vivid color following the theme; if multiple, set these (or at least --hue) for each **/
+/**  Vivid color following the theme  **/
+
 button.primary {
 	font-weight: 500;
 	--btn-bg-color: var(--primary, hsl(var(--hue), 90%, 62%));
-	--btn-bg-color-hl: var(--primary-hl, hsl(var(--hue), 93%, 79%));
+	--btn-bg-color-hl: var(--primary-hl, var(--primary, hsl(var(--hue), 93%, 79%)));
+	--btn-text-color: #fffe;
+	--btn-text-color-hl: #fff;
+
+	--btn-border-color: hsl(217, 100%, 62%);
+	--btn-border-color-hl: hsl(217, 100%, 66%);
+	--btn-border-color-darker: hsl(217, 80%, 42%);
+	--btn-border-color-lighter: hsl(217, 100%, 72%);
+
+}
+#app[highlight] button.primary {
 	--btn-text-color: #000e;
 	--btn-text-color-hl: #000;
+
 	--btn-border-color: hsl(var(--hue), 100%, 87%);
 	--btn-border-color-hl: hsl(var(--hue), 100%, 87%);
 	--btn-border-color-darker: hsl(var(--hue), 50%, 84%);
 	--btn-border-color-lighter: hsl(var(--hue), 100%, 92%);
 	--btn-outline-color: hsla(var(--hue), 0%, 100%, 0.75);
 }
+
+
+
+
+
+
 /**  primary-adapt: a lighter primary color when light-controls  **/
 button.primary-adapt,
 vs-slider input[type=range]::-webkit-slider-thumb {
@@ -199,7 +223,7 @@ button:not(.bare) {
 button:not(.bare):hover,
 body:not(.using-mouse) button:not(.bare):focus {
 	color: var(--btn-text-color-hl);
-	background-color: var(--btn-bg-color-hl);
+	background-color: var(--btn-bg-color-hl, var(--btn-bg-color));
 	border-color: var(--btn-border-color-hl);
 }
 
@@ -277,48 +301,78 @@ input:focus, textarea:focus {
 	outline-color: var(--inp-outline-color);
 }
 
-
-.bright-bg, .auto-bg {
-	background-color: #ddd;
-}
-
-.has-bright-bg,
-.bright-bg, .auto-bg {
-	color: var(--text-color-dark);
-	--link-color: hsla(var(--hue), 90%, 70%, .85);
-	--link-color-hl: hsl(var(--hue), 90%, 70%);
-}
-
-.dark-bg, .dark-components .auto-bg {
-	background-color: #272727;
-}
-
-#app {
-	--link-color: hsla(var(--hue), 90%, 70%, .85);
-	--link-color-hl: hsl(var(--hue), 90%, 70%);
-}
-
-.has-dark-bg,
-.dark-bg,
-.dark-components .auto-bg {
-	color: var(--text-color-light);
-	--link-color: hsla(var(--hue), 90%, 70%, .85);
-	--link-color-hl: hsl(var(--hue), 90%, 70%);
-}
-
 /**  LINKS and bare buttons text color **/
 
-a, button.bare { color: var(--link-color) }
-a:hover, button.bare:hover { color: var(--link-color-hl) }
-/* button.bare { color: var(--link-color-hl) } */
+a, button.bare .vs-icon { color: var(--link-color) }
+a:hover, button.bare:hover .vs-icon { color: var(--link-color-hl) }
 
-
-:is( button.bare, a).selected,
-:is( button.bare, a):hover {
-	color: var(--link-color-hl);
+button.bare.selected .vs-icon,
+a.selected,
+button.bare:hover .vs-icon, a:hover {
+	color: var(--link-color-hl)
 }
 
 body[night-mode] textarea {
 	background: field;
 	color: fieldText;
+}
+
+
+button.underline {
+	/* --hue: 234deg; */
+	/* --color: var(--link-color); */
+}
+/* button.underline {
+	color: var(--primary);
+} */
+
+vs-selector button.underline {
+	color: var(--primary-inactive);
+}
+vs-selector button.underline.selected {
+	color: var(--primary);
+}
+
+
+nav.v-menu a {
+	color: var(--link-color);
+	text-decoration-color: currentColor;
+	/* color: hsla(150deg, 90%, 70%, .78); */
+	/* text-decoration-color: hsla(150deg, 90%, 70%, .6); */
+
+}
+nav.v-menu a.selected {
+	/* color: hsla(150deg, 90%, 70%, .95); */
+	/* text-decoration-color: currentColor; */
+	color: var(--link-color-hl);
+}
+button.underline {
+	color: inherit;
+	font-weight: 600;
+}
+body[night-mode] button.underline {
+	font-weight: 400;
+}
+
+
+button.underline:hover,
+nav.v-menu a:hover {
+	color: var(--link-color-hl);
+	/* color: hsla(150deg, 90%, 70%, 1); */
+	/* text-decoration-color: currentColor; */
+}
+/* body[night-mode] button.underline, */
+body[night-mode] nav.v-menu a {
+	/* color: hsla(276deg, 42%, 75%, 1); */
+	/* text-decoration-color: hsla(276deg, 45%, 72%, .86); */
+}
+/* body[night-mode] button.underline.selected, */
+body[night-mode] nav.v-menu a.selected {
+	/* color: hsla(276deg, 100%, 86%, 1); */
+	/* text-decoration-color: currentColor; */
+}
+/* body[night-mode] button.underline:hover, */
+body[night-mode] nav.v-menu a:hover {
+	/* color: hsla(276deg, 100%, 90%, 1); */
+	/* text-decoration-color: currentColor; */
 }

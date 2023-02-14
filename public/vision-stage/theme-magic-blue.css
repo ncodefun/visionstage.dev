@@ -1,0 +1,195 @@
+:root {
+	--hue: 150deg;
+	--text-color-dark: hsl(150, 20%, 17%);
+	--text-color-light: hsl(150, 56%, 88%);
+	--link-color: hsla(150, 90%, 70%, .85);
+	--link-color-hl: hsl(150, 90%, 70%);
+}
+body {
+	--scrollbar-handle-color: hsl(247, 70%, 67%);
+	--scrolls-over-shadow-top-color: hsl(256deg 88% 33% / 75%);
+	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 37% / 75%);
+	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
+	--scrolls-header-background: #0001;
+	--scrolls-footer-background: hsl(256deg 62% 40% / 33%);
+	color: hsl(250deg 100% 89%);
+	background: hsl(194, 18%, 52%)
+}
+body[night-mode='1'] {
+	background: hsl(260deg 15% 52%);
+	--scrolls-over-shadow-bottom-color: hsl(256deg 88% 35% / 75%);
+}
+body[night-mode='2'] {
+	background: hsl(340, 7%, 18%);
+	--scrolls-over-shadow-top-color: hsla(332, 8%, 10%, 0.5);
+	--scrolls-over-shadow-bottom-color: hsla(332, 7%, 15%, 0.5);
+}
+body[night-mode] {
+	--scrollbar-handle-color: hsl(252, 25%, 44%);
+	--hue: 276deg;
+	--primary: hsl(276, 93%, 79%);
+	--primary-hl: hsl(276, 100%, 83%);
+	--link-color: hsla(276, 100%, 83%, 1);
+	--link-color-hl: hsl(276, 100%, 88%);
+}
+
+vision-stage {
+	--floor: 56%;
+	background-color:  hsl(256, 88%, 40%);
+	/* background-image:
+		linear-gradient( to bottom,
+			rgba(0,0,0,0),
+			rgba(0,0,0,0) var(--floor),
+			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
+			rgba(0,0,0,0) 70%,
+			hsla(298, 69%, 90%, 0.12)),
+		radial-gradient( circle farthest-side,
+			hsla(0, 0%, 82%, 0.19),
+			hsla(0, 0%, 75%, 0.08) 60%,
+			hsla(0, 0%, 69%, 0)) */
+}
+/* body[night-mode]  */
+vision-stage {
+	background-image:
+		linear-gradient( to bottom,
+			rgba(0,0,0,0),
+			rgba(0,0,0,0) var(--floor),
+			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
+			rgba(0,0,0,0) 70%,
+			hsla(46, 69%, 90%, .1)),
+		radial-gradient( circle farthest-side,
+			hsla(0, 0%, 82%, 0.12),
+			hsla(0, 0%, 75%, 0.08) 60%,
+			hsla(0, 0%, 69%, 0))
+}
+body[night-mode='1'] vision-stage {
+	background-color: hsl(255, 24%, 27%);
+}
+body[night-mode='2'] vision-stage {
+	background-color: hsl(258, 10%, 20%);
+}
+
+
+.text-thin {
+	font-weight: 300;
+	color: hsl(250, 100%, 94%); /* brighter for thinner text */
+}
+
+
+#veil {
+	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
+	filter: contrast(0.22) saturate(10) brightness(0.7);
+}
+body[night-mode] #veil {
+  background-blend-mode: overlay;
+  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
+  filter: saturate(3) contrast(0.8) brightness(0.7);
+}
+#veil.show {
+	opacity: .9;
+}
+body[night-mode] #veil.show {
+  opacity: .95;
+}
+
+body[night-mode='1'] .scroll.shadow::before,
+body[night-mode='1'] .scroll.shadow::after {
+	filter: saturate(.125) brightness(1.66);
+}
+
+body[night-mode] .equal-deco {
+	opacity: .15;
+	color: currentColor;
+}
+body:not([night-mode]) .equal-deco {
+	color:hsla(150deg, 100%, 70%, .25);
+	opacity: 1;
+}
+
+button.underline,
+nav.v-menu a {
+	color: hsla(150deg, 90%, 70%, .78);
+	text-decoration-color: hsla(150deg, 90%, 70%, .6);
+}
+button.underline.selected,
+nav.v-menu a.selected {
+	color: hsla(150deg, 90%, 70%, .95);
+	text-decoration-color: currentColor;
+}
+button.underline:hover,
+nav.v-menu a:hover {
+	color: hsla(150deg, 90%, 70%, 1);
+	text-decoration-color: currentColor;
+}
+body[night-mode] button.underline,
+body[night-mode] nav.v-menu a {
+	color: hsla(276deg, 42%, 75%, 1);
+	text-decoration-color: hsla(276deg, 45%, 72%, .86);
+}
+body[night-mode] button.underline.selected,
+body[night-mode] nav.v-menu a.selected {
+	color: hsla(276deg, 100%, 86%, 1);
+	text-decoration-color: currentColor;
+}
+body[night-mode] button.underline:hover,
+body[night-mode] nav.v-menu a:hover {
+	color: hsla(276deg, 100%, 90%, 1);
+	text-decoration-color: currentColor;
+}
+a + .vs-icon {
+	color: var(--link-color);
+	opacity: .75;
+}
+
+#app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(150deg 13% 17%);
+}
+#app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(161deg 54% 25%);
+	background: hsl(164deg 21% 24%);
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(278, 13%, 17%);
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(270deg 25% 41%);
+	background: hsl(265deg 19% 22%);
+}
+
+/** .content-has-scrollbar is toggled automatically in app.js */
+
+#app.content-has-scrollbar #app-header {
+	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
+}
+#app.content-has-scrollbar #app-footer {
+	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
+}
+body[night-mode] #app.content-has-scrollbar #app-header {
+	box-shadow: 0 .25rem .33rem hsl(256 20% 25% / 75%);
+}
+body[night-mode] #app.content-has-scrollbar #app-footer {
+	box-shadow: 0 -.25rem .33rem hsl(256 20% 25% / 75%);
+}
+
+#app-footer {
+	background: hsl(255deg 74% 39% / 33%);
+
+}
+body[night-mode] #app-footer {
+	background: hsla(254, 23%, 29%, 0.33);
+	/* background: hsl(256deg 26% 26% / 79%); */
+}
+body[night-mode] .scroll.shadow::before,
+body[night-mode] .scroll.shadow::after,
+.scroll.shadow::before,
+.scroll.shadow::after {
+	mix-blend-mode: darken;
+}
+
+::placeholder {
+	color: hsl(var(--hue, 150deg), 21%, 53%)
+}
+::selection {
+	background-color: hsl(150, 100%, 64%);
+	color: #000a;
+}

@@ -1,108 +1,118 @@
 
 button, input, a.button {
-	font-size: .9em;
+	/* font-size: .9em; */
 	line-height: 1.6;
 }
 
 #app {
-	--hue: 150deg;
-	--primary: hsl(150deg, 90%, 62%);
+	/* --hue: 150deg; */
+	/* --primary: hsl(150deg, 90%, 62%); */
+	color: #444;
+}
+body[night-mode] #app {
+	color: #ddd;
 }
 
-body #app[highlight='yellow-green'] {
+#app[highlight] {
+	--primary-hl: initial;
+	--primary-inactive: hsla(var(--hue), 15%, 50%, .7);
+}
+
+#app[highlight='cyan'] {
+	--hue: 150deg;
+	/* --text-color-dark: hsl(150, 20%, 17%);
+	--text-color-light: hsl(150, 56%, 88%); */
+	--primary: hsl(150, 90%, 70%);
+	--primary-hl: hsl(150, 90%, 78%);
+
+	--link-color: hsla(150, 90%, 70%, .85);
+	--link-color-hl: hsl(150, 90%, 70%);
+
+}
+#app[highlight='cyan'] button.primary {
+	/* --btn-bg-color: hsl(var(--hue), 90%, 72%); */
+	/* --btn-bg-color-hl: hsl(var(--hue), 90%, 72%); */
+
+}
+
+#app[highlight='yellow-green'] {
 	--hue: 95deg;
 	--link-color: hsl(80, 85%, 51%);
 	--link-color-hl: hsl(80, 98%, 56%);
-
-	/* --primary: hsl(95deg, 90%, 72%); */
+	--primary: hsl(95deg, 90%, 72%);
 }
-body #app[highlight='yellow-green'] button.primary {
+#app[highlight='yellow-green'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 90%, 72%);
 }
 
-body #app[highlight='yellow'] button.primary {
-	--btn-bg-color: hsl(var(--hue), 85%, 70%);
-}
-body #app[highlight='yellow'] {
+#app[highlight='yellow'] {
 	--hue: 80deg;
 	--primary: hsl(80deg 85% 70%);
 	--link-color: hsl(72deg 100% 66%);
 	--link-color-hl: hsl(72deg 100% 66%);
 }
-
-body #app[highlight='green'] button.primary {
+#app[highlight='yellow'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 85%, 70%);
 }
-body #app[highlight='green'] {
+
+#app[highlight='green'] {
 	--hue: 115deg;
 	--primary: hsl(115deg, 80%, 70%);
 	--link-color: hsl(104, 69%, 55%);
 	--link-color-hl: hsl(104, 76%, 60%);
 
 }
-
-
-/** LINKS **/
-body #app[highlight='yellow-green'].bright-bg,
-body #app[highlight='yellow-green'].dark-bg {
-	--link-color: hsla(var(--hue), 68%, 60%);
-	--link-color-hl: hsl(var(--hue), 93%, 70%);
+#app[highlight='green'] button.primary {
+	--btn-bg-color: hsl(var(--hue), 85%, 70%);
 }
 
-#app[theme-bg='whitish'] {
-	--scrollbar-handle-color: #555;
-	/* --main-hue: 200deg; */
-	--scrolls-shadow-color: #0003;
-	--scrolls-header-background: #222;
-	--scrolls-footer-background: #222;
-	text-shadow: 0 .1rem .12rem hsl(261, 15%, 23%, .5);
-	background: url(/_assets/images/textures/paper-opaque-8bit.png);
+/** highlight involves brighter / more vivid colors than the default blue -> adjust */
+
+:where(#app[highlight]) :is(vs-selector button:not(.bare), button.primary) {
+	color: var(--text-color-dark, #000e);
+}
+.dark-components vs-selector button:not(.primary):not(.bare) {
+	color: var(--text-color-light, #fffe);
 }
 
-	/* --btn-outline: hsla(var(--theme-hue), 100%, 62%, .5); */
-/**!/ find out what to do with links / bare buttons on pale bg... */
+#app[highlight] vs-selector button.selected .led {
+	background:
+		radial-gradient(at 56% 35%, #fffa, transparent 90%),
+		radial-gradient(closest-side,
+			hsl( var(--hue), 100%, 50%),
+			hsl( var(--hue), 100%, 32%)
+		);
+	--glow-color: hsla(var(--hue), 100%, 70%, 0.6);
+	box-shadow:
+		0 0 2px #fff3,
+		0 0 .12em var(--glow-color),
+		0 0 .35em var(--glow-color),
+		0 0 .6em var(--glow-color),
+		0 0 .75em var(--glow-color);
+}
+#app[highlight] vs-selector button span.led-bar {
+	background: var(--primary-inactive, hsl(var(--hue), 18%, 60%));
+}
+#app[highlight] vs-selector button.selected span.led-bar {
+	background: var(--primary-hl, hsl(var(--hue), 100%, 60%));
+	filter:
+		drop-shadow(0 0 .18rem hsla(var(--hue), 100%, 70%, 0.75))
+		drop-shadow(0 0 .35rem hsla(var(--hue), 100%, 70%, 0.75));
+}
+/** a bit less intense for bare underline */
+#app[highlight] vs-selector button.bare.selected span.led-bar {
+	filter:
+		drop-shadow(0 0 .18rem hsla(var(--hue), 100%, 70%, 0.5))
+		drop-shadow(0 0 .35rem hsla(var(--hue), 100%, 70%, 0.5));
 
+}
+.bg-light {
+	background: #eee;
+	color: #333;
+}
 
 h1 { margin: 1.5rem 0 0 ; background: var(--theme-hsl); }
 h2 { margin: 1rem 0 0 }
 h3 { margin: 0 }
 
-.has-dark-bg :is(h2, h3) { font-weight: 300 } /** light text **/
-.has-bright-bg :is(h2, h3) { font-weight: 400 }
-
 main { padding-bottom: 5rem }
-
-
-
-/* h2,h3 { display:none } */
-
-
-/**
-body[night-mode='2'] h1 {
-	color: hsl(344, 67%, 64%);
-	text-shadow: 0 0.16rem 0.5rem hsl(330deg 63% 45%);
-	-webkit-text-stroke: #fff4 .1rem;
-}
-body[night-mode='2'] .vivid { color: hsl(345, 80%, 75%) }
-body[night-mode='2'] .soft { color: hsl(346, 100%, 82%) }
-body[night-mode='2'] .filter { filter: hue-rotate(208deg) }
-*/
-
-/* .grid-2x3 {
-	display: grid !important;
-	grid-template-columns: auto auto;
-	grid-template-rows: auto auto auto;
-	gap: 1px;
-	background: palegreen;
-	padding: 1rem;
-}
-.grid-2x3 > button { border-radius: 0 !important}
-.grid-2x3 > button:nth-child(2n+1)
-	{ border-right-color: var(--btn-border-color-darker) }
-.grid-2x3 > button:nth-child(2n)
-	{ border-left-color: var(--btn-border-color-lighter) }
-.grid-2x3 > button/*:not(:last-child):not(:nth-child(5)) /* first four / not last two /
-	{ border-bottom-color: var(--btn-border-color-darker) !important}
-.grid-2x3 > button
-	{ border-top-color: var(--btn-border-color-lighter) }
-*/

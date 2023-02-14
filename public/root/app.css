@@ -1,5 +1,7 @@
+@import '/vision-stage/theme-magic-blue.css';
 
-main {
+
+main#home {
 	font-size: 1.15em;
 	/* position: relative; */
 }
@@ -25,30 +27,82 @@ h1 {
 	-webkit-text-stroke: #fff7 0.1rem;
 	margin: 4.7rem 0 0;
 }
+h1.mini {
+	font-size: 1.5em;
+	text-align: left;
+	color: hsl(230deg 100% 82% / 64%);
+	-webkit-text-stroke: #fff8 .5px;
+	text-shadow: none;
+	padding-top: .1rem;
+	margin-left: .25rem !important;
+}
 h2 {
 	line-height: 1;
 	font-weight: 400;
 	font-size: 1.7rem;
+	margin: 1rem 0 .5rem;
+	padding: 0 1ch;
+}
+h2:first-of-type {
+	margin-top: 4rem;
+}
+h1 + h2 {
 	margin: 3.3rem 0 .2rem;
 }
-#app[orientation='portrait'] h2 {
+main#home h2:first-of-type {
+	margin: 3.3rem 0 .1rem;
+}
+h2 + ul {
+	margin-top: 0;
+}
+#demos h2 {
+	text-align: center;
+}
+#app[orientation='portrait'] #home {
+	font-size: 1.1em;
+}
+#app[orientation='portrait'] #home h2 {
 	font-size: 1.5rem;
 	margin: 4.1rem 0 .6rem;
 }
-#app[orientation='portrait'] main p {
-	/* font-size: 1rem; */
+main {
+	padding-inline: .5rem;
 }
 .intro strong {
 	font-weight: 400
 }
 main p {
 	line-height: 1.75rem;
-
+	margin-block: 1.75rem;
 }
-#app[page='motivation'] #app-content {
-	background: hsl(256deg 71% 37% / 70%);
+
+
+#app:not([page='']) #app-header {
+	background: hsl(253deg 71% 41% / 85%);
+}
+#app:not([page='']) #app-content {
+	background: hsl(255deg 72% 37% / 85%);
 	background-attachment: fixed;
-	font-size: .88em;
+}
+#app:not([page='']) #app-footer {
+	background: hsl(254deg 71% 41% / 85%);
+}
+
+body[night-mode] #app:not([page='']) #app-header {
+	background: hsl(256deg 23% 28% / 85%);
+}
+body[night-mode] #app:not([page='']) #app-content {
+	background: hsl(256deg 23% 25% / 85%);
+}
+body[night-mode] #app:not([page='']) #app-footer {
+	background: hsl(256deg 26% 26% / 79%);
+}
+
+code {
+	font-size: .85em;
+	background: #0003;
+	padding: .15ch .5ch .25ch;
+	border-radius: .3rem;
 }
 main#home p {
 	max-width: 64rem;
@@ -57,15 +111,12 @@ main#home p {
 	line-height: 1.75rem;
 }
 
-.intro {
-	font-weight: 300;
-	color: hsl(250, 100%, 94%);
-}
+
 .intro a { font-weight: 400 }
 body[night-mode] .intro {
 	color: hsl(250deg 100% 92%);
 }
-.intro p {
+.intro p:first-of-type {
 	margin-block: 0;
 }
 
@@ -79,7 +130,7 @@ h1 small {
 	line-height: 1.5;
 	letter-spacing: .06em;
 	margin: -.2rem 0 0;
-	color: hsl(250, 100%, 88%);
+	/* color: hsl(250, 100%, 88%); */
 	text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6);
 }
 
@@ -92,17 +143,23 @@ hr.small {
 }
 
 .frame {
-	border: .1rem solid hsl(160, 100%, 95%, .7);
+	/* border: .1rem solid hsl(160, 100%, 95%, .7); */
+	border: .1rem solid hsl(160deg 10% 38% / 70%);
 	padding: 1ch 3ch;
-	background: hsl(159, 100%, 80%,.37);
-	color: hsl(160, 90%, 98%);
+	/* background: hsl(159, 100%, 80%,.37); */
+	background: hsl(144deg 13% 29% / 71%);
+	color: #fffc;
+	font-weight: 300;
 	border-radius: .33rem;
 	text-shadow: 0 .1rem .2rem hsl(261, 15%, 23%, .6);
 }
 body[night-mode] .frame {
 	background: hsla(256, 100%, 80%, 0.37);
-	color: hsl(256deg 100% 92%);
+	/* color: hsl(256deg 100% 92%); */
 
+}
+.frame a {
+	font-weight: 400;
 }
 
 main > footer a {
@@ -125,21 +182,67 @@ main > footer a {
 }
 /** OVERRIDES **/
 
-#app[orientation='portrait'] .frame { padding:1ch 0 ; margin-inline:1ch !important }
-#app[orientation='portrait'] hr { width:90% }
-#app[orientation='portrait'] #presentation { margin-bottom:.7rem !important ; top:auto !important }
+/* #app[orientation='portrait'] .frame { padding:1ch 0 ; margin-inline:1ch !important } */
+/* #app[orientation='portrait'] hr { width:90% } */
+/* #app[orientation='portrait'] #presentation { margin-bottom:.7rem !important ; top:auto !important } */
 
-#app[aspect-range*='portrait'] .equal-deco { display: none }
+#app[orientation='portrait'] .equal-deco { display: none }
 
-#app[aspect-range*='portrait'] #app-header.lang-center #lang-bar {
+#app[orientation='portrait'] #app-header.lang-center #lang-bar {
 	justify-content: start;
 	order: -1;
 	border: none;
 }
-#app[aspect-range*='portrait'] #app-header > span:first-child {
+#app[orientation='portrait'] #app-header > span:first-child {
 	text-align: center;
 }
 
 #app-header > span:is(:first-child, :nth-child(2)) {
 	padding-top: .1rem;
+}
+
+.box {
+	background: #0003;
+	padding-block: 1em;
+	margin-inline: 1em;
+	border-radius: .5rem;
+	box-shadow: 0 .4rem .7rem #0003;
+}
+
+#stage ul li {
+	white-space: nowrap;
+}
+ul li {
+	line-height: 1.2rem;
+	margin-bottom: .5rem;
+
+}
+ul li > div:first-of-type {
+	margin-top: .25rem;
+}
+ul li > div {
+	padding-left: 1rem;
+}
+ul.frame {
+	list-style-type: none;
+}
+
+ul li em {
+	font-size: .9rem;
+	display: block;
+	margin-top: .4rem;
+	opacity: .77;
+}
+#app[orientation='portrait'] ul {
+	padding-left: 1.5em;
+}
+#app[orientation='portrait'] ul.frame {
+	padding-left: 1em;
+}
+
+strong > em {
+	color: hsl(251, 100%, 95%);
+}
+body[night-mode] strong > em {
+	color: hsl(250deg 100% 95%) !important;
 }

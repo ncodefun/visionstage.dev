@@ -2,17 +2,55 @@
 
 html {
 	--app-header-height: 3.5em; /* calc(var(--sth) / 12) */
+	--app-footer-height: 3.5em;
 	--scrollbar-bg-color: #0001;
 	--scrollbar-handle-color: #FFF5;
 	--blue-gray-darker: hsl(215, 11%, 22%);
+	--scrolls-over-shadow-top-color: #aaa7;
+	--scrolls-over-shadow-bottom-color: #bbb5;
+	--scrolls-shadow-color: #9999;
+	font: 1rem/1.5 Josefin Sans, serif;
 }
-body {
-	/* color: hsl(267, 100%, 96%); */
-	color: hsl(250deg 100% 89%);
-	background: hsl(224deg, 23%, 31%);
+body[night-mode] {
+	--scrolls-over-shadow-top-color: #222;
+	--scrolls-over-shadow-bottom-color: #222a;
+	--scrolls-shadow-color: #2224; /* hsl(256 0% 25% / 75%) */
+	color: #eee;
 }
-vision-stage {
+#app.content-has-scrollbar #app-header {
+	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
+}
+#app.content-has-scrollbar #app-footer {
+	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
+}
+body[night-mode] #app.content-has-scrollbar #app-header {
+	box-shadow: 0 .25rem .33rem var(--scrolls-shadow-color);
+}
+body[night-mode] #app.content-has-scrollbar #app-footer {
+	box-shadow: 0 -.25rem .33rem var(--scrolls-shadow-color);
+}
+
+.scroll.shadow::before,
+.scroll.shadow::after {
+	mix-blend-mode: multiply;
+}
+body[night-mode] .scroll.shadow::before,
+body[night-mode] .scroll.shadow::after {
+	mix-blend-mode: darken;
+}
+
+
+vision-stage,
+#app-content {
 	background: url(/_assets/images/textures/paper-opaque-8bit.png);
+	background-attachment: local;
+	background-blend-mode: multiply;
+}
+body[night-mode] vision-stage,
+body[night-mode] vision-stage #app-content {
+	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
+	background-color: #333;
+	background-blend-mode: multiply;
 }
 
 *, *::after, *::before {
@@ -65,54 +103,49 @@ vision-stage.has-margins {
 	font-size: var(--sth-based-fs-em) !important;
 }
 
-#app.main-has-scrollbar .scroll.shadow::before,
-#app.main-has-scrollbar .scroll.shadow::after {
+#app.content-has-scrollbar .scroll.shadow::before,
+#app.content-has-scrollbar .scroll.shadow::after {
 	content: '';
 	pointer-events: none;
 }
 .scroll.shadow::before, .scroll.shadow::after {
 	display: block;
 	position: absolute;
-	z-index:3;
+	z-index: 3;
 	width: 100%;
 	left: 0;
-	/** to match footer scaling type -> otherwise we'd have to set this class on main... */
-	font-size: var(--sth-based-fs) !important; /*! not -em so to not super-scale with <main> parent, we want same result as footer which is outside / sibling of <main> */
-	height: 2.5em;
-	mix-blend-mode: darken;
+	/** to match footer scaling type -> otherwise we'd have to set this class on parent... */
+	font-size: var(--sth-based-fs) !important; /*! not -em so to not super-scale with parent, we want same result as footer which is outside / sibling of parent */
+
+	/* mix-blend-mode: multiply; */
 }
-.scroll.shadow::before {
-	/* top:  */
-	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color, red), #0000);
+.scroll.shadow::before { /* top:  */
+	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
 	/* mix-blend-mode: color-burn; */
+	height: 2.5em;
 }
 .scroll.shadow:after {
-	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color, red), #0000);
-	bottom: var(--app-footer-height);
-}
-
-/* body[night-mode='2'] .scroll.shadow::before {
-	background: linear-gradient(to bottom, var(--scrolls-over-shadow-top-color), #0000);
-}
-body[night-mode='2'] .scroll.shadow::after {
 	background: linear-gradient(to top, var(--scrolls-over-shadow-bottom-color), #0000);
-} */
+	bottom: var(--app-footer-height);
+	height: 1.5em;
+}
 
 #veil {
-	pointer-events: auto; /* is .layer... */
-	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
-	filter: contrast(0.22) saturate(10) brightness(0.7);
-	height: 100%;
-	z-index: 2;
-	will-change: opacity, visibility;
+	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 0% 60%);
+	filter: contrast(0.92) brightness(1);
+	opacity: .94;
 }
 body[night-mode] #veil {
   background-blend-mode: overlay;
-  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
+  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 0%, 34%);
   filter: saturate(3) contrast(0.8) brightness(0.7);
 }
-body[night-mode] #veil.show {
-  opacity: .95;
+#veil {
+	pointer-events: auto; /* is .layer... */
+	height: calc(100% - var(--app-header-height) - var(--app-footer-height));
+	top: var(--app-header-height);
+	z-index: 4;
+	will-change: opacity, visibility;
 }
 
 #settings:not(.show) {
@@ -120,8 +153,7 @@ body[night-mode] #veil.show {
   visibility: hidden;
   transition: opacity .3s ease, visibility .3s;
 }
-
-/* always delayed fade-out for #veil (delay while menu or settings are fading out) */
+/* always delay fade-out for #veil (delay while menu or settings are fading out) */
 #veil:not(.show){
 	transition: opacity .5s .2s ease, visibility .7s;
 	visibility: hidden;
@@ -133,9 +165,25 @@ body[night-mode] #veil.show {
   transition: filter .5s .2s ease;
 }
 #veil.show {
-	opacity: .9;
 	transition: opacity .3s ease;
 }
+
+#app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(var(--hue) 13% 17%);
+}
+#app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(var(--hue) 54% 25%);
+	background: hsl(var(--hue) 21% 24%);
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(var(--hue), 13%, 17%);
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(var(--hue) 25% 41%);
+	background: hsl(265deg 19% 22%);
+}
+
+
 #settings.show {
   transition: all .3s .15s ease; /* opacity, but filter also when blurred by modal */
 }
@@ -200,8 +248,8 @@ body[night-mode] .vs-box > .vs-box {
 			width: .67rem;
 			overflow: hidden;
 		}
-		#app.main-has-scrollbar #app-content.scroll,
-		#app.main-has-scrollbar main.scroll {
+		#app.content-has-scrollbar #app-content.scroll,
+		#app.content-has-scrollbar main.scroll {
 			padding-left: .67rem;
 		}
 		.scroll.scroll-hidden::-webkit-scrollbar {
@@ -211,8 +259,8 @@ body[night-mode] .vs-box > .vs-box {
 		.scroll.tiny::-webkit-scrollbar {
 			width: .2rem;
 		}
-		#app.main-has-scrollbar #app-content.scroll.tiny,
-		#app.main-has-scrollbar main.scroll.tiny {
+		#app.content-has-scrollbar #app-content.scroll.tiny,
+		#app.content-has-scrollbar main.scroll.tiny {
 			padding-left: .2rem;
 		}
 		.scroll::-webkit-scrollbar-track {
@@ -350,11 +398,11 @@ hr.split {
 
 [flow~='row'][flow~='full'],
 [flow~='row-rev'][flow~='full'] {
-  width: 100%;
+  min-width: 100%;
 }
 [flow~='col'][flow~='full'],
 [flow~='col-rev'][flow~='full']{
-	height: 100%;
+	min-height: 100%;
 }
 .grow,
 [flow~='grow'] { flex-grow: 1 }
@@ -477,75 +525,13 @@ span.vs-icon.xxx-large { font-size: 1.75em }
 }
 
 
-#app {
-	--scrollbar-handle-color: hsl(247, 70%, 67%);
-	--sea-green: hsl(150, 100%, 83%);
-	--sea-green-white: hsl(150, 65%, 82%)
-}
-body[night-mode] #app {
-	--scrollbar-handle-color: hsl(252, 25%, 44%);
-	--hue: 276deg;
-	--primary: hsl(276, 93%, 79%);
-	--primary-hl: hsl(276, 100%, 83%);
-	--link-color: hsla(276, 100%, 83%, 1);
-	--link-color-hl: hsl(276, 100%, 88%);
-
-}
-body { background: hsl(194, 18%, 52%) }
-#app {
-	--floor: 56%;
-	background-color:  hsl(256, 88%, 40%);
-	background-image:
-		linear-gradient( to bottom,
-			rgba(0,0,0,0),
-			rgba(0,0,0,0) var(--floor),
-			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
-			rgba(0,0,0,0) 70%,
-			hsla(298, 69%, 90%, 0.12)),
-		radial-gradient( circle farthest-side,
-			hsla(0, 0%, 82%, 0.19),
-			hsla(0, 0%, 75%, 0.08) 60%,
-			hsla(0, 0%, 69%, 0))
-}
-
-body[night-mode='1'] #app {
-	background-color: hsl(255, 24%, 27%);
-}
-body[night-mode='2'] #app {
-	background-color: hsl(45, 8%, 9%);
-	background-image:
-		linear-gradient( to bottom,
-			rgba(0,0,0,0),
-			rgba(0,0,0,0) var(--floor),
-			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
-			rgba(0,0,0,0) 70%,
-			hsla(46, 69%, 90%, .1)),
-		radial-gradient( circle farthest-side,
-			hsla(0, 0%, 82%, 0.12),
-			hsla(0, 0%, 75%, 0.08) 60%,
-			hsla(0, 0%, 69%, 0))
-}
-
 .icon.moon:not(.night){
 	filter: brightness(0.6);
 }
 .sun.dark {
 	filter: brightness(0.6);
 }
-::placeholder { color: hsl(var(--hue, 150deg), 21%, 53%) }
-::selection {
-	background-color: hsl(150, 100%, 64%);
-	color: #000a;
-}
 
-
-#app {
-	font: 1rem/1.5 Josefin Sans, serif;
-	--app-footer-height: 3.5em;
-	--base-color: hsl(251, 100%, 96%);
-}
-
-/* a, button, .strong { font-weight:400 } */
 
 main:not(.no-fade-in) {
 	/** auto fade-in page when its rendered */
@@ -556,55 +542,16 @@ main:not(.no-fade-in) {
 	100% { opacity: 1 }
 }
 
-/** .main-has-scrollbar is toggled automatically in app.js */
 
-body[night-mode] #app.main-has-scrollbar #app-header {
-	box-shadow: 0 .25rem .33rem hsl(256 20% 25% / 75%);
-	/* hsla(0, 0%, 0%, .5); */
+#app-header, #app-footer {
+	transition: background-color .3s ease;
+	z-index: 4
 }
-body[night-mode] #app.main-has-scrollbar #app-footer {
-	box-shadow: 0 -.25rem .33rem hsl(256 20% 25% / 75%);
-}
-body:not([night-mode]) #app.main-has-scrollbar #app-header {
-	/* background: var(--scrolls-header-background); */
-	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
-}
-body:not([night-mode]) #app.main-has-scrollbar #app-footer {
-	/* background: var(--scrolls-footer-background); */
-	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
-}
-#app {
-	--scrolls-over-shadow-top-color: hsl(256deg 88% 33% / 65%);
-	--scrolls-over-shadow-bottom-color: hsl(256deg 70% 37% / 65%);
-	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
-	/* --scrolls-shadow-bottom-color: hsl(256deg 82% 35% / 50%); */
-	--scrolls-header-background: #0001;
-	--scrolls-footer-background: hsl(256deg 62% 40% / 33%);
-}
-body[night-mode='2'] {
-	--scrolls-over-shadow-top-color: hsla(332, 8%, 10%, 0.5);
-	--scrolls-over-shadow-bottom-color: hsla(332, 7%, 15%, 0.5);
-}
-body[night-mode='1'] .scroll.shadow::before,
-body[night-mode='1'] .scroll.shadow::after {
-	opacity: .6;
-	filter: saturate(.25);
-}
-body[night-mode='1'] {
-	background: hsl(260deg 15% 52%);
-}
-body[night-mode='2'] {
-	background: hsl(340, 7%, 18%);
-}
-#app-header, #app-footer { z-index: 2 }
+
 #app-header {
-	height: var(--app-header-height);
-	/* font-family: Open Sans, sans-serif; */
 	background: #0001;
+	height: var(--app-header-height);
 	padding: .5em 1em;
-}
-#app-header :is(button,a.button){
-	/* font-size: 1em; */
 }
 #app-header h1 {
 	margin: 0;
@@ -619,12 +566,11 @@ body[night-mode='2'] {
 #app-footer {
 	flex-shrink: 0;
 	background: #0001;
-	/* margin-top: auto; */
+
 	height: var(--app-footer-height, auto);
 }
 #app-footer nav {
 	padding: 0 1rem;
-	z-index: 2;
 }
 nav small { opacity: .7 }
 #nav-toggle { display: none }
@@ -645,20 +591,13 @@ nav { user-select: none }
 	font-family: serif;
 	line-height: 1;
 	display: inline-block;
-	opacity: .15;
-}
-body:not([night-mode]) .equal-deco {
-	opacity: 1;
-	/* color: var(--sea-green); */
-	color:hsla(150deg, 100%, 70%, .25);
+
 }
 
 nav {
-	/* color: hsl(var(--hue), 100%, 83%); */
 	color: var(--link-color);
 }
 .nav-sep {
-	/* font-size: .9em; */
 	opacity: .5;
 }
 #app[orientation='portrait'] .nav-sep {
@@ -669,53 +608,18 @@ nav {
 button.underline {
 	text-decoration: underline;
 }
-button.underline,
-nav.v-menu a {
-	color: hsla(150deg, 90%, 70%, .78);
-	text-decoration-color: hsla(150deg, 90%, 70%, .6);
-}
-button.underline.selected,
-nav.v-menu a.selected {
-	color: hsla(150deg, 90%, 70%, .95);
-	text-decoration-color: currentColor;
-}
-button.underline:hover,
-nav.v-menu a:hover {
-	color: hsla(150deg, 90%, 70%, 1);
-	text-decoration-color: currentColor;
-}
-body[night-mode] button.underline,
-body[night-mode] nav.v-menu a {
-	color: hsla(276deg, 42%, 75%, 1);
-	text-decoration-color: hsla(276deg, 45%, 72%, .86);
-}
-body[night-mode] button.underline.selected,
-body[night-mode] nav.v-menu a.selected {
-	color: hsla(276deg, 100%, 86%, 1);
-	text-decoration-color: currentColor;
-}
-body[night-mode] button.underline:hover,
-body[night-mode] nav.v-menu a:hover {
-	color: hsla(276deg, 100%, 90%, 1);
-	text-decoration-color: currentColor;
-}
-a + .vs-icon {
-	color: var(--link-color);
-	opacity: .75;
-}
 
 #app[orientation='portrait'] nav.v-menu {
+	pointer-events: none;
 	flex-direction: column;
 	align-items: stretch !important;
 	gap: 1rem;
 	position: absolute;
 	top: var(--app-footer-height);
-	/* top: 0; */
 	border-radius: .5rem;
 	padding: 1rem 2.5rem;
 	text-align: center;
 	box-shadow: 0 .4rem 1rem #0004;
-	background-color: hsl(150deg 13% 17%);
 	/* transition: all .3s ease; */
 	transition: transform .5s cubic-bezier(.68, -.28, .82, .11);
 	/* inverse: 1-C, 1-D, 1-A, 1-B -> A:0.18, B:0.89, C:0.32, D:1.28 =
@@ -735,21 +639,11 @@ nav.v-menu a:focus {
 	outline-offset: .4rem;
 }
 #app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(161deg 54% 25%);
 	padding: .4rem 2rem;
-	background: hsl(164deg 21% 24%);
 	border-radius: .23rem;
 }
 #app[orientation='portrait'] #nav-toggle {
 	display: inline-flex;
-}
-
-body[night-mode] #app[orientation='portrait'] nav.v-menu {
-	background-color: hsl(278, 13%, 17%);
-}
-body[night-mode] #app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(270deg 25% 41%);
-	background: hsl(265deg 19% 22%);
 }
 
 nav.v-menu a {
@@ -762,10 +656,8 @@ nav.v-menu .marker {
 	display: inline-block;
 	line-height: .7;
 	position: absolute;
-
 	font-size: .9em;
 	bottom: -.5rem;
-	/* margin-left: 1rem; */
 }
 nav.v-menu .marker.ext {
 	bottom: -.75rem;
@@ -779,25 +671,46 @@ nav.v-menu span.link {
 	top: .2rem;
 }
 
-
 #app-header.lang-center {
 	display: grid;
 	grid-template-columns: 1fr minmax(auto, 15rem) 1fr;
+	grid-template-rows: var(--app-header-height);
 	align-items: center;
+	align-content: center;
 }
-/* main p, main ul, main h2, main h3, main h4 {
-	max-width: 40rem;
-	margin: 1em auto;
-} */
+#app[orientation='portrait'] #app-header.lang-center {
+	grid-template-columns: 1fr 1.5fr 1fr;
+}
+/* make everything inside header a bit smaller
+	– will still scale down less than content when viewport gets narrower */
+#app[orientation='portrait'] #app-header.lang-center > * {
+	font-size: .85em;
+}
+#app[orientation='portrait'] #app-header.lang-center h1.mini {
+	line-height: 1;
+	margin: 0 !important;
+	text-align: center;
+	/* font-size: 1.25em; */
+	-webkit-text-stroke: #0008 0.5px;
+	color: inherit;
+	/* -webkit-text-stroke: 0; */
+	/* opacity: .9; */
+}
+#app[orientation='portrait'] #app-header.lang-center #lang-bar {
+	/* font-size: .87em; */
+}
+
 main p {
 	padding-inline: 1em;
 	margin-inline: auto;
+}
+main :is(p,ul) {
 	max-width: 40rem;
+	padding-right: 1em;
 }
-
-main p + p {
+/* main p + p {
 	margin-top: 0;
-}
+} */
 
 .small {
 	font-size: .85em;
@@ -832,22 +745,9 @@ input[type='password'] + button {
 	border-bottom-left-radius: 0;
 	border-left-color: #00000008;
 }
-/** Encode Sans */
-@font-face {
-  font-family: 'Encode Sans Semi Condensed';
-  font-style: normal;
-  font-weight: 500;
-  src: url('/_assets/fonts/encode-sans/encode-sans-semi-condensed-v8-latin-500.woff2') format('woff2');
-}
-/** Roboto */
-@font-face {
-  font-family: 'Roboto';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/_assets/fonts/roboto/roboto-v29-latin-regular.woff2') format('woff2');
-}
+
 button, input, .button {
-	font-family: Inter, Open Sans, sans-serif;
+	font-family: Inter, sans-serif;
 	font-weight: normal;
 	font-size: inherit;
 	text-align: inherit;
@@ -926,6 +826,9 @@ button.bare {
 	padding-block: .25em;
 }
 
+nav a:not(.selected):not(:hover) {
+	text-decoration: none;
+}
 
 [flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,section,article):not(.inline) { flex:1 0 100% }
 .inline { display: inline-block }
