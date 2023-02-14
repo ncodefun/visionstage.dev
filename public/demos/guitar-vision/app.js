@@ -67,7 +67,7 @@ class App extends VS {
 		<footer id='app-footer' class='alt-scaling rel' flow='row'>
 
 			<button id='nav-toggle' class='square bare'
-				@pointerup=${ e => this.menu_open = !this.menu_open }
+				@click=${ e => this.show_menu = !this.show_menu }
 				>
 				${ icon('navicon-round', 'x-large') }
 			</button>
@@ -212,7 +212,7 @@ class App extends VS {
 			}
 		}
 
-		this.menu_open = false
+		this.show_menu = false
 	}
 
 	onKeyDown( e){

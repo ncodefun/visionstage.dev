@@ -56,7 +56,7 @@ class App extends VS {
 		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
-				@pointerup=${ e => this.menu_open = !this.menu_open }
+				@click=${ e => this.show_menu = !this.show_menu }
 				>
 				${ icon('navicon-round', 'x-large') }
 			</button>
@@ -80,7 +80,7 @@ class App extends VS {
 	`
 
 	onPageChanged( page, prev){
-		this.menu_open = false // for normal-type apps
+		this.show_menu = false // for normal-type apps
 		// if (!page) this.show_menu = true // for game-type apps (asking to chose a scene/page)
 	}
 }

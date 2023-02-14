@@ -8,6 +8,8 @@ import { VisionStage as VS, Component, html, cache, define, log, icon}
 
 import { cycleValueWithin, sleep, strIf, labelAsClassMapper, labelOptionsMapper }
 	from '/vision-stage/utils.js'
+import { appContent } from '/_templates/appContent.js'
+import { appFooter } from '/_templates/appFooter.js'
 
 const fs = window.screenfull // embeded / global
 const config = VS.config
@@ -48,7 +50,7 @@ const DEMO_COLORS = [
 
 // log('pink', 'STATE_DEMO3_OPTIONS:', STATE_DEMO3_OPTIONS)
 
-const THEMES = ['', 'yellow-green', 'yellow', 'green']
+const THEMES = ['', 'cyan', 'yellow-green', 'yellow', 'green']
 
 const STEPPER_DEMO_OPTS = [
 	{label:['Oneeeeeeeeeeee','Un'], value: 'one'}, ['two','deux'], 'three', 'four', 'five'
@@ -93,14 +95,6 @@ class App extends VS {
 
 			<span flow='row right gaps'>
 
-				<!-- <button id='theme-toggle' class='square bare'
-					@pointerdown={ e => {
-						this.bg_index = cycle( this.bg_index, BGS_RANGE)
-						this.bg = BACKGROUNDS[ this.bg_index]
-					}}>
-					🖼️
-				</button> -->
-
 				<button id='theme-toggle' class='square bare'
 					@pointerdown=${ e => {
 						this.theme = cycleValueWithin( this.theme, THEMES)
@@ -137,27 +131,12 @@ class App extends VS {
 
 		</header>
 
-		${ cache( this[(this.page||'home')]() ) }
-
-		<footer id='app-footer' class='alt-scaling rel' flow='row'>
-
-			<button id='nav-toggle' class='square bare'
-				@pointerup=${ e => this.menu_open = !this.menu_open }
-				>
-				${ icon('navicon-round', 'x-large') }
-			</button>
-
-			<nav flow='row gaps-large' class='v-menu nowrap'>
-				${ this.pages && this.pages.map( ([page],i) =>
-					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
-				)}
-			</nav>
-
-		</footer>
+		${ appContent.call(this) }
+		${ appFooter.call(this, 'nav') }
 	`
 	home = () => html`
 		<main id='home'
-			class='grow text-center scroll shadow'
+			class='text-center'
 			flow='row baseline divide wrap gaps-small'>
 
 			<!-- divide: > div,p,h1...,article,section, all are made full width to act as dividers -->
@@ -225,16 +204,16 @@ class App extends VS {
 			<div></div>
 
 			<div class='inline'>
+				<!-- .tabs .menu → aligned on bottom (tabs "sits" on bottom content) -->
 				<vs-selector id='tabs' class='tabs small-caps'
 					direction='horizontal'
 					type='led-bar'
-					selected-color='primary-adapt'
 					.options=${ STATE_DEMO2_OPTIONS }
 					.selected=${ this.state_demo2 }
 					@change=${ e => this.state_demo2 = e.target.selected }
 					>
 				</vs-selector>
-				<section class='bright-bg' style='padding:1rem'>
+				<section class='bg-light' style='padding:1rem'>
 					<section class=${strIf('hide', this.state_demo2!=='hello')}>
 						Tab 1
 					</section>
@@ -247,6 +226,7 @@ class App extends VS {
 			<vs-selector id='radio-buttons'
 				direction='horizontal'
 				type='radio'
+				selected-color='primary-adapt'
 				.options=${ STATE_DEMO2_OPTIONS }
 				.selected=${ this.state_demo2 }
 				@change=${ e => this.state_demo2 = e.target.selected }
@@ -339,7 +319,7 @@ class App extends VS {
 
 	onPageChanged( page, prev){
 		if( page===prev) return // only changed language (or mod url) -> using a different page.path
-		this.menu_open = false
+		this.show_menu = false
 	}
 }
 
@@ -367,12 +347,13 @@ VS.sounds = {
 VS.languages = ['en', 'fr']
 
 VS.pages = {
-	'': 		["Home", "Accueil"],
-	// about: ['About', 'À propos'], // -> /#About | /#À propos
-	'/vision-stage': 	['Vision Stage', 'Vision Stage'],
-	'/todo': ['Todo', 'Todo'],
-	'/test': ['Components', 'Composantes'],
-	'/triads': ['Guitar', 'Guitare']
+	'': 							["Home", "Accueil"],
+	// about: 					['About', 'À propos'], // -> /#About | /#À propos
+	'/demos': 					["Demos"],
+	'/': 							["Vision Stage"],
+	'/demos/todo': 			['Todo', 'Todo'],
+	'/demos/guitar-vision': ['Guitar', 'Guitare'],
+	'https://appy.world': 	['appy.world']
 }
 
 VS.strings = {
@@ -415,15 +396,6 @@ VS.properties = {
 		value: false,
 		class: 'dark-components',
 		storable: true
-	},
-	bg_index: 0,
-	bg: {
-		value: '',
-		attribute: 'theme-bg',
-		init_watcher: true,
-		watcher( val){
-			this.switchClasses('has-bright-bg', 'has-dark-bg', val==='whitish')
-		}
 	},
 	stepper_val: 'two'
 }

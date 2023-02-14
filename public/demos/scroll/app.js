@@ -10,7 +10,7 @@ const config = VS.config
 class App extends VS {
 
 	onConnected = () => this.render()
-	onPageChanged = (page, prev) => this.menu_open = false
+	onPageChanged = (page, prev) => this.show_menu = false
 
 	// App template
 	template = () => html`
@@ -61,7 +61,7 @@ class App extends VS {
 		<footer id='app-footer' flow='row' class='alt-scaling rel'>
 
 			<button id='nav-toggle' class='square bare'
-				@pointerup=${ e => this.menu_open = !this.menu_open }
+				@click=${ e => this.show_menu = !this.show_menu }
 				>
 				${ icon('navicon-round', 'x-large') }
 			</button>
@@ -166,7 +166,6 @@ VS.strings = {
 }
 
 VS.properties = {
-	menu_open: { value: false, class: 'menu-open'},
 	a: { value:null, sync_to_url_param: true },
 	b: { value:null, sync_to_url_param: true },
 	c: { value:null, sync_to_url_param: true, storable: true }, /** params will override a stored value */

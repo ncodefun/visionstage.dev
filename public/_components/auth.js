@@ -73,7 +73,7 @@ class Auth extends Component {
 						@keydown=${ this.signinOnEnter }
 						@invalid=${ e => e.target.setCustomValidity( this.$password_format) }>
 					<button type='button' id='btn-show-password' class='round bare'
-						@pointerup=${ e => this.show_password = !this.show_password }>
+						@click=${ e => this.show_password = !this.show_password }>
 						${ icon( 'eye-' + (this.show_password ? "hide" : "show") )}
 					</button>
 				</div>
@@ -88,7 +88,7 @@ class Auth extends Component {
 		</section>
 
 		<section id='auth-infos'>
-			<button @pointerup=${ this.signOut }>${ this.$logout }</button>
+			<button @click=${ this.signOut }>${ this.$logout }</button>
 		</section>
 	`
 

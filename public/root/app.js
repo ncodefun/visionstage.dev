@@ -1,201 +1,78 @@
-import { VisionStage as VS, html, cache, define, log, icon }
+import { VisionStage as VS, html, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleValueWithin, sleep, strIf }
-	from '/vision-stage/utils.js'
+import { appHeader } 	from '/_templates/appHeader.js'
+import { appContent } 	from '/_templates/appContent.js'
+import { appFooter } 	from '/_templates/appFooter.js'
 
-const fs = window.screenfull // embeded / global
-const config = VS.config
-
-const PRES = [0,1] // presentation galery indices
-
+// const github = html`<a href='https://github.com/ncodefun/visionstage.dev'
+// 	target='_'>Github</a> ${ icon('ext-link') }`
+const minibrand = html`<h1 class='mini'>Vision Stage</h1>`
 class App extends VS {
 
 	onConnected = () => this.render()
 
 	template = () => html`
-		<header id='app-header' class='alt-scaling lang-center'>
-
-			<span></span>
-
-			<span flow='row gaps' id='lang-bar'>
-				<span class='equal-deco'> = </span>
-				${ this.languages.map( (lang,i) => html`
-					<button
-						@click=${ e => this.lang = lang }
-						class='bare uppercase underline josefin-400 ${ strIf('selected', this.lang === lang) }'
-						>
-						${ lang.toUpperCase() }
-					</button>
-					<span class='equal-deco'> = </span>
-				`)}
-			</span>
-
-			<span flow='row right gaps'>
-
-				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@click=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
-					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
-				</button>
-
-				<button id='fullscreen-toggle'
-					class='square bare'
-					aria-label=${ this.$fullscreen }
-					@click=${ async e => { fs.isEnabled && fs.toggle() ; await sleep(100) ; this.render() } }
-					>
-					${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, 'large') }
-				</button>
-
-			</span>
-
-		</header>
-
-		<section id='app-content' class='scroll shadow' flow='col top stretch grow'>
-			<!-- <vs-modal type='full'></vs-modal> -->
-			${ this.page !== null && cache( this[ this.page||'home' ]() ) }
-		</section>
-
-		<footer id='app-footer' flow='row' class='alt-scaling rel'>
-
-			<button id='nav-toggle' class='square bare'
-				@click=${ e => this.show_menu = !this.show_menu }
-				>
-				${ icon('navicon-round', 'x-large') }
-			</button>
-
-			<nav flow='row gaps-large' class='v-menu nowrap'>
-				${ this.pages && this.pages.map( ([page],i) =>
-					this.getPageLink(page, i < this.pages.length-1 ? '✦' : '')
-				)}
-			</nav>
-
-		</footer>
+		${ appHeader.call(this, 'lang-center', minibrand)}
+		${ appContent.call(this, { class: 'typo-gridd scroll shadow' }) }
+		${ appFooter.call(this, 'nav') }
 	`
 
 	home = () => html`
-		<main id='home' class='text-center rel' flow='col top full'>
+		<main id='home' class='text-center' flow='col top grow'>
 
 			<h1>Vision <small>✦</small> Stage</h1>
-			<div id='tagline'><em class='strong'>${ this.$tagline }</em></div>
-
-			<h2><em>✦ Zero friction ⇢ Pure focus ! ✦</em></h2>
 
 			<div lang='en' class='intro'>
-				<p class='nowrap'>
-					Go <em>vanilla,</em> with <wbr>super intuitive Web components, <wbr>100% pure JS/HTML, <wbr>thanks to lit-html templates. <wbr>No build step. <wbr>No strange, non-standard concepts. <wbr>No confusion, frustration and diversion… <wbr>Now you can stay in the flow, <wbr>and <strong>focus</strong> on what matter – <strong><em>your</em> app !
+
+				<div id='tagline'><strong>Web apps, <em>simply.</em></strong></div>
+
+				<h2><em>✦ Zero friction ⇢ Pure focus ! ✦</em></h2>
+
+				<p class='text-thin nowrap'>
+					Embrace <em>modern vanilla,</em> with pure JS/HTML <wbr>(thanks to <a href='https://lit.dev/docs/v1/lit-html/template-reference/'>lit-html</a> templates), <wbr>super intuitive Web components. <wbr <wbr>No tooling, no build step. <wbr>No strange, non-standard concepts. <wbr>No confusion, frustration and diversion…
+				</p>
+				<p>
+					Stay in the flow, <wbr>and <strong>focus on what matter – <em>your</em> app !</strong>
 				</p>
 			</div>
 
 			<div lang='fr' class='intro'>
-				<br>
+				<div id='tagline'><strong>Des applications Web, <em>simplement.</em></strong></div>
+
+				<h2><em>✦ Zéro friction ⇢ Pure focus ! ✦</em></h2>
+				<p class='text-thin nowrap'>
+					Embrassez le <em>modern vanilla,</em> avec <wbr>des composentes Web super intuitives <wbr>en pure JS/HTML, <wbr>grâce aux templates <a href='https://lit.dev/docs/v1/lit-html/template-reference/'>lit-html</a>. <wbr>Pas de build step. <wbr>Pas de concepts étranges et non-standard. <wbr>Pas de confusion, de frustration et de diversion… <wbr>Maintenant vous pouvez rester dans le flow, <wbr>et <strong>focaliser sur ce qui compte – <em>votre</em> appli !</strong>
+				</p>
 			</div>
-
-			<!-- <div id='presentation' class='rel' style='margin:auto 0 2.5rem ; top:.75rem'>
-				<div style='margin: 0 1rem' class='frame strong' flow='col'>
-
-					<div class='rel ${ strIf('hide', this.pres_index !== 0) }'>
-
-						<div lang='en'>
-							<em>This</em> is agile…
-							<hr class='medium'>
-							<div class='small'>
-								Skip the toolchain hell
-								<span class='nowrap'>of diversions and frustration…</span><br>
-								No build step, no tools, no config <span class='nowrap'>– pure focus&thinsp;!</span><br>
-								A really simple and intuitive API,
-								<br>no arbitrary barrier…
-							</div>
-						</div>
-
-						<div lang='fr'>
-							Être <em>agile</em> pour vrai…
-							<hr class='medium'>
-							<div class='small'>
-								Évitez la frustration
-								<span class='nowrap'>et les diversions sans fin&hairsp;;</span><br>
-								Pas de build, pas d'outils, pas de config <span class='nowrap'>— pure focus&thinsp;!</span><br>
-								Une API vraiment simple et intuitive,
-								<br>et aucune barrière artificielle…
-							</div>
-						</div>
-					</div>
-
-					<div class=${ strIf('hide', this.pres_index !== 1) }>
-						<div lang='en'>
-							<div style='line-height:1.33'>
-								Bring your vision to life on
-								<span class='nowrap'>
-								a truly unique stage
-								</span>
-							</div>
-							<hr class='medium'>
-							<div class='small '>
-								Multi-aspect stage for framing
-								<span class='nowrap'>& resizing your content (rem scaling)</span><br>
-								Perfect for Full page apps, games, stories,
-								<span class='nowrap'>landing pages or presentations</span>
-							</div>
-						</div>
-
-						<div lang='fr'>
-							<div style='line-height:1.33'>
-								Pour porter votre vision
-								<span class='nowrap'>
-								sur une scène vraiment unique
-								</span>
-							</div>
-							<hr class='medium'>
-							<div class='small '>
-								Une scène multi-aspects pour encadrer
-								<span class='nowrap'>& redimensionner votre contenu (rem scaling)</span><br>
-								Parfait pour les applis pleine page, les jeux, histoires,
-								<span class='nowrap'>pages d'arrivé ou présentations.</span>
-							</div>
-						</div>
-					</div>
-
-				</div>
-
-				<div flow='row gaps' id='btns-presentation'
-					class='alt-scaling'
-					style='margin: .25rem 0 0'>
-
-					<button ?disabled=${ this.pres_index===0 }
-						id='btn-prev-presentation'
-						class='bare square'
-						@click=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, -1) }
-						>
-						${ icon('arrow-right-rounded', 'large') }
-					</button>
-
-					<button ?disabled=${ this.pres_index===1 }
-						id='btn-next-presentation'
-						class='bare square'
-						@click=${ e => this.pres_index = cycleValueWithin( this.pres_index, PRES, 1) }
-						>
-						${ icon('arrow-right-rounded', 'large') }
-					</button>
-				</div>
-			</div> -->
-
-			<!-- <footer style='margin:0 0 1.2rem; font-size:.92em; '>
-				<a href='mailto:june@mystic.vision'>June@mystic.vision</a>
-			</footer> -->
 		</main>
 	`
 
-	why = () => html`
-		<main id='why' flow='col top full' class='scroll shadow'>
-			<h1>Vision Stage</h1>
-			<h2>Why&hairsp;?</h2>
+	motivation = () => html`
+		<main id='motivation' flow='col top grow' class='text-justify'>
+			<h2>Motivation</h2>
 			<div lang='en'>
 				<p>
-					Unless you build a monster app, simplicity, free of artificial constraints always pays more in the end. Leave the over-engineered things to the big shots of the past – Vision Stage is for tomorrows dev, high-level conscious creators with no time to waste managing overly complex, confusing, pre-digested solutions you eternally get tangled with… Start simple, and see if you'll ever want to look back… It's not super optimal? So what! Are you obsessed with perfection? Speed? Or about kilobytes? In my book, elegance IS perfection, simplicity IS speed, in many ways…
+					This is what happens when someone builds a framework, looking only for elegance and simplicity; you create a superb developer experience. Yes, you won't have some goodies that modern tooling can provide, but on the plus side, you don't have any tooling to deal with… Nor do you have to deal with an overly complex framework, with so many barriers and nerdy concepts you *must* learn and use, for your own good my child… God forbid you should shoot yourself in the foot! Not everyone is building a monster app à la Facebook ! Here you have a simple base from which you can do what you want, without any artificial limits.
 				</p>
 				<p>
-					Plus, Vision Stage being pure and modern JS/HTML, it's easy to build on top of it with any plugin or custom solution for more robust applications.
+					Spare yourself a sea of endless confusion and frustrations, keep it simple, <strong>focused</strong>, and see how far you can go when you care more about freedom and lightness than about conformity and tightness.
 				</p>
+				<p>
+					We may say that Vision Stage is for quickly and easily prototyping a Web app, but you'll wonder why on earth you should then redo your app in way more time, and way less fun - for minimal gains, and probably for reassuring fearful, worrying minds that demand conformity. 🤷 The truth is that Vision Stage is built on such simple, "vanilla" concepts, that you can easily add to it or modify it without having to study all the intricacies of a complicated library/framework… I'd call that <em>truly</em> agile and future-proof development…
+				</p>
+				<p>
+					So in the end, the result is that you have an app that's lightweight and fast, and though it's not the lightest or fastest possible, I'd argue that it's quite enough, as this is already better than the vast majority of apps / Websites out there, made with way overkill frameworks for their requirements… Maybe there's more optimization to be done here, but the main goal until now was to build the most intuitive workflow / API possible. Not every use case has been taken into account, but I've made quite a lot of educational apps using it, which allowed me to test Vision Stage with quite a wide variety of requirements and catch and fix many issues. So it's a pretty well rounded "framework" for relatively simple small / medium apps, and the fact that it frees you from distractions unrelated to <strong>your</strong> work,
+					it also makes an ideal environment for learning Web development with the absolute minimal frictions possible !
+				</p>
+
+				<p>
+					Vision Stage is a work of art; this is the word of an artist, the fruit of years of decisions and redoing, always looking ahead for the clearest path. I hope you find the same joy using it as the joy I had and still have developing it.
+				</p>
+
+				<p>❤️</p>
 			</div>
+
 			<div lang='fr'>
 				<p>
 
@@ -204,23 +81,64 @@ class App extends VS {
 		</main>
 	`
 
-	how = () => html`
-		<main flow='col full'>
-			<div lang='en'>
-				<p>
-					Vision Stage is using lit-html at its core as the template manager to render the content, but its components are built using a purely native approach to enhance custom elements, without requiring a build step. Everything is kept native, using the latest ES features whenever possible, like async imports to load components.
-				</p>
-			</div>
-			<div lang='fr'>
-				<p>
-					Vision Stage utilise lit-html pour gérer le rendu de <i>templates<i> incrustables sans fin écrite en standard JS+HTML, part de composantes construit en utilisant une approche purement native pour faire des éléments custom évolués, personalisé, et sans besoin build step. Everything is kept native, using the latest ES features whenever possible, like async imports to load components.
-				</p>
-			</div>
+	stage = () => html`
+		<main id='stage' flow='col top grow' class='text-justify'>
+			<h2>The Stage</h2>
+			<p>
+				Vision Stage came about as a framework for developing full page apps / mini-games, where you want your "staged" content to always remain visible and look the same on any screen aspect. Thus the top-level, "App" element <code>&lt;vision-stage></code> acts as a stage:
+			</p>
+			<p>
+				1) It scales the rem value (&lt;html> font-size), therefore the content sized in em/rem units scales to always fit the stage vertically, or horizontally – if we define a <code>portrait</code> aspect-ratio – when the viewport aspect-ratio is under that ratio.
+			</p>
+			<p>
+				2) Optionally, using aspect-ratio boundaries provides a neat way to frame your landscape and portrait layouts by keeping the stage's dimensions within specific aspect-ratios. This prevents the layout space to extend or contract to much, so you don't have to manage how your content displays within extreme or in-between aspect-ratios. You only define a layout for landscape, and maybe allow for a wider space up to a defined <code>landscape_max</code> ratio, and you can also make a layout for portrait, and by default we allow vertical space on very narrow screens to extend without limit, for it would look weird to have empty space above and beyond the stage on phone screens… There's also a <code>portrait_alt</code> ratio that we can define for elements with the class <code>alt-scaling</code>, so their content will still be scaled relative to the stage height down to a lower ratio than portrait, thus content will be bigger than the normal content on narrow screens; this is useful for header and footer items where theres enough room.
+			</p>
+			<p>To see this in action, just make this window very wide and slowly reduce its width til it's very narrow like a phone; you will see all different aspects, which here are:
+			</p>
+			<ul class='frame text-left'>
+				<li><code>portrait_alt: 0.5</code> <wbr><em>// alternative min horizontal space <wbr>in portrait, for elements with class <code>alt-scaling</code>.</em></li>
+				<li><code>portrait: 0.6</code> <wbr><em>// min horizontal space in portrait.</em></li>
+				<li><code>portrait_max: 0.6</code> <wbr><em>// max horizontal space in portrait.</em></li>
+				<li><code>landscape: 4/3</code> <wbr><em>// min horizontal space in landscape.</em></li>
+				<li><code>landscape_max: 1.85</code> <wbr><em>// max horizontal space in landscape.</em></li>
+				<li><code>threshold: 1.2</code> <wbr><em>// point at which we switch between <wbr>portrait & landscape.</em></li>
+				<li><code>cross_margin: '1.23%'</code> <wbr><em>// margins opposite to empty space <wbr>("black bars") to detach the stage visually <wbr>and prevent the letterbox effect.</em></li>
+				<li><code>height: 40</code> <wbr><em>// rem - base vertical space.</em></li>
+			</ul>
 		</main>
 	`
 
-	learn = () => html`
-		<main flow='col full'>
+	demos = () => html`
+		<main id='demos' flow='col top grow' class=''>
+			<!-- <h1>Vision Stage</h1> -->
+			<!-- <div class='boxx' flow='col stretch'> -->
+				<h2>Demos</h2>
+				<ul class='frame'>
+					<li><a href='/demos/todo'>Todo</a></li>
+					<li><a href='/demos/guitar-vision'>Guitar Vision</a></li>
+				</ul>
+
+				<h2>Layouts and themes examples</h2>
+				<ul class='frame'>
+					<li>
+						<a href='/demos/game/'>Game</a>
+						<div>Game style nav menu, auth & settings menu.</div></li>
+					<li>
+						<a href='/demos/game/gold.html'>Gold</a>
+						<div>Game with Gold color theme.</div></li>
+					<li>
+						<a href='/demos/vs-selector/'>vs-selector</a>
+						<div>Universal selector component.</div>
+						<div>(state toggle / cycling, multi-button selector, foldable or not, single or multi-choice)</div></li>
+					<li>
+						<a href='/demos/scroll'>URL Params</a>
+						</li>
+				</ul>
+			<!-- </div> -->
+	`
+
+	start = () => html`
+		<main flow='col grow'>
 			learn
 		</main>
 	`
@@ -231,17 +149,13 @@ class App extends VS {
 }
 
 VS.config = {
+	font_size_decimals: 1,
 	// sw:'/my-app/sw.js'
 }
 
 VS.aspects = {
-	// Below the 'portrait' aspect ratio,
-	// the vertical space (rem) is extended
-	// as the content now scales to fit width.
-	// This v-extension can be limited by portrait_min,
-	// which will look weird; i.e. not recommended…
-
 	// portrait_min: 	.37,	// max vertical space in portrait
+	portrait_alt: .5,			//
 	portrait: 		.6,		// min horizontal space in portrait
 	portrait_max: 	.6,		// max horizontal space in portrait
 	landscape: 		4/3,		// min horizontal space in landscape
@@ -260,10 +174,13 @@ VS.sounds = {
 VS.languages = ['en', 'fr']
 
 VS.pages = {
-	'': 		["Home", "Accueil"],
-	//why:		["Why", "Pourquoi"],
-	how: 		["How", "Comment"],
-	learn:	["Learn", "Apprendre"],
+	'': 					["Home", "Accueil"],
+	//why:				["Why", "Pourquoi"],
+	motivation: 		["Motivation"],
+	stage:				["The Stage", "Le Stage"],
+	demos:				["Demos", "Démos"],
+	start:				["Start!", "Commencer!"],
+	'https://github.com/ncodefun/visionstage.dev' : ["Github"],
 }
 
 VS.strings = {
@@ -282,4 +199,4 @@ VS.properties = {
 	},
 }
 
-define( 'vision-stage', App)
+define( 'vision-stage', App, ['vs-button.js'])

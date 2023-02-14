@@ -55,6 +55,10 @@ class App extends VS {
 		</header>
 
 		<section id='app-content' class='rel' flow='col top grow'>
+			<div id='veil'
+				class='layer ${ strIf('show', this.show_menu || this.show_settings) }'
+				@pointerdown=${ () => { if (this.page && this.show_menu) this.show_menu = false }}>
+			</div>
 			<!-- Inside middle section: will not overlay header & footer -->
 			<vs-modal type='full'></vs-modal>
 			<!-- cache when we're switching template to prevent destroying / rebuilding -->
@@ -64,7 +68,7 @@ class App extends VS {
 		<footer id='app-footer' class='alt-scaling rel' flow='row'>
 
 			<button id='nav-toggle' class='square bare'
-				@pointerup=${ e => this.menu_open = !this.menu_open }
+				@click=${ e => this.show_menu = !this.show_menu }
 				>
 				${ icon('navicon-round', 'x-large') }
 			</button>
@@ -77,8 +81,10 @@ class App extends VS {
 
 		</footer>
 	`
+
 	home = () => html`
 		<main id='home' flow='col top grow' class='scroll shadow'>
+			<p>${this.params?.map(p=>html`<div>Param: ${p[0]}</div>`)}</p>
 			<h1>${ this.$todo }</h1>
 			<form
 				flow='row stretch'
@@ -92,7 +98,7 @@ class App extends VS {
 					}
 				}}
 				>
-				<input type='text' id='todo-input' placeholder='new todo'>
+				<vs-text-input id='todo-input' placeholder='new todo'></vs-text-input>
 				<button class='primary small'>${ icon('plus', 'small') }</button>
 			</form>
 
@@ -196,9 +202,17 @@ class App extends VS {
 		</main>
 	`
 
+	two = () => html`<main><h1>Page two</h1></main>`
+
+	onPageChanged(){ //! jsdoc for autocomplete
+		if (this.params?.[0]?.[0]==='pwa')
+			this.is_pwa = true
+		log('err', 'params:', this.params)
+	}
+
 	async onCacheUpdated(){
 		log('ok', 'update ready!')
-		const answer = await this.modal.setup(['An update is ready.','Refresh?'], ['Later', 'Yes'])
+		const answer = await this.modal?.setup(['An update is ready.','Refresh?'], ['Later', 'Yes'])
 		if( answer===1)
 			location.reload()
 	}
@@ -212,7 +226,8 @@ const newTodo = title => ({
 })
 
 VS.config = {
-	sw: '/demos/todo/sw.js'
+	sw: '/demos/todo/sw.js',
+	update_check_min: 1,
 }
 
 VS.aspects = {
@@ -232,19 +247,22 @@ VS.sounds = {
 VS.languages = ['en', 'fr']
 
 VS.pages = {
+
+	// empty name => document.title = app.$title only (no • page)
 	'': 							["Home", "Accueil"],
-	'/demos/todo': 			['Todo'],
-	'/demos/vs-selector': 	['Components', 'Composantes'],
-	'/demos/guitar-vision':	['Guitar Vision']
+	'two':						["Two","Deux"],
+	'/demos/vs-selector': 	['vs-selector'],
+	'/demos/guitar-vision':	['Guitar Vision'],
+	'https://github.com/ncodefun/visionstage.dev': ["Github"]
 }
 
 VS.strings = {
-	title: 				["Title", "Titre"],
+	title: 				["Todo", "Tâches"],
 	details: 			["Details", "Détails"],
 	more_infos: 		["More informations", "Plus d'informations"],
 	move_up: 			["Move up", "Déplacer<br>vers le haut"],
 	move_down: 			["Move down", "Déplacer<br>vers le bas"],
-	todo: 				["To do", "À faire"]
+	todo: 				["To do", "Tâches"]
 }
 
 VS.properties = {
@@ -267,9 +285,10 @@ VS.properties = {
 		value: false,
 		//getter: () => this.show_menu || this.show_settings
 	},
+
 }
 
-define('vision-stage', App, ['vs-selector', 'vs-modal'])
+define('vision-stage', App, ['vs-selector', 'vs-modal', 'vs-text-input'])
 
 // {
 // 	update_check_min: 30,
