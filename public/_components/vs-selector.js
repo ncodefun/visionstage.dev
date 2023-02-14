@@ -1,3 +1,18 @@
+/**
+ * # Universal State Selector
+ *
+ * Two major types:
+ * 1) A single button to toggle or cycle through options;
+ * 2) Horizontal or vertical group of buttons
+ * 	to select option(s) directly or after unfolding,
+ * 	with single or multi choice;
+
+ * - Many types / styles: checkbox, switch, radio-buttons, color led / led-bar; Symbols can be positioned on any side of the label;
+ * - Any type can also show the activated state / option(s) with a specified bg color*;
+ * - Dark variant with using `.dark-components` class on a parent.
+
+*Limited keywords for now: like `blue`, `green`, or `primary`, `primary-adapt` → subtler, lighter, or darker than primary if parent has a `.dark-components` class…
+ */
 
 import { log, Component, html, define, icon, unsafeHTML, classes, ifDefined }
 	from '../vision-stage/vision-stage.min.js'
@@ -7,6 +22,15 @@ import { cycleValueWithin, containsHTML, nextFrame, strIf, q }
 
 const app = q('vision-stage')
 
+/**
+ * @prop {string} type
+ * @prop {string} [direction='vertical']
+ * @prop {string} [selected-color]
+ * @prop {array} [options] Array of objects {label,value,class?,details?} or bare strings for label & value. Labels can be an array of locale strings, following App.languages order.
+ * @prop {any} selected Selected value
+ * @prop {function} onchange callback when selected changes
+ *
+ */
 export default class Selector extends Component {
 
 	// static get dynamicAttributes(){ return ['type'] }
