@@ -1,9 +1,9 @@
 import { html, cache } from '/vision-stage/vision-stage.min.js'
 import { strIf } from '/vision-stage/utils.js'
 
-export function appContent(){ return html`
+export function appContent(options){ return html`
 
-<section id='app-content' class='rel' flow='col top stretch grow'>
+<section id='app-content' class=${options?.class||'scroll shadow'} flow='col top stretch grow'>
 
 	<!-- For when showing menu (footer nav or game) or settings (settingsTemplate()) -->
 	<div id='veil'
@@ -19,6 +19,5 @@ export function appContent(){ return html`
 
 	<!-- cached pages templates – calls methods named after their page name -->
 	${ this.page !== null && cache( this[ this.page||'home' ]() ) }
-
 </section>
 `}

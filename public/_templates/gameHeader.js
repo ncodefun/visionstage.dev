@@ -28,7 +28,7 @@ export function gameHeader(){ return html`
 
 		<h1>${ this.$title }</h1>
 
-		<button
+		<button is='vs-button'
 			id='page-btn'
 			class='abs bare fadable ${ this.show_menu||this.show_settings ? 'faded':'delayed-fade-in' }'
 			title=${ this.$menu }
@@ -44,10 +44,10 @@ export function gameHeader(){ return html`
 		<nav
 			flow='col'
 			class='abs ${ strIf('show', this.show_menu) }'
-			@click=${ e => {
+			@pointerdown=${ e => {
 				//log('ok', 'e.target', e.target)
-				// will have page defined if button
-				// otherwise: we clicked nav bg -> only close if !!page
+				// will have page defined if clicked button
+				// otherwise: we clicked nav bg -> only close if page
 				if (e.target.classList.contains('button') || this.page){
 					this.show_menu = false
 				}
@@ -80,7 +80,7 @@ export function gameHeader(){ return html`
 
 	<span flow='row right gaps'>
 
-		<button
+		<button is='vs-button'
 			id='night-mode-toggle'
 			class='square bare fadable ${ strIf('faded', !this.show_settings) }'
 			title=${ this.$night_mode }
@@ -89,7 +89,7 @@ export function gameHeader(){ return html`
 			<span class='shift-icon icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
 		</button>
 
-		<button
+		<button is='vs-button'
 			id='fullscreen-toggle'
 			class='square bare fadable ${ strIf('faded', !this.show_settings) }'
 			title=${ this.$fullscreen }
@@ -102,7 +102,7 @@ export function gameHeader(){ return html`
 			${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, 'x-large') }
 		</button>
 
-		<button
+		<button is='vs-button'
 			id='settings-btn'
 			class='square bare'
 			title=${ this.$settings }
