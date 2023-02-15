@@ -1602,10 +1602,13 @@ VisionStage._properties = {
 					}
 				}
 			}
+			if (this.params?.[0]?.[0]==='pwa')
+				this.is_pwa = true
 
 			this.onPageChanged && this.onPageChanged( val, prev)
 		}
 	},
+	is_pwa: false,
 }
 
 /**
