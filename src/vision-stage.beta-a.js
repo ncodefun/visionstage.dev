@@ -260,8 +260,16 @@ export class Component extends HTMLElement {
 						if (desc.sync_to_url_param){
 							// Update param - find param w/ name matching prop, sync it's val [1]
 							// this prop may be global and app doesn't use or have params
-							if (this.params){
+
+							if (!this.params) {
+								// build params
+								this.params = [[prop,val]]
+							}
+							else if (desc.force_url_param) {
+								// update params
 								this.params[this.params.findIndex(p => p[0]===prop)][1] = val
+							}
+							if (this.params){
 								// Update hash
 								let page = this.getPage().path.split('/')[0] // remove possible params
 								let hash = page + '/' +
@@ -812,12 +820,13 @@ export class VisionStage extends Component {
 			}
 		}
 
-		if (!page_name){ // unknown
+		if (page && !page_name)
 			log('warn', 'unknown path:', h)
+
+		if (!page_name){ // unknown
 			this.page = ''
 			return
 		}
-
 		this.page = page_name
 		this.updateDocTitle()
 	}
