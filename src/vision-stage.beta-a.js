@@ -261,14 +261,22 @@ export class Component extends HTMLElement {
 							// Update param - find param w/ name matching prop, sync it's val [1]
 							// this prop may be global and app doesn't use or have params
 
-							if (!this.params) {
+							if (!this.params && desc.force_url_param) {
 								// build params
 								this.params = [[prop,val]]
 							}
-							else if (desc.force_url_param) {
-								// update params
-								this.params[this.params.findIndex(p => p[0]===prop)][1] = val
+							else {
+								const p = this.params[this.params.findIndex(p => p[0]===prop)]
+								// update param if exists
+								if (p){
+									p[1] = val
+								}
+								// add it if we want to force an url param
+								else if (desc.force_url_param){
+									this.params.push([prop,val])
+								}
 							}
+
 							if (this.params){
 								// Update hash
 								let page = this.getPage().path.split('/')[0] // remove possible params
