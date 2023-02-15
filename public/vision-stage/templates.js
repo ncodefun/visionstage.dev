@@ -49,7 +49,7 @@ function rightSettings(){ return html`
 	<span flow='row right gaps'>
 		<button is='vs-button' id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
 			@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
-			<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
+			<span class='icon moon small ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 		</button>
 
 		<button is='vs-button' id='fullscreen-toggle'
