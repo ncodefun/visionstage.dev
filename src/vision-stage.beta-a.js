@@ -261,20 +261,19 @@ export class Component extends HTMLElement {
 							// Update param - find param w/ name matching prop, sync it's val [1]
 							// this prop may be global and app doesn't use or have params
 
-							if (!this.params && desc.force_url_param) {
+							if (!this.params) {
 								// build params
-								this.params = [[prop,val]]
+								if (desc.force_url_param)
+									this.params = [[prop,val]]
 							}
 							else {
 								const p = this.params[this.params.findIndex(p => p[0]===prop)]
 								// update param if exists
-								if (p){
-									p[1] = val
-								}
+								if (p) p[1] = val
+
 								// add it if we want to force an url param
-								else if (desc.force_url_param){
+								else if (desc.force_url_param)
 									this.params.push([prop,val])
-								}
 							}
 
 							if (this.params){
@@ -1814,7 +1813,7 @@ function storedValue(ns, elem_id, prop){
 		initStore(ns)
 		s = stores[ns]?.[elem_id]
 	}
-	s?.[prop]!==undefined && log('purple', 'Got storedValue:', prop, s[prop])
+	//s?.[prop]!==undefined && log('purple', 'Got storedValue:', prop, s[prop])
 	return s ? s[prop] : undefined
 }
 /** either save to localStorage after setting a prop on elem, or just save */
