@@ -99,8 +99,8 @@ class App extends VS {
 
 			<ul class='frame text-left'>
 				<li><code>portrait_alt: 0.5</code> <wbr><em>// alternative min horizontal space <wbr>in portrait, for elements with class <code>alt-scaling</code>.</em></li>
-				<li><code>portrait: 0.6</code> <wbr><em>// min horizontal space in portrait.</em></li>
-				<li><code>portrait_max: 0.6</code> <wbr><em>// max horizontal space in portrait.</em></li>
+				<li><code>portrait: 0.66</code> <wbr><em>// min horizontal space in portrait.</em></li>
+				<li><code>portrait_max: 0.66</code> <wbr><em>// max horizontal space in portrait.</em></li>
 				<li><code>landscape: 4/3</code> <wbr><em>// min horizontal space in landscape.</em></li>
 				<li><code>landscape_max: 1.85</code> <wbr><em>// max horizontal space in landscape.</em></li>
 				<li><code>threshold: 1.2</code> <wbr><em>// point at which we switch between <wbr>portrait & landscape.</em></li>
