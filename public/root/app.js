@@ -1,13 +1,11 @@
-import { VisionStage as VS, html, define, log, icon }
+import { VisionStage as VS, html, define, log }
 	from '/vision-stage/vision-stage.min.js'
 
-import { appHeader } 	from '/_templates/appHeader.js'
-import { appContent } 	from '/_templates/appContent.js'
-import { appFooter } 	from '/_templates/appFooter.js'
+import { appHeader, appContent, appFooter }
+	from '/vision-stage/templates.js'
 
-// const github = html`<a href='https://github.com/ncodefun/visionstage.dev'
-// 	target='_'>Github</a> ${ icon('ext-link') }`
 const minibrand = html`<h1 class='mini'>Vision Stage</h1>`
+
 class App extends VS {
 
 	onConnected = () => this.render()
@@ -199,4 +197,4 @@ VS.properties = {
 	},
 }
 
-define( 'vision-stage', App, ['vs-button.js'])
+define( 'vision-stage', App)

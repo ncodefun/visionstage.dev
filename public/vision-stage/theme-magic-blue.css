@@ -2,8 +2,16 @@
 	--hue: 150deg;
 	--text-color-dark: hsl(150, 20%, 17%);
 	--text-color-light: hsl(150, 56%, 88%);
-	--link-color: hsla(150, 90%, 70%, .85);
-	--link-color-hl: hsl(150, 90%, 70%);
+
+	--link-color: hsl(150, 90%, 70%);
+	--link-color-hl: hsl(150, 90%, 62%);
+
+	--primary: hsl(150deg, 90%, 62%);
+	--primary-hl: hsl(150, 90%, 70%);
+	/* --primary-hl: hsl(150, 90%, 78%); */
+}
+#app-content, body[night-mode] #app-content {
+	background: none;
 }
 body {
 	--scrollbar-handle-color: hsl(247, 70%, 67%);
@@ -17,6 +25,7 @@ body {
 }
 body[night-mode='1'] {
 	background: hsl(260deg 15% 52%);
+	--scrolls-over-shadow-top-color: hsl(256deg 88% 35% / 75%);
 	--scrolls-over-shadow-bottom-color: hsl(256deg 88% 35% / 75%);
 }
 body[night-mode='2'] {
@@ -29,38 +38,45 @@ body[night-mode] {
 	--hue: 276deg;
 	--primary: hsl(276, 93%, 79%);
 	--primary-hl: hsl(276, 100%, 83%);
-	--link-color: hsla(276, 100%, 83%, 1);
-	--link-color-hl: hsl(276, 100%, 88%);
+
+	--link-color: hsl(276, 100%, 88%);
+	--link-color-hl: hsl(276, 100%, 85%);
 }
 
+body[night-mode] vision-stage,
 vision-stage {
-	--floor: 56%;
-	background-color:  hsl(256, 88%, 40%);
-	/* background-image:
-		linear-gradient( to bottom,
-			rgba(0,0,0,0),
-			rgba(0,0,0,0) var(--floor),
-			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
-			rgba(0,0,0,0) 70%,
-			hsla(298, 69%, 90%, 0.12)),
-		radial-gradient( circle farthest-side,
-			hsla(0, 0%, 82%, 0.19),
-			hsla(0, 0%, 75%, 0.08) 60%,
-			hsla(0, 0%, 69%, 0)) */
-}
-/* body[night-mode]  */
-vision-stage {
+	--floor: 24rem;
+	background-color: hsl(256, 88%, 40%);
 	background-image:
 		linear-gradient( to bottom,
 			rgba(0,0,0,0),
 			rgba(0,0,0,0) var(--floor),
 			rgba(0,0,0,0.07) calc(var(--floor) + 1.5rem),
+			rgba(0,0,0,0) 35rem,
+			hsla(298, 69%, 90%, 0.12)),
+		radial-gradient( circle at 50% 20rem,
+			hsla(0, 0%, 82%, .15),
+			hsla(0, 0%, 75%, .08) 14rem,
+			hsla(0, 0%, 69%, .05));
+}
+vision-stage[orientation='portrait'] {
+	/* --floor: 24rem; */
+}
+
+/* body[night-mode]  */
+vision-stage {
+	/* --floor: 27rem; */
+	/* background-image:
+		linear-gradient( to bottom,
+			rgba(0,0,0,0),
+			rgba(0,0,0,0) var(--floor),
+			rgba(0,0,0,0.17) calc(var(--floor) + 1.5rem),
 			rgba(0,0,0,0) 70%,
 			hsla(46, 69%, 90%, .1)),
 		radial-gradient( circle farthest-side,
 			hsla(0, 0%, 82%, 0.12),
 			hsla(0, 0%, 75%, 0.08) 60%,
-			hsla(0, 0%, 69%, 0))
+			hsla(0, 0%, 69%, 0)) */
 }
 body[night-mode='1'] vision-stage {
 	background-color: hsl(255, 24%, 27%);
@@ -77,13 +93,13 @@ body[night-mode='2'] vision-stage {
 
 
 #veil {
-	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
-	filter: contrast(0.22) saturate(10) brightness(0.7);
+	background: url(/_assets/images/textures/brushed-alum.png) hsl(243deg 100% 50%);
+	filter: contrast(0.22) saturate(10) brightness(0.52);
 }
 body[night-mode] #veil {
   background-blend-mode: overlay;
   background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
-  filter: saturate(3) contrast(0.8) brightness(0.7);
+  filter: saturate(3) contrast(0.8) brightness(0.6);
 }
 #veil.show {
 	opacity: .9;
@@ -92,9 +108,9 @@ body[night-mode] #veil.show {
   opacity: .95;
 }
 
-body[night-mode='1'] .scroll.shadow::before,
-body[night-mode='1'] .scroll.shadow::after {
-	filter: saturate(.125) brightness(1.66);
+body[night-mode] .scroll.shadow::before,
+body[night-mode] .scroll.shadow::after {
+	filter: saturate(.1) brightness(1.5);
 }
 
 body[night-mode] .equal-deco {
@@ -105,37 +121,32 @@ body:not([night-mode]) .equal-deco {
 	color:hsla(150deg, 100%, 70%, .25);
 	opacity: 1;
 }
-
-button.underline,
-nav.v-menu a {
+/*
+#app[orientation='portrait'] nav.v-menu a {
 	color: hsla(150deg, 90%, 70%, .78);
 	text-decoration-color: hsla(150deg, 90%, 70%, .6);
 }
-button.underline.selected,
-nav.v-menu a.selected {
+#app[orientation='portrait'] nav.v-menu a.selected {
 	color: hsla(150deg, 90%, 70%, .95);
 	text-decoration-color: currentColor;
 }
-button.underline:hover,
-nav.v-menu a:hover {
+#app[orientation='portrait'] nav.v-menu a:hover {
 	color: hsla(150deg, 90%, 70%, 1);
 	text-decoration-color: currentColor;
 }
-body[night-mode] button.underline,
-body[night-mode] nav.v-menu a {
+body[night-mode] #app[orientation='portrait'] nav.v-menu a {
 	color: hsla(276deg, 42%, 75%, 1);
 	text-decoration-color: hsla(276deg, 45%, 72%, .86);
 }
-body[night-mode] button.underline.selected,
-body[night-mode] nav.v-menu a.selected {
+body[night-mode] #app[orientation='portrait'] nav.v-menu a.selected {
 	color: hsla(276deg, 100%, 86%, 1);
 	text-decoration-color: currentColor;
 }
-body[night-mode] button.underline:hover,
-body[night-mode] nav.v-menu a:hover {
+body[night-mode] #app[orientation='portrait'] nav.v-menu a:hover {
 	color: hsla(276deg, 100%, 90%, 1);
 	text-decoration-color: currentColor;
-}
+} */
+
 a + .vs-icon {
 	color: var(--link-color);
 	opacity: .75;
@@ -176,8 +187,8 @@ body[night-mode] #app.content-has-scrollbar #app-footer {
 
 }
 body[night-mode] #app-footer {
-	background: hsla(254, 23%, 29%, 0.33);
-	/* background: hsl(256deg 26% 26% / 79%); */
+	/* background: hsla(254, 23%, 29%, 0.33); */
+	background: #0001;
 }
 body[night-mode] .scroll.shadow::before,
 body[night-mode] .scroll.shadow::after,

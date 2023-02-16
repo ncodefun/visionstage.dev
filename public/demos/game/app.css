@@ -1,5 +1,23 @@
+:root {
+  --app-footer-height: 0em;
+}
+body {
+  --hue: 256deg;
+	--primary: hsl(var(--hue), 93%, 59%);
+	--primary-hl: hsl(var(--hue), 100%, 63%);
+	--link-color: hsl(var(--hue), 93%, 59%);
+	--link-color-hl: hsl(var(--hue), 100%, 63%);
+}
 
+body[night-mode] {
+  --hue: 256deg;
+	--primary: hsl(var(--hue), 100%, 78%);
+	--primary-hl: hsl(var(--hue), 100%, 75%);
 
+	--link-color: hsl(var(--hue), 100%, 78%);
+	--link-color-hl: hsl(var(--hue), 100%, 75%);
+
+}
 button, input, a.button {
 	/* font-size: .9em;
 	line-height: 1.6; */
@@ -35,7 +53,9 @@ input:focus, textarea:focus {
   border-bottom-right-radius: .5rem;
 }
 
-
+/* #app-header > span {
+  border: 1px solid #fff3;
+} */
 /* vision-stage {
   background: hsl(48, 7%, 13%);
 } */

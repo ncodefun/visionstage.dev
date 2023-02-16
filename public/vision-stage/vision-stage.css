@@ -1,16 +1,30 @@
 @import '/vision-stage/colors.css';
 
-html {
-	--app-header-height: 3.5em; /* calc(var(--sth) / 12) */
+:root {
 	--app-footer-height: 3.5em;
+	/* ! em causes problems:
+		must be defined here for access,
+		but em here is not alt-scaled...
+	 */
 	--scrollbar-bg-color: #0001;
-	--scrollbar-handle-color: #FFF5;
+	--scrollbar-handle-color: #FFF8;
 	--blue-gray-darker: hsl(215, 11%, 22%);
 	--scrolls-over-shadow-top-color: #aaa7;
 	--scrolls-over-shadow-bottom-color: #bbb5;
 	--scrolls-shadow-color: #9999;
 	font: 1rem/1.5 Josefin Sans, serif;
 }
+body {
+	--app-header-height: 3.5em;
+	/* for non- .alt-scaled to match size of header */
+	--scaled-header-height: calc(var(--sth-based-fs-em) * 3.5);
+	/*  */
+	/* calc(var(--sth) / 12); */
+	/*  */
+	/* 3.5em; */
+
+}
+
 body[night-mode] {
 	--scrolls-over-shadow-top-color: #222;
 	--scrolls-over-shadow-bottom-color: #222a;
@@ -41,13 +55,14 @@ body[night-mode] .scroll.shadow::after {
 
 
 vision-stage,
-#app-content {
-	background: url(/_assets/images/textures/paper-opaque-8bit.png);
+#app-content.scroll {
+	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
 	background-attachment: local;
-	background-blend-mode: multiply;
+	/* background-blend-mode: multiply; */
 }
+
 body[night-mode] vision-stage,
-body[night-mode] vision-stage #app-content {
+body[night-mode] #app-content {
 	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
 	background-color: #333;
 	background-blend-mode: multiply;
@@ -137,13 +152,13 @@ vision-stage.has-margins {
 }
 body[night-mode] #veil {
   background-blend-mode: overlay;
-  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 0%, 34%);
-  filter: saturate(3) contrast(0.8) brightness(0.7);
+  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(0, 0%, 13%);
+  filter: contrast(0.8) brightness(0.7);
 }
 #veil {
 	pointer-events: auto; /* is .layer... */
-	height: calc(100% - var(--app-header-height) - var(--app-footer-height));
-	top: var(--app-header-height);
+	height: calc(100% - var(--scaled-header-height) - var(--app-footer-height));
+	top: var(--scaled-header-height);
 	z-index: 4;
 	will-change: opacity, visibility;
 }
@@ -172,15 +187,15 @@ body[night-mode] #veil {
 	background-color: hsl(var(--hue) 13% 17%);
 }
 #app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(var(--hue) 54% 25%);
+	border: 1px solid hsl(var(--hue) 25% 41%);
 	background: hsl(var(--hue) 21% 24%);
 }
 body[night-mode] #app[orientation='portrait'] nav.v-menu {
-	background-color: hsl(var(--hue), 13%, 17%);
+	/* background-color: hsl(var(--hue), 13%, 17%); */
 }
 body[night-mode] #app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(var(--hue) 25% 41%);
-	background: hsl(265deg 19% 22%);
+	/* border: 1px solid hsl(var(--hue) 25% 41%); */
+	background: hsl(var(--hue) 19% 22%);
 }
 
 
@@ -443,7 +458,7 @@ hr.split {
 [flow~='row'][flow~='block-gaps-large'],
 [flow~='col'][flow~='inline-gaps-x-large'] { row-gap: 3em }
 
-
+[flow] > p + p:not(:first-of-type) { margin-top: 0 }
 span.vs-icon {
 	height: 1em;
 	width: 1em;
@@ -458,13 +473,6 @@ span.vs-icon svg {
 	stroke: none;
 	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, .25));
 }
-span.vs-icon.x-small { font-size: .72em }
-span.vs-icon.small { font-size: .85em }
-span.vs-icon.large { font-size: 1.25em }
-span.vs-icon.x-large { font-size: 1.37em }
-span.vs-icon.xx-large { font-size: 1.5em }
-span.vs-icon.xxx-large { font-size: 1.75em }
-
 
 /* @font-face {
 	font-family: 'Open Sans';
@@ -544,8 +552,9 @@ main:not(.no-fade-in) {
 
 
 #app-header, #app-footer {
+	flex-shrink: 0; /* else shrinks when overflowing scrolling content */
 	transition: background-color .3s ease;
-	z-index: 4
+	z-index: 6;
 }
 
 #app-header {
@@ -566,7 +575,6 @@ main:not(.no-fade-in) {
 #app-footer {
 	flex-shrink: 0;
 	background: #0001;
-
 	height: var(--app-footer-height, auto);
 }
 #app-footer nav {
@@ -795,12 +803,15 @@ body.using-mouse *::-moz-focus-inner {
 }
 body.using-mouse button, body.using-mouse a { outline: none !important }
 
-button.mini, button.xx-small { font-size: .7em;}
-button.small { font-size: .85em; }
-button.smaller, button.x-small { font-size: .75em }
-button.medium { font-size: 1.125em }
-button.big, button.large { font-size: 1.25em }
-button.bigger, button.x-large { font-size: 1.5em }
+.xxx-large { font-size: 1.75em }
+.xx-large { font-size: 1.5em }
+.x-large, .bigger { font-size: 1.37em }
+.large, .big { font-size: 1.25em }
+.m-large, .medium { font-size: 1.125em }
+.m-small { font-size: .92em }
+.small { font-size: .85em; }
+.x-small, .smaller { font-size: .75em }
+.xx-small, .mini { font-size: .7em;}
 
 button.round, button.square {
 	width: 2em;

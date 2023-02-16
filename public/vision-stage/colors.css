@@ -1,18 +1,19 @@
 :root {
-	--link-color: hsl(217, 100%, 57%);
-	--link-color-hl: hsl(217, 100%, 64%);
+	--link-color: hsl(217, 100%, 62%);
+	--link-color-hl: hsl(217, 100%, 66%);
 	--primary: hsl(217, 100%, 52%);
 	--primary-hl: hsl(217, 90%, 55%);
-	--primary-inactive: hsla(217, 20%, 50%, .5);
 	--hue: 217deg;
 }
 body {
-	background: #aaa;
+	/* declare on body to match correct body[night-mode] --hue */
+	--primary-inactive: hsla(var(--hue), 20%, 50%, .8);
+	background: #2b2b2b;
 }
 body[night-mode] {
 	background: #1c1c1c;
-	--link-color: hsl(217, 100%, 60%);
-	--link-color-hl: hsl(217, 100%, 62%);
+	--link-color: hsl(217, 100%, 62%);
+	--link-color-hl: hsl(217, 100%, 66%);
 }
 /**  Basic light and dark button colors  **/
 button {
@@ -31,6 +32,7 @@ button {
 		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 25%);
 		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
 }
+button.dark,
 .dark-components button:not(.primary):not(.bare) {
 	--btn-bg-color: #272727;
 	--btn-bg-color-hl: #303030;
@@ -326,11 +328,16 @@ button.underline {
 	color: var(--primary);
 } */
 
-vs-selector button.underline {
+/* vs-selector  */
+button.underline {
 	color: var(--primary-inactive);
 }
-vs-selector button.underline.selected {
+/* vs-selector  */
+button.underline.selected {
 	color: var(--primary);
+}
+button.underline:hover {
+	color: var(--primary-hl);
 }
 
 
@@ -347,7 +354,7 @@ nav.v-menu a.selected {
 	color: var(--link-color-hl);
 }
 button.underline {
-	color: inherit;
+	/* color: inherit; */
 	font-weight: 600;
 }
 body[night-mode] button.underline {
@@ -355,24 +362,7 @@ body[night-mode] button.underline {
 }
 
 
-button.underline:hover,
+/* button.underline:hover, */
 nav.v-menu a:hover {
 	color: var(--link-color-hl);
-	/* color: hsla(150deg, 90%, 70%, 1); */
-	/* text-decoration-color: currentColor; */
-}
-/* body[night-mode] button.underline, */
-body[night-mode] nav.v-menu a {
-	/* color: hsla(276deg, 42%, 75%, 1); */
-	/* text-decoration-color: hsla(276deg, 45%, 72%, .86); */
-}
-/* body[night-mode] button.underline.selected, */
-body[night-mode] nav.v-menu a.selected {
-	/* color: hsla(276deg, 100%, 86%, 1); */
-	/* text-decoration-color: currentColor; */
-}
-/* body[night-mode] button.underline:hover, */
-body[night-mode] nav.v-menu a:hover {
-	/* color: hsla(276deg, 100%, 90%, 1); */
-	/* text-decoration-color: currentColor; */
 }

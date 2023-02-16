@@ -19,7 +19,6 @@
   animation-fill-mode: backwards;
 }
 #app-header {
-  z-index: 4;
   /* box-shadow: 0 .25rem .5rem hsla(0, 0%, 0%, .15); */
 }
 #settings h2 {
@@ -38,7 +37,7 @@
 #page-btn {
   min-width: 11em;
   color: #000c;
-  top: 2.6rem;
+  top: 2.75em;
   padding: .4em 2em .5em;
   font-family: Luckiest Guy;
   text-transform: uppercase;
@@ -73,7 +72,7 @@
 
 #page-btn,
 #title nav a.button {
-  font-size: 1rem;
+  font-size: 1em;
 	font-weight: 600;
   line-height: 1.1;
 }
@@ -120,13 +119,14 @@ body:not(.using-mouse) #title nav a:focus-visible svg.fanion {
 
 #settings {
   padding: 5rem 1rem 1rem;
-  z-index: 2;
+  z-index: 4;
   animation: fade-in .6s .3s ease;
   animation-fill-mode: backwards;
 }
 
 #app-header h1 {
 	color: hsl(250, 73%, 84%);
+  color: hsl(256, 73%, 64%);
 	margin: 0;
 	font: 2rem/1 'Luckiest Guy';
 	transition: transform .4s ease;
@@ -134,10 +134,36 @@ body:not(.using-mouse) #title nav a:focus-visible svg.fanion {
 #app.show-settings #app-header h1 {
 	transform: translateY(.2rem);
 }
+body[night-mode] #app-header h1 {
+	color: hsl(250, 73%, 80%);
+}
 /* Make sides equal width so title is perfect center */
-#app-header > span:first-child {
+/* #app-header > span:first-child {
   flex: 0 0 10rem;
 }
 #app-header > span:last-child {
   flex: 0 0 10rem;
+} */
+
+#app-header {
+	display: grid;
+	grid-template-columns: 1fr minmax(auto, 15rem) 1fr;
+	grid-template-rows: var(--app-header-height);
+	align-items: center;
+	align-content: center;
+}
+#app[orientation='portrait'] #app-header {
+  padding-left: .5em;
+  grid-template-columns: 1fr 1.25fr 1fr;
+}
+#app[orientation='portrait'] #app-header span:last-child {
+  gap: .6em;
+}
+/* #app[orientation='portrait']  */
+#app-header h1 {
+  font-size: 1.9em;
+  line-height: 1.5;
+}
+#app[orientation='portrait'] #app-header > * {
+  font-size: .9em;
 }

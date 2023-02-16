@@ -1,18 +1,17 @@
-import { VisionStage as VS, html, cache, define, log, icon, useSVG }
+import { VisionStage as VS, html, define, log }
 	from '/vision-stage/vision-stage.min.js'
 
-import { q, sleep, strIf, cycleValueWithin }
+import { q, sleep, strIf }
 	from '/vision-stage/utils.js'
 
-import { gameHeader } from '/_templates/gameHeader.js'
-import { appContent } from '/_templates/appContent.js'
+import { appContent, gameHeader }
+	from '/vision-stage/templates.js'
 
 class App extends VS {
 
 	onConnected = () => this.render()
 
 	onPageChanged( page, prev){
-		// log('info', 'onPageChanged; page, params:', page, this.params)
 		if (!page) this.show_menu = true
 		else {
 			this.show_menu = false
@@ -32,7 +31,7 @@ class App extends VS {
 
 			<div style='margin: auto;' class='vs-box rounded'>
 				<h2>Connexion</h2>
-				<div class='vs-box rounded' id='connection' flow='row gaps'>
+				<div class='vs-box rounded' id='connection' flow='row wrap gaps'>
 					<input type='email' id='user-email'
 						placeholder='email'>
 					<input type='password' id='user-password'
@@ -74,19 +73,20 @@ class App extends VS {
 }
 
 VS.config = {
+	font_size_decimals: 0,
 	// sw:'/my-app/sw.js'
 }
 
 VS.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
-	portrait: 		.5,		// min horizontal space in portrait
-	portrait_max: 	.65,		// max horizontal space in portrait
-	// threshold: 		1.2,
+	portrait_alt:	.6,
+	portrait: 		.75,		// min horizontal space in portrait
+	portrait_max: 	.75,		// max horizontal space in portrait
+	threshold: 		1.2,
 	landscape: 		1.39,		// min horizontal space in landscape
 	landscape_max: 16/9,		// max horizontal space in landscape
 	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
 	height: 40,					// rem - base vertical space
-	portrait_height: 64,
+	// portrait_height: 64,
 }
 
 VS.sounds = {

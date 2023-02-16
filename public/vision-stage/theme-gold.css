@@ -1,6 +1,5 @@
 /*! components styles will load after this; we must use more specific selectors… */
 
-
 :root {
 	--nav-bg: hsl(60, 7%, 22%);
 	--nav-border: hsl(60, 7%, 17%);
@@ -9,12 +8,27 @@
 	--menu-section-color: hsl(60, 7%, 22%) !important;
 	--menu-section-border-top: hsl(60, 7%, 33%) !important;
 	--menu-section-border-bottom: hsl(60, 7%, 12%) !important;
+	--hue:45deg;
+	--primary: hsl(45, 100%, 76%);
+	--primary-hl: hsl(45, 100%, 73%);
 }
 body {
+	/* declare on body to match correct body[night-mode] --hue */
+	--primary-inactive: hsl(var(--hue), 45%, 66%);
   background: hsl(60, 7%, 22%);
 }
+
 body[night-mode='1'] {
 	background-color: hsl(50deg 7% 42%);
+	--primary-inactive: hsla(var(--hue), 30%, 60%, .6);
+
+}
+body, body[night-mode] {
+	--link-color: hsla(45, 100%, 76%, .85);
+	--link-color-hl: hsl(45, 100%, 76%);
+}
+#app-content, body[night-mode] #app-content {
+	background: none !important;
 }
 #app {
 	color: hsl(45deg 20% 20%);
@@ -29,9 +43,6 @@ body[night-mode='1'] #app {
 	background-color: hsl(40, 10%, 11%);
 }
 #app, body[night-mode] #app {
-	--hue:45deg;
-	--link-color: hsla(45, 100%, 76%, .85);
-	--link-color-hl: hsl(45, 100%, 76%);
 }
 /* body[night-mode] {
 	--hue: 45deg;
@@ -85,12 +96,17 @@ body[night-mode] vs-modal .content {
   background: hsl(50deg 7% 42%);
 }
 #app vs-modal {
-	--modal-bg: url(/_assets/images/textures/brushed-alum.png) #b3ab8f;
-	--modal-bg-filter: contrast(1.4) brightness(0.7);
-	--modal-bg-blend-mode: overlay;
-
+	/* --modal-bg: url(/_assets/images/textures/brushed-alum.png) #b3ab8f; */
+	--modal-bg: url(
+	/_assets/images/textures/brushed-alum.png) hsl(47deg 15% 59%);
+	/* --modal-bg-filter: contrast(1.4) brightness(0.7);
+	--modal-bg-blend-mode: overlay; */
 	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) #45423d;
-	--modal-dark-bg-filter: saturate(3) contrast(0.8) brightness(0.7);
+	--modal-dark-bg-filter:
+		saturate(3.5) contrast(0.7) brightness(0.64);
+	/* --modal-dark-bg-filter:
+		saturate(3) contrast(0.8) brightness(0.7); */
+
 	--modal-dark-bg-blend-mode: overlay;
 
 }

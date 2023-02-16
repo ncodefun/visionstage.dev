@@ -1,24 +1,14 @@
-/// DEMO
-/// selectors: tabs | radio, select, checkbox/led/under-line/toggle switch, multi selections (checkboxes)
-/// gallery w/ prev / next (see /vision-stage)
-/// input, text-area, bare input
-
-import { VisionStage as VS, Component, html, cache, define, log, icon}
+import { VisionStage as VS, html, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
 import { cycleValueWithin, sleep, strIf, labelAsClassMapper, labelOptionsMapper }
 	from '/vision-stage/utils.js'
-import { appContent } from '/_templates/appContent.js'
-import { appFooter } from '/_templates/appFooter.js'
+
+import { appContent, appFooter }
+	from '/vision-stage/templates.js'
 
 const fs = window.screenfull // embeded / global
 const config = VS.config
-
-// log('info', 'Updated 2022.07.29')
-
-// Use real char for readability (vs-code will highlight these for visibility)
-// thinsp:" "
-// hairsp:" "
 
 // new explicit format for options
 // const opts = [
@@ -69,14 +59,7 @@ const ICON_GRID_OPTS = [
 
 class App extends VS {
 
-	onConnected = () => {
-		//this.observed = {'Selector':['type']}
-		//! DO NOT RENDER BEFORE LOADED, ELSE BINDINGS GET MESSED UP
-		Component.load('vs-selector').then( async module => {
-			//log('ok', 'vs-selector loaded')
-			this.render()
-		})
-	}
+	onConnected = () => this.render()
 
 	template = () => html`
 		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
@@ -101,8 +84,6 @@ class App extends VS {
 					}}>
 					🎨
 				</button>
-
-				<!-- /// type='cycler' | 'stepper' | 'steppers' -> can set .values instead of options and keep showing the initial content as the only label ?? (or bad idea... no signifier?)-->
 
 				<!-- <vs-selector id='dark-comp-selector' class='bare'
 					.btn_class='sun \${ this.dark_components ? 'dark' : '' }'
@@ -223,6 +204,7 @@ class App extends VS {
 				</section>
 			</div>
 
+			<!-- Default: .menu buttons are aligned to top -->
 			<vs-selector id='radio-buttons'
 				direction='horizontal'
 				type='radio'
@@ -324,6 +306,7 @@ class App extends VS {
 }
 
 VS.config = {
+	font_size_decimals: 1,
 	// sw:'/my-app/sw.js'
 }
 
@@ -344,16 +327,12 @@ VS.sounds = {
 	// win:	'win.mp3',
 }
 
-VS.languages = ['en', 'fr']
+VS.languages = 	['en', 'fr']
 
 VS.pages = {
-	'': 							["Home", "Accueil"],
-	// about: 					['About', 'À propos'], // -> /#About | /#À propos
-	'/demos': 					["Demos"],
-	'/': 							["Vision Stage"],
-	'/demos/todo': 			['Todo', 'Todo'],
-	'/demos/guitar-vision': ['Guitar', 'Guitare'],
-	'https://appy.world': 	['appy.world']
+	'': 				["Home", "Accueil"],
+	about: 			['About', 'À propos'],
+	'/': 				["Vision Stage"],
 }
 
 VS.strings = {
@@ -400,5 +379,5 @@ VS.properties = {
 	stepper_val: 'two'
 }
 
-define( 'vision-stage', App)//, ['vs-selector'])
+define( 'vision-stage', App, ['vs-selector'])
 

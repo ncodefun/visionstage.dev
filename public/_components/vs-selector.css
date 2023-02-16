@@ -273,34 +273,26 @@ vs-selector button.bare span.led-bar {
 	margin-bottom: 0;
 }
 
-vs-selector button.selected span.led-bar {
+vs-selector button.selected:not(.bare) span.led-bar {
 	border: 1px solid #0002;
 	filter:
-		drop-shadow(0 0 .18rem hsl(217, 100%, 78%))
-		drop-shadow(0 0 .35rem hsl(217, 100%, 78%));
+		drop-shadow(0 0 .18rem hsl(var(--hue), 100%, 78%))
+		drop-shadow(0 0 .35rem hsl(var(--hue), 100%, 78%));
 }
-
-.dark-components vs-selector button.selected:not(.bare) span.led-bar,
+.dark-components vs-selector button.selected:not(.bare) span.led-bar {
+	filter:
+		drop-shadow(0 0 .18rem hsl(var(--hue) 100% 57%))
+		drop-shadow(0 0 .35rem hsl(var(--hue) 100% 57%));
+}
 body[night-mode] vs-selector button.bare.underline.selected span.led-bar {
 	filter:
-		drop-shadow(0 0 .18rem hsl(219deg 100% 57%))
-		drop-shadow(0 0 .35rem hsl(219deg 100% 57%));
+		drop-shadow(0 0 .18rem hsl(var(--hue) 100% 25%))
+		drop-shadow(0 0 .35rem hsl(var(--hue) 100% 25%));
 }
-vs-selector button.selected span.led-bar.underline {
-	/* filter: none; */
-}
-/* vs-selector button.selected span.led-bar.underline {
-	filter:
-		drop-shadow(0 0 .18rem var(--primary));
-} */
-vs-selector button:not(.selected) span.led-bar {
 
-	/* opacity: .5; */
-	/*
-	filter: brightness(1) saturate(.5); */
+vs-selector button:not(.selected) span.led-bar {
 	background: var(--primary-inactive);
 }
-/* .has-dark-bg vs-selector button.bare:not(.selected) span.led-bar, */
 :is(.dark-components vs-selector, vs-selector.dark) button:not(.selected):not(.bare) span.led-bar {
 	filter: brightness(.75);
 	opacity: 1;
@@ -313,7 +305,6 @@ vs-selector span.switch {
 	background: hsl(var(--hue), 27%, 85%);
 	border-radius: 1rem;
 	border: 1px solid hsl(var(--hue), 32%, 80%);
-	/* margin-right: .75rem; */
 }
 .dark-components vs-selector span.switch {
 	background: hsl(var(--hue), 27%, 85%, .33);

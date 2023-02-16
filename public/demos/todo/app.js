@@ -1,11 +1,11 @@
-import { VisionStage as VS, html, define, log, icon, cache, maybe, clearStores }
+import { VisionStage as VS, html, define, log, icon, maybe, clearStores }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleValueWithin, strIf, nextFrame, q, sleep }
+import { strIf, nextFrame, q }
 	from '/vision-stage/utils.js'
 
-const fs = window.screenfull
-const config = VS.config
+import { appHeader, appContent, appFooter }
+	 from '/vision-stage/templates.js'
 
 class App extends VS {
 
@@ -20,66 +20,9 @@ class App extends VS {
 	}
 
 	template = () => html`
-		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
-
-			<span flow='row left gaps' id='lang-bar'>
-				<vs-selector id='lang-selector'
-					btns-class='gaps'
-					btn-class='bare uppercase tiny-bar josefin-400'
-					type='underline'
-					direction='horizontal'
-					.options=${ this.languages }
-					.selected=${ this.lang }
-					@change=${ e => this.lang = e.target.selected }>
-				</vs-selector>
-			</span>
-
-			<span flow='row right gaps'>
-
-				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e =>
-						this.night_mode = cycleValueWithin(this.night_mode, config.night_modes)
-					}>
-					<span class='icon moon ${ strIf('night',this.night_mode) }' shift='-1'>🌙</span>
-				</button>
-
-				<button id='fullscreen-toggle'
-					class='square bare'
-					aria-label=${ this.$fullscreen }
-					@click=${ async e => { fs.isEnabled && fs.toggle() ; sleep(100) ; this.render() } }
-					>
-					${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, 'large') }
-				</button>
-			</span>
-
-		</header>
-
-		<section id='app-content' class='rel' flow='col top grow'>
-			<div id='veil'
-				class='layer ${ strIf('show', this.show_menu || this.show_settings) }'
-				@pointerdown=${ () => { if (this.page && this.show_menu) this.show_menu = false }}>
-			</div>
-			<!-- Inside middle section: will not overlay header & footer -->
-			<vs-modal type='full'></vs-modal>
-			<!-- cache when we're switching template to prevent destroying / rebuilding -->
-			${ cache( this[this.page||'home']() ) }
-		</section>
-
-		<footer id='app-footer' class='alt-scaling rel' flow='row'>
-
-			<button id='nav-toggle' class='square bare'
-				@click=${ e => this.show_menu = !this.show_menu }
-				>
-				${ icon('navicon-round', 'x-large') }
-			</button>
-
-			<nav flow='row gaps-large' class='v-menu nowrap'>
-				${ this.pages && this.pages.map( ([page],i) =>
-					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
-				)}
-			</nav>
-
-		</footer>
+		${ appHeader.call(this) }
+		${ appContent.call(this) }
+		${ appFooter.call(this, 'nav') }
 	`
 
 	home = () => html`
@@ -204,10 +147,8 @@ class App extends VS {
 
 	two = () => html`<main><h1>Page two</h1></main>`
 
-	onPageChanged(){ //! jsdoc for autocomplete
-		if (this.params?.[0]?.[0]==='pwa')
-			this.is_pwa = true
-		log('err', 'params:', this.params)
+	onPageChanged(){
+
 	}
 
 	async onCacheUpdated(){

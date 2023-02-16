@@ -3,14 +3,15 @@
 /// - custom chord sequence
 /// - custom chords ?
 
-import { VisionStage as VS, html, cache, define, log, icon }
+import { VisionStage as VS, html, define, log }
 	from '/vision-stage/vision-stage.min.js'
 
-import { cycleValueWithin, tempClass, sleep, strIf }
+import { tempClass }
 	from '/vision-stage/utils.js'
 
-const fs = window.screenfull // embeded / global
-const config = VS.config
+import { appHeader, appContent, appFooter }
+	from '/vision-stage/templates.js'
+
 
 const POSITIONS = ['C', 'A', 'G', 'E', 'D']
 const KEYS = ['C','G','D','A','E']
@@ -27,62 +28,15 @@ class App extends VS {
 		document.body.addEventListener('keydown', this.onKeyDown.bind( this))
 	}
 
-	template = () => {
-		// log('check', 'this.position:', this.position)
-
-		return html`
-		<header id='app-header' flow='row space-between' class='alt-scaling text-center'>
-
-			<span flow='row left' id='lang-bar'>
-				<vs-selector id='lang-selector'
-					btns-class='gaps'
-					btn-class='bare uppercase tiny-bar josefin-400'
-					type='underline'
-					direction='horizontal'
-					.options=${ this.languages }
-					.selected=${ this.lang }
-					@change=${ e => this.lang = e.target.selected }>
-				</vs-selector>
-			</span>
-
-			<span flow='row right gaps'>
-				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
-					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }
-					>
-					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
-				</button>
-
-				<button id='fullscreen-toggle' class='square bare large'
-					aria-label=${ this.$fullscreen }
-					@click=${ async e => { fs.isEnabled && fs.toggle(); await sleep(100); this.render() }}
-					>
-					${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, '') }
-				</button>
-			</span>
-
-		</header>
-
-		${ cache( this[(this.page||'home')]() ) }
-
-		<footer id='app-footer' class='alt-scaling rel' flow='row'>
-
-			<button id='nav-toggle' class='square bare'
-				@click=${ e => this.show_menu = !this.show_menu }
-				>
-				${ icon('navicon-round', 'x-large') }
-			</button>
-
-			<nav flow='row gaps-large' class='v-menu nowrap'>
-				${ this.pages && this.pages.map( ([page],i) =>
-					this.getPageLink( page, i < this.pages.length-1 ? '✦' : '')
-				)}
-			</nav>
-
-		</footer>`}
+	template = () => html`
+		${ appHeader.call(this) }
+		${ appContent.call(this) }
+		${ appFooter.call(this, 'nav') }
+	`
 
 	home = () => html`
-		<main id='home'
-			class='grow text-center scroll shadow'
+		<div id='test' class='abs'>TEST</div>
+		<main id='home' class='grow text-center'
 			flow='row baseline divide wrap gaps-small'>
 
 			<!-- <h1>Triads Practice</h1> -->
@@ -200,20 +154,9 @@ class App extends VS {
 		</main>
 	`
 
-	onPageChanged( page, prev){
-		//log('info', 'page changed:', page, this.params)
-		if( page===prev) return // only changed language -> different page.path
+	// onPageChanged( page, prev){
 
-		if( this.params)
-		for( let [p,val] of this.params){
-			if( p in this && val){
-				//log('check', 'set hash param on this:', p)
-				this[ p] = val
-			}
-		}
-
-		this.show_menu = false
-	}
+	// }
 
 	onKeyDown( e){
 		//log('check', 'key:', e.code)
@@ -282,7 +225,8 @@ class App extends VS {
 }
 
 VS.config = {
-	// sw:'/my-app/sw.js'
+	// sw:'/my-app/sw.js',
+	font_size_decimals: 1,
 }
 
 VS.aspects = {

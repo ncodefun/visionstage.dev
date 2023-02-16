@@ -1,7 +1,15 @@
 html {
+	--modal-bg: url(/_assets/images/textures/brushed-alum.png) hsl(0deg, 0%, 60%);
+	/* url(/_assets/images/textures/brushed-alum.png) hsl(0deg 0% 50%); */
+	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) hsl(0, 0%, 13%);
+	/* url(/_assets/images/textures/brushed-alum-black.png) hsl(0deg, 0%, 34%); */
+}
+
+html.blue {
 	--modal-bg: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
 	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
 }
+
 vs-modal {
 	position: absolute;
 	display: flex;
@@ -69,8 +77,8 @@ vs-modal input {
 vs-modal {
 	pointer-events: auto; /* is .layer... */
 	width: 100%;
-	height: 100%;
-	z-index: 3;
+	height: calc(100% - var(--scaled-header-height) - var(--app-footer-height));
+	z-index: 5;
 	visibility: hidden;
 	opacity: 0;
 	will-change: opacity, visibility;
@@ -83,9 +91,11 @@ vs-modal.show {
 }
 vs-modal .bg {
 	background: var(--modal-bg);
-	filter: contrast(0.22) saturate(10) brightness(0.7);
 	opacity: var(--modal-bg-opacity, .9);
 	z-index: -1;
+}
+[theme] vs-modal .bg {
+	filter: contrast(0.22) saturate(10) brightness(0.7);
 }
 
 vs-modal ~ * {
@@ -98,12 +108,14 @@ vs-modal.show ~ * {
 
 vs-modal .content {
 	background: #282828;
-	mix-blend-mode: plus-lighter;
 	padding: 1rem 2.5rem;
 	border-radius: .5rem;
 	box-shadow: 0 .3rem 1rem #0006;
 	will-change: transform;
 	animation: slide-down .5s cubic-bezier(.68, -.28, .82, .11) forwards;
+}
+[theme] vs-modal .content {
+	mix-blend-mode: plus-lighter;
 }
 vs-modal.show .content {
 	animation: slide-up .4s cubic-bezier(0.18, 0.89, 0.32, 1.28) forwards;
