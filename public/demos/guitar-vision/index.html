@@ -35,15 +35,31 @@
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400&display=swap" rel="stylesheet">
-	<!-- <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;460&display=swap" rel="stylesheet"> -->
+
+	<link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/josefin-sans/josefin-sans-v24-latin-300.woff2'>
+	<!-- <link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/josefin-sans/josefin-sans-v24-latin-300italic.woff2'> -->
+	<link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/josefin-sans/josefin-sans-v24-latin-regular.woff2'>
+	<link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/josefin-sans/josefin-sans-v24-latin-italic.woff2'>
+	<link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/josefin-sans/josefin-sans-v24-latin-600.woff2'>
+	<link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/inter/inter-v12-latin-300.woff2'>
+	<link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/inter/inter-v12-latin-regular.woff2'>
+	<!-- <link rel='preload' as='font' crossorigin
+		href='/_assets/fonts/inter/inter-v12-latin-500.woff2'> -->
 
 	<link rel='modulepreload' 			href='/vision-stage/z-console.js'>
 	<link rel='modulepreload' 			href='/vision-stage/vision-stage.min.js'>
-	<!-- <link rel='modulepreload' 			href='/vision-stage/utils.js'> -->
+	<link rel='modulepreload' 			href='/vision-stage/utils.js'>
 	<link rel='modulepreload' 			href='./app.js'>
 
 	<link rel='preload' as='style' 	href='./app.css'>
-	<link rel='preload' as='style' 	href='/vision-stage/vision-stage.css'>
+	<link rel='preload' as='style' 	href='/vision-stage/vision-stage.min.css'>
 
 	<link rel='icon' type='image/png' sizes='192x192'
 				href='/_assets/images/app-icons/android-chrome-192x192.png'>
@@ -54,11 +70,12 @@
 	<link rel='apple-touch-icon' 		 sizes='60x60'
 				href='/_assets/images/app-icons/apple-touch-icon.png'>
 
-	<!-- <link rel='manifest' 	href	='./manifest.json'> -->
-	<link rel='stylesheet'	href	='/vision-stage/vision-stage.css'>
+	<!-- <link rel='manifest' 	href='./manifest.json'> -->
+	<!-- <link rel='author' 	href='./humans.txt'> -->
+
+	<link rel='stylesheet'	href	='/vision-stage/vision-stage.min.css'>
 	<link rel='stylesheet'	href	='./app.css'>
 	<script type='module'	src	='./app.js'></script>
-	<!-- <script src='/vision-stage/chroma.min.js'></script> -->
 </head>
 
 <body flow>
