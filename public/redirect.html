@@ -24,23 +24,24 @@
 
 		/// format -> 'real-path' : regex matching all allowed variation (case insensitive)
 
+		const path = decodeURI(location.pathname)
 		const map = {
-			'cv': /\/cv\-fr/i,
-			'sélecteurs': /\/s[ée]lect(o|eu)rs?/i, // matches sélecteurs? | selectors?
+			'cv': /\/cv-fr/i,
+			'demos': /\/d[eé]mos?/,
 		}
+		// console.warn('path:', path)
 
-		const path = decodeURI( location.pathname)
-		console.warn('path:', path)
 		let matches, dest = ''
-		for( let app in map){
-			let reg = map[ app]
+
+		for (let app in map){
+			const reg = map[app]
 			matches = reg.test( path)
-			if( matches){
+			if (matches){
 				dest = '/'+app+'/'
 				break
 			}
 		}
-		if( dest) location.assign( dest)
+		if (dest) location.assign( dest)
 		else location.assign( '/404.html')
 	</script>
 </body>
