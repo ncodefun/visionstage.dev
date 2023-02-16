@@ -1,9 +1,21 @@
+/**
+ * Appearence: colors, filters, opacity, z-index, animations, transition…
+ * Not layout.
+ */
+
 :root {
+	--hue: 217deg;
 	--link-color: hsl(217, 100%, 62%);
 	--link-color-hl: hsl(217, 100%, 66%);
 	--primary: hsl(217, 100%, 52%);
 	--primary-hl: hsl(217, 90%, 55%);
-	--hue: 217deg;
+
+	--scrollbar-bg-color: #0001;
+	--scrollbar-handle-color: #FFF8;
+	--blue-gray-darker: hsl(215, 11%, 22%);
+	--scrolls-over-shadow-top-color: #aaa7;
+	--scrolls-over-shadow-bottom-color: #bbb5;
+	--scrolls-shadow-color: #9999;
 }
 body {
 	/* declare on body to match correct body[night-mode] --hue */
@@ -11,9 +23,13 @@ body {
 	background: #2b2b2b;
 }
 body[night-mode] {
+	color: #eee;
 	background: #1c1c1c;
 	--link-color: hsl(217, 100%, 62%);
 	--link-color-hl: hsl(217, 100%, 66%);
+	--scrolls-over-shadow-top-color: #222;
+	--scrolls-over-shadow-bottom-color: #222a;
+	--scrolls-shadow-color: #2224; /* hsl(256 0% 25% / 75%) */
 }
 /**  Basic light and dark button colors  **/
 button {
@@ -69,7 +85,6 @@ button.primary {
 #app[highlight] button.primary {
 	--btn-text-color: #000e;
 	--btn-text-color-hl: #000;
-
 	--btn-border-color: hsl(var(--hue), 100%, 87%);
 	--btn-border-color-hl: hsl(var(--hue), 100%, 87%);
 	--btn-border-color-darker: hsl(var(--hue), 50%, 84%);
@@ -77,9 +92,68 @@ button.primary {
 	--btn-outline-color: hsla(var(--hue), 0%, 100%, 0.75);
 }
 
+#app.content-has-scrollbar #app-header {
+	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
+}
+#app.content-has-scrollbar #app-footer {
+	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
+}
+body[night-mode] #app.content-has-scrollbar #app-header {
+	box-shadow: 0 .25rem .33rem var(--scrolls-shadow-color);
+}
+body[night-mode] #app.content-has-scrollbar #app-footer {
+	box-shadow: 0 -.25rem .33rem var(--scrolls-shadow-color);
+}
+.scroll.shadow::before,
+.scroll.shadow::after {
+	mix-blend-mode: multiply;
+}
+body[night-mode] .scroll.shadow::before,
+body[night-mode] .scroll.shadow::after {
+	mix-blend-mode: darken;
+}
 
+/** Replicate bg on #app-content to use bg-attachment: local */
+vision-stage,
+#app-content.scroll {
+	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
+	background-attachment: local;
+}
 
+body[night-mode] vision-stage,
+body[night-mode] #app-content.scroll {
+	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
+	background-color: #333;
+	background-blend-mode: multiply;
+}
 
+#veil {
+	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 0% 60%);
+	filter: contrast(0.92) brightness(1);
+	opacity: .94;
+}
+body[night-mode] #veil {
+  background-blend-mode: overlay;
+  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(0, 0%, 13%);
+  filter: contrast(0.8) brightness(0.7);
+}
+#app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(var(--hue) 13% 17%);
+}
+#app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(var(--hue) 25% 41%);
+	background: hsl(var(--hue) 21% 24%);
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu a {
+	background: hsl(var(--hue) 19% 22%);
+}
+
+.icon.moon:not(.night){
+	filter: brightness(0.6);
+}
+.sun.dark {
+	filter: brightness(0.6);
+}
 
 
 /**  primary-adapt: a lighter primary color when light-controls  **/
@@ -109,8 +183,6 @@ vs-slider input[type=range]::-webkit-slider-thumb {
 	--btn-outline-color: hsla(var(--hue), 90%, 70%, 0.5);
 }
 
-/**  FIXED COLORS WITH MEANINGS (warn, error, ok)  **/
-
 button.blue {
 	--btn-bg-color: hsl(217, 100%, 52%);
 	--btn-bg-color-hl: hsl(217, 90%, 55%);
@@ -121,7 +193,6 @@ button.blue {
 	--btn-border-color-darker: hsl(217, 80%, 42%);
 	--btn-border-color-lighter: hsl(217, 100%, 72%);
 }
-
 /* .dark-components button.blue {
 	--btn-bg-color: ;
 	--btn-bg-color-hl: ;
@@ -132,7 +203,6 @@ button.blue {
 	--btn-border-color-darker: ;
 	--btn-border-color-lighter: ;
 } */
-
 button.green {
 	font-weight: 300;
 	--btn-bg-color: hsl(128, 54%, 44%);
@@ -319,27 +389,15 @@ body[night-mode] textarea {
 	color: fieldText;
 }
 
-
-button.underline {
-	/* --hue: 234deg; */
-	/* --color: var(--link-color); */
-}
-/* button.underline {
-	color: var(--primary);
-} */
-
-/* vs-selector  */
 button.underline {
 	color: var(--primary-inactive);
 }
-/* vs-selector  */
 button.underline.selected {
 	color: var(--primary);
 }
 button.underline:hover {
 	color: var(--primary-hl);
 }
-
 
 nav.v-menu a {
 	color: var(--link-color);
@@ -361,8 +419,46 @@ body[night-mode] button.underline {
 	font-weight: 400;
 }
 
-
-/* button.underline:hover, */
 nav.v-menu a:hover {
 	color: var(--link-color-hl);
+}
+
+main:not(.no-fade-in) {
+	/** auto fade-in page when its rendered */
+	animation: fade-in .22s ease-in;
+}
+@keyframes fade-in {
+	0% { opacity: 0 }
+	100% { opacity: 1 }
+}
+
+#app-header, #app-footer {
+	background: #0001;
+	transition: background-color .3s ease;
+	z-index: 6;
+}
+
+nav {
+	color: var(--link-color);
+}
+nav.v-menu a:focus {
+	outline: 1px solid var(--link-color-hl);
+	outline-offset: .4rem;
+}
+nav a:not(.selected):not(:hover) {
+	text-decoration: none;
+}
+.nav-sep {
+	opacity: .5;
+}
+#app[orientation='portrait'] .nav-sep {
+	display: none;
+}
+button.underline {
+	text-decoration: underline;
+}
+svg.icon { /** inserted with useSVG('name') */
+	fill: currentColor;
+	stroke: none;
+	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, 0.22));
 }

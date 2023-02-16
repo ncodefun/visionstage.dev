@@ -204,3 +204,5 @@ body[night-mode] .scroll.shadow::after,
 	background-color: hsl(150, 100%, 64%);
 	color: #000a;
 }
+
+noscript { color: white }

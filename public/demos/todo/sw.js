@@ -12,7 +12,7 @@ const CACHED_URLS = [
 	'/vision-stage/vision-stage.css',
 	'/vision-stage/z-console.js',
 	'/vision-stage/utils.js',
-	'/vision-stage/colors.css',
+	'/vision-stage/appearance.css',
 
   '/_components/vs-selector.js',
   '/_components/vs-selector.css',

@@ -1,63 +1,13 @@
-@import '/vision-stage/colors.css';
+@import '/vision-stage/appearance.css';
 
 :root {
 	--app-header-height: calc(var(--alt-scaling-fs-em) * 3.5);
 	--app-footer-height: calc(var(--alt-scaling-fs-em) * 3.5);
-
-	--scrollbar-bg-color: #0001;
-	--scrollbar-handle-color: #FFF8;
-	--blue-gray-darker: hsl(215, 11%, 22%);
-	--scrolls-over-shadow-top-color: #aaa7;
-	--scrolls-over-shadow-bottom-color: #bbb5;
-	--scrolls-shadow-color: #9999;
 	font: 1rem/1.5 Josefin Sans, serif;
 }
 .alt-scaling {
 	--app-header-height: 3.5em;
 	--app-footer-height: 3.5em;
-}
-
-body[night-mode] {
-	--scrolls-over-shadow-top-color: #222;
-	--scrolls-over-shadow-bottom-color: #222a;
-	--scrolls-shadow-color: #2224; /* hsl(256 0% 25% / 75%) */
-	color: #eee;
-}
-#app.content-has-scrollbar #app-header {
-	box-shadow: 0 .25rem .5rem var(--scrolls-shadow-color);
-}
-#app.content-has-scrollbar #app-footer {
-	box-shadow: 0 -.25rem .5rem var(--scrolls-shadow-color);
-}
-body[night-mode] #app.content-has-scrollbar #app-header {
-	box-shadow: 0 .25rem .33rem var(--scrolls-shadow-color);
-}
-body[night-mode] #app.content-has-scrollbar #app-footer {
-	box-shadow: 0 -.25rem .33rem var(--scrolls-shadow-color);
-}
-
-.scroll.shadow::before,
-.scroll.shadow::after {
-	mix-blend-mode: multiply;
-}
-body[night-mode] .scroll.shadow::before,
-body[night-mode] .scroll.shadow::after {
-	mix-blend-mode: darken;
-}
-
-
-vision-stage,
-#app-content.scroll {
-	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
-	background-attachment: local;
-	/* background-blend-mode: multiply; */
-}
-
-body[night-mode] vision-stage,
-body[night-mode] #app-content {
-	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
-	background-color: #333;
-	background-blend-mode: multiply;
 }
 
 *, *::after, *::before {
@@ -67,7 +17,7 @@ body[night-mode] #app-content {
 	-webkit-user-drag: none;
 }
 img { margin: 0; display: inline-block }
-noscript { color: white }
+
 html {
 	height: 100%;
 	font: 18px/1.5 Josefin Sans, serif;
@@ -78,10 +28,6 @@ body {
 	overflow: hidden;
 	box-sizing: border-box;
 }
-/* body *:not(:defined){
-	display: none !important;
-} */
-
 vision-stage {
 	width: var(--stw);
 	height: var(--sth);
@@ -89,9 +35,6 @@ vision-stage {
 	transition: opacity 1s .1s ease; /** delay, let #loading fade out first */
 	overflow: hidden; /* to hide bottom nav menu */
 }
-/* vision-stage.faded {
-	opacity: 0;
-} */
 vision-stage.has-margins {
 	border-radius: .5rem;
 	box-shadow: 0 .125rem 1rem -.25rem rgb(0, 0, 0, .42);
@@ -136,16 +79,6 @@ vision-stage.has-margins {
 }
 
 #veil {
-	background: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 0% 60%);
-	filter: contrast(0.92) brightness(1);
-	opacity: .94;
-}
-body[night-mode] #veil {
-  background-blend-mode: overlay;
-  background: url(/_assets/images/textures/brushed-alum-black.png) hsl(0, 0%, 13%);
-  filter: contrast(0.8) brightness(0.7);
-}
-#veil {
 	pointer-events: auto; /* is .layer... */
 	height: calc(100% - var(--app-header-height) - var(--app-footer-height));
 	top: var(--app-header-height);
@@ -173,22 +106,6 @@ body[night-mode] #veil {
 	transition: opacity .3s ease;
 }
 
-#app[orientation='portrait'] nav.v-menu {
-	background-color: hsl(var(--hue) 13% 17%);
-}
-#app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(var(--hue) 25% 41%);
-	background: hsl(var(--hue) 21% 24%);
-}
-body[night-mode] #app[orientation='portrait'] nav.v-menu {
-	/* background-color: hsl(var(--hue), 13%, 17%); */
-}
-body[night-mode] #app[orientation='portrait'] nav.v-menu a {
-	/* border: 1px solid hsl(var(--hue) 25% 41%); */
-	background: hsl(var(--hue) 19% 22%);
-}
-
-
 #settings.show {
   transition: all .3s .15s ease; /* opacity, but filter also when blurred by modal */
 }
@@ -209,8 +126,6 @@ body[night-mode] #app[orientation='portrait'] nav.v-menu a {
   transition: opacity .3s ease, visibility .3s;
 }
 
-
-
 .vs-box, .vs-box-inv {
   padding: 1rem;
 }
@@ -228,7 +143,6 @@ body[night-mode] #app[orientation='portrait'] nav.v-menu a {
 body[night-mode] .vs-box > .vs-box {
   background: #ffffff19;
 }
-
 
 /** SCROLL **/
 	.scroll {
@@ -464,13 +378,6 @@ span.vs-icon svg {
 	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, .25));
 }
 
-/* @font-face {
-	font-family: 'Open Sans';
-	font-style: normal;
-	font-weight: 400;
-	src: url(/_assets/fonts/open-sans/open-sans-v29-latin-regular.woff2) format('woff2');
-} */
-
 /* josefin-sans-300 - latin */
 @font-face {
   font-family: 'Josefin Sans';
@@ -522,33 +429,10 @@ span.vs-icon svg {
   src: url('/_assets/fonts/inter/inter-v12-latin-regular.woff2') format('woff2');
 }
 
-
-.icon.moon:not(.night){
-	filter: brightness(0.6);
-}
-.sun.dark {
-	filter: brightness(0.6);
-}
-
-
-main:not(.no-fade-in) {
-	/** auto fade-in page when its rendered */
-	animation: fade-in .22s ease-in;
-}
-@keyframes fade-in {
-	0% { opacity: 0 }
-	100% { opacity: 1 }
-}
-
-
 #app-header, #app-footer {
 	flex-shrink: 0; /* else shrinks when overflowing scrolling content */
-	transition: background-color .3s ease;
-	z-index: 6;
 }
-
 #app-header {
-	background: #0001;
 	height: var(--app-header-height);
 	padding: .5em 1em;
 }
@@ -556,15 +440,11 @@ main:not(.no-fade-in) {
 	margin: 0;
 	line-height: 1.5;
 }
-
 #night-mode-toggle {
 	line-height: 1;
-	/* padding-bottom: .07rem; */
 }
-
 #app-footer {
 	flex-shrink: 0;
-	background: #0001;
 	height: var(--app-footer-height, auto);
 }
 #app-footer nav {
@@ -592,20 +472,7 @@ nav { user-select: none }
 
 }
 
-nav {
-	color: var(--link-color);
-}
-.nav-sep {
-	opacity: .5;
-}
-#app[orientation='portrait'] .nav-sep {
-	display: none;
-}
 /** vertical menu */
-
-button.underline {
-	text-decoration: underline;
-}
 
 #app[orientation='portrait'] nav.v-menu {
 	pointer-events: none;
@@ -624,17 +491,13 @@ button.underline {
 		 1-.32, 1-1.28, 1-.18 , 1-.89 => .68, -.28, .82, .11  */
 }
 #app[orientation='portrait'].show-menu nav.v-menu {
-	transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 	position: absolute;
 	transform: translateY(calc(-100% - var(--app-footer-height) - 1rem));
+	transition: transform .5s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 nav.v-menu a {
 	padding: 0 .25rem;
-}
-nav.v-menu a:focus {
-	outline: 1px solid var(--link-color-hl);
-	outline-offset: .4rem;
 }
 #app[orientation='portrait'] nav.v-menu a {
 	padding: .4rem 2rem;
@@ -644,17 +507,14 @@ nav.v-menu a:focus {
 	display: inline-flex;
 }
 
-nav.v-menu a {
-	width: 100%;
-}
+nav.v-menu a { width: 100% }
 nav.v-menu .marker:empty { display: none }
-
 nav.v-menu .marker {
+	font-size: .9em;
 	pointer-events: none;
 	display: inline-block;
 	line-height: .7;
 	position: absolute;
-	font-size: .9em;
 	bottom: -.5rem;
 }
 nav.v-menu .marker.ext {
@@ -680,22 +540,16 @@ nav.v-menu span.link {
 	grid-template-columns: 1fr 1.5fr 1fr;
 }
 /* make everything inside header a bit smaller
-	– will still scale down less than content when viewport gets narrower */
-#app[orientation='portrait'] #app-header.lang-center > * {
-	font-size: .85em;
+	#app-header normally has .alt-scaling – will still scale down less than content when viewport gets narrower */
+#app[orientation='portrait'] #app-header > * {
+  font-size: .9em;
 }
 #app[orientation='portrait'] #app-header.lang-center h1.mini {
 	line-height: 1;
 	margin: 0 !important;
 	text-align: center;
-	/* font-size: 1.25em; */
 	-webkit-text-stroke: #0008 0.5px;
 	color: inherit;
-	/* -webkit-text-stroke: 0; */
-	/* opacity: .9; */
-}
-#app[orientation='portrait'] #app-header.lang-center #lang-bar {
-	/* font-size: .87em; */
 }
 
 main p {
@@ -706,13 +560,7 @@ main :is(p,ul) {
 	max-width: 40rem;
 	padding-right: 1em;
 }
-/* main p + p {
-	margin-top: 0;
-} */
 
-.small {
-	font-size: .85em;
-}
 .flip-x { transform: scaleX(-1) }
 
 
@@ -764,25 +612,19 @@ button[disabled] svg.icon, .button[disabled] svg.icon {
 }
 svg.icon { /** inserted with useSVG('name') */
 	display: inline-block;
-	fill: currentColor;
-	stroke: none;
-	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, 0.22));
 }
 
 a.button {
 	text-decoration: none;
-	/* font-weight: 500; */
 }
 button, a.button {
 	font-size: 1em;
-	/* min-height: 2em; */
 	border-radius: .42rem;
 	padding: 0 1ch;
 	user-select: none;
 	display: inline-flex;
 	justify-content: center;
 	align-items: center;
-
 }
 button > * { pointer-events: none }
 button a { pointer-events: auto }
@@ -791,7 +633,8 @@ body.using-mouse *::-moz-focus-outer,
 body.using-mouse *::-moz-focus-inner {
 	border: 0;
 }
-body.using-mouse button, body.using-mouse a { outline: none !important }
+body.using-mouse button,
+body.using-mouse a { outline: none !important }
 
 .xxx-large { font-size: 1.75em }
 .xx-large { font-size: 1.5em }
@@ -823,19 +666,15 @@ button.bare {
 	border: none;
 	box-shadow: none;
 	border-radius: .25rem !important;
-	/* padding: 0; */
 	padding-block: .25em;
 }
 
-nav a:not(.selected):not(:hover) {
-	text-decoration: none;
-}
-
-[flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,section,article):not(.inline) { flex:1 0 100% }
-.inline { display: inline-block }
 
 /* With this there's no need to wrap sections in otherwise useless containers which only adds noise… Plus we can simply hide empty div for example on mobile / narrow screens and make a more compact flow, which would be impossible by using containers!
 */
+[flow~='row'][flow~='divide'] > :is(div,p,h1,h2,h3,h4,h5,h6,section,article):not(.inline) { flex: 1 0 100% }
+.inline { display: inline-block }
+
 
 /* @keyframes step-pulse {
 	0% {
