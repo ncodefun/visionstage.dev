@@ -20,6 +20,13 @@ I hope you find the same joy using it as the joy I had and still have developing
 
 ---
 
+### Why "Vision Stage"?
+
+1) It's ideal for quickly starting to build your app while in the ideation stage, the "vision" stage, since there's zero friction to slow you down and frustrate you and get you out of your creative flow.
+
+2) The app is a special component, a visual stage to frame your vision, kept within specific aspect-ratios; so it's a way to stage and resize your content consistently like with games.
+---
+
 *Currently, I'm in the process of documenting Vision Stage properly, making examples and (forever) cleaning and refining styles.*
 
 - [Get started](docs/get-started.md)
