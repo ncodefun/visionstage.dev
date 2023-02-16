@@ -3,7 +3,7 @@
   "author": "José Roux",
   "scripts": {
     "start": "browser-sync start --server 'public/' --port 5001 --files 'public/**/*.html,public/**/*.js,public/**/*.css' --no-open --no-ghost-mode --no-notify",
-    "build:prod": "rollup -c rollup.config.prod.js -w",
+    "build:prod": "rollup -c rollup.config.prod.js",
     "build:dev": "rollup -c rollup.config.dev.js -w",
     "build:css": "cleancss --watch --output public/vision-stage/vision-stage.min.css src/vision-stage.css"
   },
