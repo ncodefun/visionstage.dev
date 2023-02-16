@@ -278,7 +278,7 @@ export class Component extends HTMLElement {
 
 							if (this.params){
 								// Update hash
-								let page = this.getPage().path.split('/')[0] // remove possible params
+								let page = this.getPage()?.path?.split('/')[0] || '' // remove possible params
 								let hash = page + '/' +
 									this.params.map( p => p.map(seg=>seg.toString()).join('=')).join('/')
 								location.hash = hash
