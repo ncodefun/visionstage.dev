@@ -175,7 +175,7 @@ define( 'vision-stage', App, ['app-header'${ inputs.use_options==='yes' ? ", 'me
 	<meta 	name=				'keywords'
 					content=			'web app'>
 	<meta 	name=				'web-author'
-					content=			'José Roux (joserouxx@gmail.com)'>
+					content=			'Josef Roy'>
 	<meta 	name=				'author'
 					content=			''>
 

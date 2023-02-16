@@ -123,7 +123,7 @@ class App extends VS {
 				<h2>Layouts and themes examples</h2>
 				<ul class='frame'>
 					<li>
-						<a href='/demos/game/'>Game</a>
+						<a href='/demos/game/#/night_mode=1'>Game</a>
 						<div>Game style nav menu, auth & settings menu.</div></li>
 					<li>
 						<a href='/demos/game/gold.html'>Gold</a>

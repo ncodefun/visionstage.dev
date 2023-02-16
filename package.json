@@ -1,6 +1,6 @@
 {
   "name": "vision-stage",
-  "author": "José Roux",
+  "author": "Josef Roy",
   "scripts": {
     "start": "browser-sync start --server 'public/' --port 5001 --files 'public/**/*.html,public/**/*.js,public/**/*.css' --no-open --no-ghost-mode --no-notify",
     "build:prod": "rollup -c rollup.config.prod.js",

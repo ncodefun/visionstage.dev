@@ -147,7 +147,7 @@ export function gameHeader(){ return html`
 			<nav
 				flow='col'
 				class='abs ${ strIf('show', this.show_menu) }'
-				@pointerdown=${ e => {
+				@pointerup=${ e => {
 					//log('ok', 'e.target', e.target)
 					// will have page defined if clicked button
 					// otherwise: we clicked nav bg -> only close if page

@@ -45,7 +45,7 @@ class App extends VS {
 			</div>
 			<div style='margin-top: auto;'>
 				<div flow='row gaps'>
-					<p class='frame'>Développement&thinsp;: <a href='mailto:ncode.fun@gmail.com'>José Roux</a></p>
+					<p class='frame'>Développement&thinsp;: <a href='mailto:ncode.fun@gmail.com'>Josef Roy</a></p>
 				</div>
 			</div>
 		</aside>
