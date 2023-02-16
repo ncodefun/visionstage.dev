@@ -10,7 +10,7 @@
 	--primary-hl: hsl(150, 90%, 70%);
 	/* --primary-hl: hsl(150, 90%, 78%); */
 }
-#app-content, body[night-mode] #app-content {
+#app-content.scroll, body[night-mode] #app-content.scroll {
 	background: none;
 }
 body {

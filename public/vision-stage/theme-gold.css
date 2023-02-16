@@ -27,8 +27,8 @@ body, body[night-mode] {
 	--link-color: hsla(45, 100%, 76%, .85);
 	--link-color-hl: hsl(45, 100%, 76%);
 }
-#app-content, body[night-mode] #app-content {
-	background: none !important;
+#app-content.scroll, body[night-mode] #app-content.scroll {
+	background: none;
 }
 #app {
 	color: hsl(45deg 20% 20%);
