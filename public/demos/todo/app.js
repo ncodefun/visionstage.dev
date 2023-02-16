@@ -173,7 +173,7 @@ VS.config = {
 
 VS.aspects = {
 	portrait:.6,
-	portrait_max:1,
+	portrait_max:.75,
 	landscape:1,
 	landscape_max:16/9,
 	cross_margin: '1.23%'
