@@ -95,7 +95,7 @@ export class Component extends HTMLElement {
 		if (this.localName === 'vision-stage'){
 			app = this
 			this.id = 'app'
-			this.languages = ctor(this).languages
+			this.languages = ctor(this).languages || ['en']
 			const path = decodeURI( location.pathname)
 			this.app_name =
 			this.ns = path.slice(1,-1).replace(/\//g, '-') || 'home'
@@ -714,7 +714,7 @@ export class VisionStage extends Component {
 	}
 
 	connectedCallback(){
-
+		Component.load('vs-button.js')
 		this.onConnected && this.onConnected()
 		this.updateDocTitle()
 		if (ctor(this).sounds)
@@ -1172,7 +1172,7 @@ export class VisionStage extends Component {
 	 * @return {Promise}
 	 */
 	setupSounds (){
-		log('info', 'setupSounds')
+		// log('info', 'setupSounds')
 		let sounds_data = ctor( this).sounds
 		if( !sounds_data)
 			return
