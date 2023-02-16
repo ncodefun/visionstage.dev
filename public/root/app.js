@@ -26,22 +26,36 @@ class App extends VS {
 				<div id='tagline'><strong>Web apps, <em>simply.</em></strong></div>
 
 				<h2><em>✦ Zero friction ⇢ Pure focus ! ✦</em></h2>
-
-				<p class='text-thin nowrap'>
-					Embrace <em>modern vanilla,</em> with pure JS/HTML <wbr>(thanks to <a href='https://lit.dev/docs/v1/lit-html/template-reference/'>lit-html</a> templates), <wbr>super intuitive Web components. <wbr <wbr>No tooling, no build step. <wbr>No strange, non-standard concepts. <wbr>No confusion, frustration and diversion…
-				</p>
 				<p>
-					Stay in the flow, <wbr>and <strong>focus on what matter – <em>your</em> app !</strong>
-				</p>
+					Vision stage is a minimalist & intuitive Web component & Web app library, using lit-html templates and reactive properties – all with vanilla JS/HTML. No build step required.
+
+				<h2>KISS ❤</h2>
+				<p>
+					Vision Stage provides – I beleive – the best developer experience out there… Its simplicity frees you from wasteful diversions with the concerns, confusion and frustrations of working with non-standard syntax, concepts and workflow / tooling that other, complex libraries and frameworks force you to deal with.
+				<p>
+					Such true simplicity means you can **stay in the creative flow**, and **focus on what matter – *your* app !** In my book, **that** is truly agile, and future-proof development…
+				<p>
+					Forget about ultra-optimizing everything; simplicity is already, by nature, lightweight and fast. Quite fast enough in fact, compared to so many small and medium apps using way overkill frameworks…
+				<p>
+					I hope you find the same joy working to build your ideas with Vision Stage as the joy I had and still have developing it ! ✌
 			</div>
 
 			<div lang='fr' class='intro'>
 				<div id='tagline'><strong>Des applications Web, <em>simplement.</em></strong></div>
 
 				<h2><em>✦ Zéro friction ⇢ Pure focus ! ✦</em></h2>
-				<p class='text-thin nowrap'>
-					Embrassez le <em>modern vanilla,</em> avec <wbr>des composentes Web super intuitives <wbr>en pure JS/HTML, <wbr>grâce aux templates <a href='https://lit.dev/docs/v1/lit-html/template-reference/'>lit-html</a>. <wbr>Pas de build step. <wbr>Pas de concepts étranges et non-standard. <wbr>Pas de confusion, de frustration et de diversion… <wbr>Maintenant vous pouvez rester dans le flow, <wbr>et <strong>focaliser sur ce qui compte – <em>votre</em> appli !</strong>
-				</p>
+				<p>
+					Vision stage, c'est une librairie minimaliste et intuitive pour bâtir des composantes & des applis Web moderne, utilisant des <i>templates</i> lit-html et des propriétés réactives – tout ça en pure JS/HTML. Pas de <i>build step<i> requit.
+
+				<h2>KISS ❤</h2>
+				<p>
+					Vision Stage procure – je le crois – la meilleure expérience développeur ici-bas… Sa simplicité nous libère des pertes de temps en diversions avec les préoccupations, la confusion et les frustrations à travailler avec une syntaxe, des concepts et un workflow / outillage non-standard, que les autres librairie et frameworks complexes nous forces à utiliser.
+				<p>
+					Une telle simplicité veux dire qu'on peut <strong>rester dans le <i>flow</i> créatif<strong>, et <strong>focaliser sur ce qui compte – <i>son</i> appli !</strong> Pour moi, <strong>ça</strong> c'est vraiment du développement agile, et <i>future-proof</i>…
+				<p>
+					Oubliez l'ultra-optimisation de tout; la simplicité est déjà, par nature, légère et rapide. Bien assez rapide en fait, comparé à tant d'applis, petites et mediums, qui utilisent des librairies ou framework totalement <i>overkill</i>…
+				<p>
+					J'espère que vous aurez autant de joie à travailler à réaliser vos idées avec Vision Stage que j'en ai eu à le concevoir ! ✌
 			</div>
 		</main>
 	`
@@ -50,23 +64,8 @@ class App extends VS {
 		<main id='motivation' flow='col top grow' class='text-justify'>
 			<h2>Motivation</h2>
 			<div lang='en'>
-				<p>
-					This is what happens when someone builds a framework, looking only for elegance and simplicity; you create a superb developer experience. Yes, you won't have some goodies that modern tooling can provide, but on the plus side, you don't have any tooling to deal with… Nor do you have to deal with an overly complex framework, with so many barriers and nerdy concepts you *must* learn and use, for your own good my child… God forbid you should shoot yourself in the foot! Not everyone is building a monster app à la Facebook ! Here you have a simple base from which you can do what you want, without any artificial limits.
-				</p>
-				<p>
-					Spare yourself a sea of endless confusion and frustrations, keep it simple, <strong>focused</strong>, and see how far you can go when you care more about freedom and lightness than about conformity and tightness.
-				</p>
-				<p>
-					We may say that Vision Stage is for quickly and easily prototyping a Web app, but you'll wonder why on earth you should then redo your app in way more time, and way less fun - for minimal gains, and probably for reassuring fearful, worrying minds that demand conformity. 🤷 The truth is that Vision Stage is built on such simple, "vanilla" concepts, that you can easily add to it or modify it without having to study all the intricacies of a complicated library/framework… I'd call that <em>truly</em> agile and future-proof development…
-				</p>
-				<p>
-					So in the end, the result is that you have an app that's lightweight and fast, and though it's not the lightest or fastest possible, I'd argue that it's quite enough, as this is already better than the vast majority of apps / Websites out there, made with way overkill frameworks for their requirements… Maybe there's more optimization to be done here, but the main goal until now was to build the most intuitive workflow / API possible. Not every use case has been taken into account, but I've made quite a lot of educational apps using it, which allowed me to test Vision Stage with quite a wide variety of requirements and catch and fix many issues. So it's a pretty well rounded "framework" for relatively simple small / medium apps, and the fact that it frees you from distractions unrelated to <strong>your</strong> work,
-					it also makes an ideal environment for learning Web development with the absolute minimal frictions possible !
-				</p>
 
-				<p>
-					Vision Stage is a work of art; this is the word of an artist, the fruit of years of decisions and redoing, always looking ahead for the clearest path. I hope you find the same joy using it as the joy I had and still have developing it.
-				</p>
+
 
 				<p>❤️</p>
 			</div>
