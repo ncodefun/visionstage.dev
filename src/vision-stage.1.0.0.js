@@ -704,7 +704,10 @@ export class VisionStage extends Component {
 		})
 
 		window.addEventListener('hashchange', this.#onHashChanged.bind( this))
-		this.#updateAspect( ctor( this).aspects)
+		this.#updateAspect( ctor( this).aspects || {
+			landscape: 1,
+			portrait: .5,
+		})
 
 		this._onInstallable = this.#onInstallable.bind( this)
 		this._onInstalled = this.#onInstalled.bind( this)
@@ -1106,7 +1109,7 @@ export class VisionStage extends Component {
 	}
 
 	#updateAspect (ratios){
-		// log('info', 'aspects:', ratios)
+		log('info', 'aspects:', ratios)
 		if (!this.initial_ratios)
 			this.initial_ratios = ratios
 
@@ -1128,6 +1131,7 @@ export class VisionStage extends Component {
 		if (!aspect_ratios.cross_margin)
 			aspect_ratios.cross_margin = 0
 
+		log('check', 'updated ratio:', aspect_ratios)
 		this.resize()
 	}
 
