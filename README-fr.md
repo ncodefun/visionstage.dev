@@ -20,6 +20,3 @@ J'espère que vous aurez autant de joie à travailler à réaliser vos idées av
 ---
 
 *Currently, I'm in the process of documenting Vision Stage properly, making examples and (forever) cleaning and refining styles.*
-
-- [Get started](docs/get-started.md)
-- [Motivation](docs/motivation.md)
