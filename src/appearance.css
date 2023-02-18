@@ -116,6 +116,7 @@ body[night-mode] .scroll.shadow::after {
 /** Replicate bg on #app-content to use bg-attachment: local */
 vision-stage,
 #app-content.scroll {
+	/* background-color: red; */
 	background-image: url(/_assets/images/textures/paper-opaque-8bit.png);
 	background-attachment: local;
 }

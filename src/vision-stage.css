@@ -21,17 +21,17 @@ img { margin: 0; display: inline-block }
 html {
 	height: 100%;
 	font: 18px/1.5 Josefin Sans, serif;
-	background: #ddd;
+	/* background: #ddd; */
 }
 body {
 	margin: 0;
 	min-height:100%;
 	overflow: hidden;
 	box-sizing: border-box;
-	background: #ddd;
+	/* background: #ddd; */
 }
 vision-stage {
-	background: #eee;
+	/* background: #eee; */
 	width: var(--stw);
 	height: var(--sth);
 	position: relative;
