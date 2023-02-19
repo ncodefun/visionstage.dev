@@ -1,6 +1,7 @@
 :root {
   --app-footer-height: 0em;
 }
+/* for default theme
 body {
   --hue: 256deg;
 	--primary: hsl(var(--hue), 93%, 59%);
@@ -8,7 +9,14 @@ body {
 	--link-color: hsl(var(--hue), 93%, 59%);
 	--link-color-hl: hsl(var(--hue), 100%, 63%);
 }
-
+*/
+body {
+  --hue: 256deg;
+	--primary: hsl(var(--hue), 93%, 79%);
+	--primary-hl: hsl(var(--hue), 100%, 83%);
+	--link-color: hsl(var(--hue), 93%, 79%);
+	--link-color-hl: hsl(var(--hue), 100%, 83%);
+}
 body[night-mode] {
   --hue: 256deg;
 	--primary: hsl(var(--hue), 100%, 78%);
@@ -18,10 +26,7 @@ body[night-mode] {
 	--link-color-hl: hsl(var(--hue), 100%, 75%);
 
 }
-button, input, a.button {
-	/* font-size: .9em;
-	line-height: 1.6; */
-}
+
 button > img {
   height: 2.25rem;
   width: auto;

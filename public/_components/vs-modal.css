@@ -5,11 +5,6 @@ html {
 	/* url(/_assets/images/textures/brushed-alum-black.png) hsl(0deg, 0%, 34%); */
 }
 
-html.blue {
-	--modal-bg: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
-	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
-}
-
 vs-modal {
 	position: absolute;
 	display: flex;
@@ -93,10 +88,9 @@ vs-modal .bg {
 	background: var(--modal-bg);
 	opacity: var(--modal-bg-opacity, .9);
 	z-index: -1;
+	filter: var(--modal-bg-filter, none);
 }
-[theme] vs-modal .bg {
-	filter: contrast(0.22) saturate(10) brightness(0.7);
-}
+
 
 vs-modal ~ * {
 	transition: filter .3s .25s ease;

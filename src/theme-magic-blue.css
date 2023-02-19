@@ -8,8 +8,15 @@
 
 	--primary: hsl(150deg, 90%, 62%);
 	--primary-hl: hsl(150, 90%, 70%);
+}
+vs-modal {
+	--modal-bg: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
+	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) hsl(258, 12%, 34%);
+	--modal-bg-filter: contrast(0.22) saturate(10) brightness(0.54);
+	--modal-dark-bg-filter: saturate(3) contrast(0.8) brightness(0.6);
 	/* --primary-hl: hsl(150, 90%, 78%); */
 }
+
 #app-content.scroll, body[night-mode] #app-content.scroll {
 	background: none;
 }
