@@ -67,7 +67,7 @@ class App extends VS {
 	`
 
 	async testModal(){
-		const answer = await this.modal.setup(["Hello","Welcome home!"], ["Cancel", "OK"])
+		const answer = await this.modal.setup(["Hello","Welcome home!"], ["Cancel", ["OK",'primary']])
 		log('info', 'answer:', answer)
 	}
 }

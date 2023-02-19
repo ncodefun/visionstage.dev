@@ -15,7 +15,7 @@ class App extends VS {
 	}
 
 	async testModal(){
-		const answer = await this.modal.setup(["Hello","What's your name?"], null, true)
+		const answer = await this.modal.setup(["Hello","What's your name?"], ['OK'], true)
 		log('info', 'answer:', answer)
 	}
 
@@ -41,7 +41,7 @@ class App extends VS {
 					}
 				}}
 				>
-				<vs-text-input id='todo-input' placeholder='new todo'></vs-text-input>
+				<input is='vs-input' type='text' id='todo-input' placeholder='new todo'>
 				<button class='primary small'>${ icon('plus', 'small') }</button>
 			</form>
 
@@ -117,10 +117,11 @@ class App extends VS {
 				<hr>
 
 				<div flow='col stretch'>
+
 					<label>${ this.$title }</label>
 					<input type='text'
 						id='todo-title'
-						.value=${ maybe( this.todo).title }
+						.value=${ this.todo?.title }
 						@input=${ e => this.prop('todo.title', e.target.value) }>
 					</input>
 
@@ -130,7 +131,7 @@ class App extends VS {
 						cols='30' rows='5'
 						placeholder=${ this.$more_infos }
 						spellcheck='false'
-						.value=${ maybe( this.todo).details }
+						.value=${ this.todo?.details }
 						@input=${ e => this.prop('todo.details', e.target.value) }>
 					</textarea>
 				</div>
@@ -146,10 +147,6 @@ class App extends VS {
 	`
 
 	two = () => html`<main><h1>Page two</h1></main>`
-
-	onPageChanged(){
-
-	}
 
 	async onCacheUpdated(){
 		log('ok', 'update ready!')
@@ -229,7 +226,8 @@ VS.properties = {
 
 }
 
-define('vision-stage', App, ['vs-selector', 'vs-modal', 'vs-text-input'])
+define('vision-stage', App, ['vs-selector', 'vs-modal'])
+// vs-modal already loads 'vs-input'
 
 // {
 // 	update_check_min: 30,
