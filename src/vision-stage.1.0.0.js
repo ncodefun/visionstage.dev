@@ -705,8 +705,9 @@ export class VisionStage extends Component {
 
 		window.addEventListener('hashchange', this.#onHashChanged.bind( this))
 		this.#updateAspect( ctor( this).aspects || {
-			landscape: 1,
 			portrait: .5,
+			portrait_max: 1,
+			landscape: 1,
 		})
 
 		this._onInstallable = this.#onInstallable.bind( this)
