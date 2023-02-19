@@ -71,23 +71,17 @@ const loaded_components = new Set()
 
 let app, after_resize_timeout, aspect_ratios, active_sw, redundant
 
-/// Component base class ///
-export class Component extends HTMLElement {
+/**
+ * All types of Components will be based on this class
+ */
+export const ComponentMixin = (base) => class extends base {
+  /* class fields & methods to extend superClass with */
 
-	/**
+  	/**
 	 * Callback; runs after component is rendered.
 	 * @type {function}
 	 */
 	onRendered;
-
-	/**
-	 * Callback; runs after app is resized.
-	 * @type {function}
-	 */
-	onResized;
-
-
-
 
 	constructor(){
 		// Note: this (Component ctor) runs *after* VisionStage (app) ctor
@@ -454,8 +448,8 @@ export class Component extends HTMLElement {
 	 */
 	async render( evt_ctx){
 
-		if( !this.template){
-			if( this.localName !== 'vision-stage')
+		if (!this.template){
+			if (this.localName !== 'vision-stage' && !this.hasAttribute('is'))
 				log('warn', '--no template, cannot render(): '+ this.id +', '+ this.tagName)
 			return
 		}
@@ -567,6 +561,14 @@ export class Component extends HTMLElement {
 		this.classList.toggle(a, condition)
 		this.classList.toggle(b, !condition)
 	}
+}
+
+/**
+ * Basic Component based on HTMLElement
+ */
+export class Component extends ComponentMixin(HTMLElement) {
+
+	// We may move these next 2 methods to the ComponentMixin if they're ever needed…
 
 	/**
 	 * Returns an array from an attribute value consisting of
@@ -657,6 +659,12 @@ export class Component extends HTMLElement {
 
 /// App Component ///
 export class VisionStage extends Component {
+
+	/**
+	 * Callback; runs after app is resized.
+	 * @type {function}
+	 */
+	onResized;
 
 	/**
 	 * callback;

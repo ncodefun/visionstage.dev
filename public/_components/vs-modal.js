@@ -22,10 +22,11 @@ class Modal extends Component {
 	template = () => html`
 		<div class='content'>
 			<header>${ this.message }</header>
-			${ this.mode === 'input' ? html`<vs-text-input></vs-text-input>` : '' }
+			${ this.mode === 'input' ?
+				html`<input is='vs-input' type='text'>` : '' }
 			<div class='buttons' flow='row' @pointerdown=${ this.onAnswer }>
-				${ this.options && this.options.map( opt =>
-						html`<button class='big'>${ opt }</button>`
+				${ this.options && this.options.map( (opt,index) =>
+						html`<button class='big ${this.options_classes[index]}'>${ opt }</button>`
 				)}
 			</div>
 		</div>
@@ -42,7 +43,8 @@ class Modal extends Component {
 	 * @param input_validator {Function} a function to validate input
 	 * @return answer: index of button clicked
 	 */
-	setup( msg, options=null, use_text_input=false, input_validator=null, force_answer=false){
+	setup( msg, options, use_text_input=false, input_validator=null, force_answer=false){
+		if (!options) throw 'vs-modal setup() -> Missing options argument.'
 
 		this.message = Array.isArray( msg) ?
 			msg.map( (m,i) => i===0 ? html`<h1>${m}</h1>` : html`<div>${m}</div>`) :
@@ -53,7 +55,7 @@ class Modal extends Component {
 			this.mode = 'input'
 			this.input_validator = input_validator
 			this.force_answer = force_answer
-			this.options = force_answer ? ['OK'] : ['Annuler','OK']
+			//this.options = force_answer ? ['OK'] : ['Annuler','OK']
 			setTimeout( () => {
 				let input = this.q('input')
 				input && input.focus()
@@ -61,8 +63,11 @@ class Modal extends Component {
 		}
 		else {
 			this.mode = 'buttons'
-			this.options = options
 		}
+		this.options = options.map(
+			opt => Array.isArray(opt) ? opt[0] : opt)
+		this.options_classes = options.map(
+			opt => Array.isArray(opt) ? opt[1] : '')
 
 		// so we can wait user response (let answer = await setMessage(...))
 		return new Promise( (resolve) => {
@@ -140,4 +145,4 @@ Modal.properties = {
 	},
 }
 
-define( 'vs-modal', Modal, ['vs-text-input'])
+define( 'vs-modal', Modal, ['vs-input.js'])
