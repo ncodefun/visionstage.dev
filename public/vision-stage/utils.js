@@ -76,8 +76,8 @@ function parseLabels( labels, details, index){
 	return l // arrays of only locale labels
 }
 const explodeArray = (arr) => arr.reduce( (cumul,val) =>
-	cumul.forEach((a,i) => a.push( val[ i])) || cumul
-, Array.from( Array(arr[0].length), () => []) )
+	cumul.forEach((a,i) => a.push( val[i])) || cumul
+, Array.from(Array(arr[0].length), () => []) )
 
 export const createOptions = opts => ({
 	labels: 	opts.map( o =>
