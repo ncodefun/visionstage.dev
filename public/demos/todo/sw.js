@@ -1,4 +1,4 @@
-const VERSION = 14
+const VERSION = 1
 const CACHE_NAME = 'my-cache-v1'
 // This is the list of URLs to be cached by your Progressive Web App.
 const CACHED_URLS = [
@@ -9,10 +9,9 @@ const CACHED_URLS = [
   './manifest.json',
 
 	'/vision-stage/vision-stage.min.js',
-	'/vision-stage/vision-stage.css',
+	'/vision-stage/vision-stage.min.css',
 	'/vision-stage/z-console.js',
 	'/vision-stage/utils.js',
-	'/vision-stage/appearance.css',
 
   '/_components/vs-selector.js',
   '/_components/vs-selector.css',
@@ -20,8 +19,8 @@ const CACHED_URLS = [
   '/_components/vs-slider.css',
   '/_components/vs-number-input.js',
   '/_components/vs-number-input.css',
-  '/_components/vs-text-input.js',
-  '/_components/vs-text-input.css'
+  '/_components/vs-input.js',
+  '/_components/vs-button.js',
 
 ]
 
