@@ -1,45 +1,23 @@
 
 button, input, a.button {
 	/* font-size: .9em; */
-	line-height: 1.6;
+	line-height: 1.62; /* match vs-selector height */
 }
 
-#app {
-	/* --hue: 150deg; */
-	/* --primary: hsl(150deg, 90%, 62%); */
-	color: #444;
+:where(#app[highlight])
+:is( vs-selector button:not(.bare), button.primary ) {
+	--btn-text-color: var(--text-color-dark, #000e);
 }
-body[night-mode] #app {
-	color: #ddd;
-}
-
-#app[highlight] {
-	--primary-hl: initial;
-	--primary-inactive: hsla(var(--hue), 15%, 50%, .7);
+.dark-components vs-selector button:not(.primary):not(.bare) {
+	--btn-text-color: var(--text-color-light, #fffe);
 }
 
-#app[highlight='cyan'] {
-	--hue: 150deg;
-	/* --text-color-dark: hsl(150, 20%, 17%);
-	--text-color-light: hsl(150, 56%, 88%); */
-	--primary: hsl(150, 90%, 70%);
-	--primary-hl: hsl(150, 90%, 78%);
-
-	--link-color: hsla(150, 90%, 70%, .85);
-	--link-color-hl: hsl(150, 90%, 70%);
-
-}
-#app[highlight='cyan'] button.primary {
-	/* --btn-bg-color: hsl(var(--hue), 90%, 72%); */
-	/* --btn-bg-color-hl: hsl(var(--hue), 90%, 72%); */
-
-}
 
 #app[highlight='yellow-green'] {
 	--hue: 95deg;
-	--link-color: hsl(80, 85%, 51%);
-	--link-color-hl: hsl(80, 98%, 56%);
 	--primary: hsl(95deg, 90%, 72%);
+	/* --link-color: hsl(80, 85%, 51%);
+	--link-color-hl: hsl(80, 98%, 56%); */
 }
 #app[highlight='yellow-green'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 90%, 72%);
@@ -48,8 +26,8 @@ body[night-mode] #app {
 #app[highlight='yellow'] {
 	--hue: 80deg;
 	--primary: hsl(80deg 85% 70%);
-	--link-color: hsl(72deg 100% 66%);
-	--link-color-hl: hsl(72deg 100% 66%);
+	/* --link-color: hsl(72deg 100% 66%);
+	--link-color-hl: hsl(72deg 100% 66%); */
 }
 #app[highlight='yellow'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 85%, 70%);
@@ -58,54 +36,30 @@ body[night-mode] #app {
 #app[highlight='green'] {
 	--hue: 115deg;
 	--primary: hsl(115deg, 80%, 70%);
-	--link-color: hsl(104, 69%, 55%);
-	--link-color-hl: hsl(104, 76%, 60%);
-
+	/* --link-color: hsl(104, 69%, 55%);
+	--link-color-hl: hsl(104, 76%, 60%); */
 }
 #app[highlight='green'] button.primary {
 	--btn-bg-color: hsl(var(--hue), 85%, 70%);
 }
 
-/** highlight involves brighter / more vivid colors than the default blue -> adjust */
-
-:where(#app[highlight]) :is(vs-selector button:not(.bare), button.primary) {
-	color: var(--text-color-dark, #000e);
-}
-.dark-components vs-selector button:not(.primary):not(.bare) {
-	color: var(--text-color-light, #fffe);
-}
-
-#app[highlight] vs-selector button.selected .led {
-	background:
-		radial-gradient(at 56% 35%, #fffa, transparent 90%),
-		radial-gradient(closest-side,
-			hsl( var(--hue), 100%, 50%),
-			hsl( var(--hue), 100%, 32%)
-		);
-	--glow-color: hsla(var(--hue), 100%, 70%, 0.6);
-	box-shadow:
-		0 0 2px #fff3,
-		0 0 .12em var(--glow-color),
-		0 0 .35em var(--glow-color),
-		0 0 .6em var(--glow-color),
-		0 0 .75em var(--glow-color);
-}
-#app[highlight] vs-selector button span.led-bar {
-	background: var(--primary-inactive, hsl(var(--hue), 18%, 60%));
-}
-#app[highlight] vs-selector button.selected span.led-bar {
-	background: var(--primary-hl, hsl(var(--hue), 100%, 60%));
-	filter:
-		drop-shadow(0 0 .18rem hsla(var(--hue), 100%, 70%, 0.75))
-		drop-shadow(0 0 .35rem hsla(var(--hue), 100%, 70%, 0.75));
-}
-/** a bit less intense for bare underline */
-#app[highlight] vs-selector button.bare.selected span.led-bar {
-	filter:
-		drop-shadow(0 0 .18rem hsla(var(--hue), 100%, 70%, 0.5))
-		drop-shadow(0 0 .35rem hsla(var(--hue), 100%, 70%, 0.5));
+#app[highlight='purple'] {
+	--hue: 268deg;
+	--primary: hsl(268, 100%, 76%);
 
 }
+#app[highlight='purple'] button.primary {
+	--btn-text-color: var(--text-color-light, #fffe);
+	--btn-text-color-hl: var(--text-color-light, #fffe);
+
+	/* --btn-bg-color: hsl(var(--hue), 85%, 70%); */
+}
+
+
+
+
+
+
 .bg-light {
 	background: #eee;
 	color: #333;

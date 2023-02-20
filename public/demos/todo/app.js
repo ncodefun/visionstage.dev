@@ -53,7 +53,7 @@ class App extends VS {
 				.map( (todo,i) => html`
 				<li
 					flow='row space-between'
-					class=${ strIf('selected', todo===this.todo) }
+					class=${ strIf('selected primary', todo===this.todo) }
 					>
 					<button
 						class='checkbox bare icon'

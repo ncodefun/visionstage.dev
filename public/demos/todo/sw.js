@@ -9,7 +9,7 @@ const CACHED_URLS = [
   './manifest.json',
 
 	'/vision-stage/vision-stage.min.js',
-	'/vision-stage/vision-stage.min.css',
+	'/vision-stage/vision-stage.css',
 	'/vision-stage/z-console.js',
 	'/vision-stage/utils.js',
 

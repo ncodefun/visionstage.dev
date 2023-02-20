@@ -4,92 +4,88 @@
  */
 
 :root {
-	--hue: 217deg;
-	--link-color: hsl(217, 100%, 62%);
-	--link-color-hl: hsl(217, 100%, 66%);
-	--primary: hsl(217, 100%, 52%);
-	--primary-hl: hsl(217, 90%, 55%);
+	--hue: 150deg;
+	--text-color-dark: #282828;
+	--text-color-light: #eee;
+	--text-color-dark-strong: #000;
+	--text-color-light-strong: #fff;
 
 	--scrollbar-bg-color: #0001;
 	--scrollbar-handle-color: #FFF8;
-	--blue-gray-darker: hsl(215, 11%, 22%);
-	--scrolls-over-shadow-top-color: #aaa7;
-	--scrolls-over-shadow-bottom-color: #bbb5;
 	--scrolls-shadow-color: #9999;
+	--scrolls-over-shadow-top-color: #aaa4;
+	--scrolls-over-shadow-bottom-color: #bbb4;
+
+	--btn-bg-color: 					hsl(0deg 0% 96%);
+	--btn-bg-color-hl: 				hsl(0deg 0% 100%);
+	--btn-text-color: 				hsl(0deg 0% 7% / 95%);
+	--btn-text-color-hl: 			hsl(0deg 0% 7%);
+	--btn-border-color: 				hsl(0deg 0% 100% / 50%);
+	--btn-border-color-hl: 			hsl(0deg 0% 100% / 60%);
 }
+/** define at this level so they use a possibly overriden --hue within #app[highlight='xyz'] */
+#app {
+	--primary: hsl(var(--hue), 90%, 70%);
+	--primary-hl: hsl(var(--hue), 90%, 78%);
+	--primary-inactive: hsl(var(--hue), 15%, 50%, .7);
+	--btn-border-color-darker: 	hsl(var(--hue) 12% 88%);
+	--btn-border-color-lighter: 	hsl(var(--hue) 12% 100%);
+	--btn-outline-color: 			hsl(var(--hue) 37% 64%);
+	--inp-outline-color: hsl(var(--hue), 90%, 70%, .85);
+}
+
+.primary {
+	--btn-bg-color: 					hsl(var(--hue) 90% 70%);
+	--btn-bg-color-hl: 				hsl(var(--hue) 90% 78%);
+	--btn-text-color: 				hsl(0deg 0% 7% / 95%);
+	--btn-text-color-hl: 			hsl(0deg 0% 7%);
+}
+.primary-inactive {
+	--btn-bg-color: 					hsl(var(--hue) 20% 65%);
+	--btn-bg-color-hl: 				hsl(var(--hue) 20% 65%);
+	--btn-text-color: 				hsl(0deg 0% 27% / 95%);
+	--btn-text-color-hl: 			hsl(0deg 0% 27%);
+}
+[night-mode] .primary-inactive {
+	--btn-bg-color: 					hsl(var(--hue) 20% 65%);
+	--btn-bg-color-hl: 				hsl(var(--hue) 20% 65% / 75%);
+}
+
+button {
+	color: inherit;
+	box-shadow:
+		0 0.25rem 0.6rem -0.123rem hsl(0deg 0% 0% / 25%);
+}
+
+button.dark,
+.dark-components button:not(.primary) {
+	--btn-bg-color: 					hsl(0deg 0% 15%);
+	--btn-bg-color-hl: 				hsl(0deg 0% 19%);
+	--btn-text-color: 				hsl(0deg 0% 100% / 93%);
+	--btn-text-color-hl: 			hsl(0deg 0% 100%);
+	--btn-border-color: 				hsl(0deg 0% 0% / 25%);
+	--btn-border-color-hl: 			hsl(0deg 0% 0% / 50%);
+	--btn-border-color-darker: 	hsl(var(--hue) 11% 11%);
+	--btn-border-color-lighter: 	hsl(var(--hue) 0% 19%);
+	--btn-outline-color: 			hsl(var(--hue) 90% 62% / 50%);
+}
+
+button.dark, .dark-components button:not(.primary):not(.bare) {
+	font-weight: 300;
+	box-shadow: 0 0.25rem 0.6rem -0.123rem hsl(0deg 0% 0% / 50%);
+}
+
 body {
-	/* declare on body to match correct body[night-mode] --hue */
-	--primary-inactive: hsla(var(--hue), 20%, 50%, .8);
+	color: var(--text-color-dark, red);
 	background: #2b2b2b;
 }
-body[night-mode] {
-	color: #eee;
+body[night-mode], .bg-dark {
+	color: var(--text-color-light, red);
 	background: #1c1c1c;
-	--link-color: hsl(217, 100%, 62%);
-	--link-color-hl: hsl(217, 100%, 66%);
+
 	--scrolls-over-shadow-top-color: #222;
 	--scrolls-over-shadow-bottom-color: #222a;
 	--scrolls-shadow-color: #2224; /* hsl(256 0% 25% / 75%) */
-}
-/**  Basic light and dark button colors  **/
-button {
-	--btn-bg-color: hsl(0, 0%, 96%);
-	--btn-bg-color-hl: hsl(0, 0%, 100%);
-	--btn-text-color: hsla(0, 0%, 7%, 0.95);
-	--btn-text-color-hl: hsl(0, 0%, 7%);
-	--btn-border-color: hsla(0, 0%, 100%, 0.5);
-	--btn-border-color-hl: hsla(0, 0%, 100%, 0.6);
-	--btn-border-color-darker: hsl(var(--hue), 12%, 88%);
-	--btn-border-color-lighter: hsl(var(--hue), 12%, 100%);
-	--btn-outline-color: hsla(var(--hue), 90%, 62%, 1);
-	--btn-outline-color: hsl(var(--hue), 37%, 64%);
-
-	box-shadow:
-		0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 25%);
-		/* inset 0 0 0.4em rgba(255, 255, 255, 0.15); */
-}
-button.dark,
-.dark-components button:not(.primary):not(.bare) {
-	--btn-bg-color: #272727;
-	--btn-bg-color-hl: #303030;
-	--btn-text-color: #fffe;
-	--btn-text-color-hl: #fff;
-	--btn-border-color: hsla(0, 0%, 0%, 0.25);
-	--btn-border-color-hl: #00000080;
-	--btn-border-color-darker: hsl(var(--hue), 11%, 11%);
-	--btn-border-color-lighter: hsl(var(--hue), 0%, 19%);
-	--btn-outline-color: hsla(var(--hue), 90%, 62%, 0.5);
-
-	box-shadow: 0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 50%);
-}
-
-:where(.dark-components) button:not(.bare) {
-	font-weight: 300;
-}
-
-/**  Vivid color following the theme  **/
-
-button.primary {
-	font-weight: 500;
-	--btn-bg-color: var(--primary, hsl(var(--hue), 90%, 62%));
-	--btn-bg-color-hl: var(--primary-hl, var(--primary, hsl(var(--hue), 93%, 79%)));
-	--btn-text-color: #fffe;
-	--btn-text-color-hl: #fff;
-
-	--btn-border-color: hsl(217, 100%, 62%);
-	--btn-border-color-hl: hsl(217, 100%, 66%);
-	--btn-border-color-darker: hsl(217, 80%, 42%);
-	--btn-border-color-lighter: hsl(217, 100%, 72%);
-
-}
-#app[highlight] button.primary {
-	--btn-text-color: #000e;
-	--btn-text-color-hl: #000;
-	--btn-border-color: hsl(var(--hue), 100%, 87%);
-	--btn-border-color-hl: hsl(var(--hue), 100%, 87%);
-	--btn-border-color-darker: hsl(var(--hue), 50%, 84%);
-	--btn-border-color-lighter: hsl(var(--hue), 100%, 92%);
-	--btn-outline-color: hsla(var(--hue), 0%, 100%, 0.75);
 }
 
 #app.content-has-scrollbar #app-header {
@@ -139,16 +135,21 @@ body[night-mode] #veil {
   filter: contrast(0.8) brightness(0.7);
 }
 #app[orientation='portrait'] nav.v-menu {
-	background-color: hsl(var(--hue) 13% 17%);
+	background-color: hsl(217 13% 17%);
 }
 #app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(var(--hue) 25% 41%);
-	background: hsl(var(--hue) 21% 24%);
+	border: 1px solid hsl(var(--hue) 15% 30%);
+	background: hsl(var(--hue) 65% 85%);
+}
+#app[orientation='portrait'] nav.v-menu a:hover {
+	background: hsl(216, 100%, 90%);
 }
 body[night-mode] #app[orientation='portrait'] nav.v-menu a {
-	background: hsl(var(--hue) 19% 22%);
+	background: hsl(var(--hue) 16% 13%);
 }
-
+body[night-mode] #app[orientation='portrait'] nav.v-menu a:hover {
+	background: hsl(216, 17%, 17%);
+}
 .icon.moon:not(.night){
 	filter: brightness(0.6);
 }
@@ -168,7 +169,7 @@ vs-slider input[type=range]::-webkit-slider-thumb {
 	--btn-border-color-hl: ; */
 	--btn-border-color-darker: hsl(var(--hue), 50%, 84%);
 	--btn-border-color-lighter: hsl(var(--hue), 100%, 92%);
-	--btn-outline-color: hsla(var(--hue), 90%, 50%, 0.5);
+	/* --btn-outline-color: hsl(var(--hue), 90%, 50%, 0.5); */
 }
 /**  primary-adapt: a darker primary color when dark-bg  **/
 .dark-components button.primary-adapt,
@@ -181,7 +182,7 @@ vs-slider input[type=range]::-webkit-slider-thumb {
 	--btn-border-color-hl: hsl(var(--hue), 70%, 14%);
 	--btn-border-color-darker:  hsl(var(--hue), 19%, 17%);
 	--btn-border-color-lighter: hsl(var(--hue), 20%, 26%);
-	--btn-outline-color: hsla(var(--hue), 90%, 70%, 0.5);
+	/* --btn-outline-color: hsl(var(--hue), 90%, 70%, 0.5); */
 }
 
 button.blue {
@@ -214,7 +215,7 @@ button.green {
 	--btn-border-color-hl: hsl(128, 58%, 49%);
 	--btn-border-color-darker: hsl(128, 50%, 35%);
 	--btn-border-color-lighter: hsl(128, 58%, 59%);
-	--btn-outline-color: hsl(128, 100%, 65%);
+	/* --btn-outline-color: hsl(128, 100%, 65%); */
 }
 /* .dark-components button.green {
 	--btn-bg-color: ;
@@ -236,7 +237,7 @@ button.yellow {
 	--btn-border-color-hl: hsl(60, 100%, 68%);
 	--btn-border-color-darker: hsl(60, 100%, 58%);
 	--btn-border-color-lighter: hsl(60, 100%, 78%);
-	--btn-outline-color: hsl(60, 100%, 52%);
+	/* --btn-outline-color: hsl(60, 100%, 52%); */
 }
 button.orange {
 	--btn-bg-color: hsl(16, 100%, 60%);
@@ -247,7 +248,7 @@ button.orange {
 	--btn-border-color-hl: hsl(29, 100%, 68%);
 	--btn-border-color-darker: hsl(29, 100%, 42%);
 	--btn-border-color-lighter: hsl(29, 90%, 77%);
-	--btn-outline-color: hsl(16, 100%, 52%);
+	/* --btn-outline-color: hsl(16, 100%, 52%); */
 	text-shadow: 0 .07rem .07rem rgba(0, 0, 0, .2);
 }
 /* .dark-components button.orange {
@@ -269,7 +270,7 @@ button.red {
 	--btn-border-color-hl: hsl(0, 46%, 56%);
 	--btn-border-color-darker: hsl(0, 46%, 46%);
 	--btn-border-color-lighter: hsl(0, 88%, 60%);
-	--btn-outline-color: hsl(0, 100%, 59%);
+	/* --btn-outline-color: hsl(0, 100%, 59%); */
 }
 /* .dark-components button.red {
 	--btn-bg-color: ;
@@ -289,7 +290,7 @@ vs-slider input[type=range]::-webkit-slider-thumb:hover {
 	background-color: var(--btn-bg-color-hl);
 }
 button:not(.bare) {
-	color: var(--btn-text-color);
+	color: var(--btn-text-color, --text-color-dark);
 	background-color: var(--btn-bg-color);
 	border: .12rem solid var(--btn-border-color);
 }
@@ -346,15 +347,16 @@ body:not(.using-mouse) button.bare:focus {
 	--inp-border-color: #ffffff80;
 	--inp-outline-color: #0007;
 } */
-
-input, textarea {
-	--inp-text-color: var(--text-color-dark);
-	--inp-text-color-hl: var(--text-color-dark);
+:root {
+	--inp-text-color: var(--text-color-dark, red);
+	--inp-text-color-hl: var(--text-color-dark, blue);
 	--inp-bg-color: #f7f7f7;
 	--inp-bg-color-hl: #fff;
 	--inp-border-color: #ffffff80;
 	--inp-border-color-hl: #fff;
-	--inp-outline-color: hsl(var(--hue), 90%, 62%);;
+	--inp-outline-color: hsl(217, 90%, 62%);
+}
+input, textarea {
 
 	background: var(--inp-bg-color);
 	border: .12rem solid var(--inp-border-color);
@@ -376,14 +378,17 @@ input:focus, textarea:focus {
 
 /**  LINKS and bare buttons text color **/
 
-a, button.bare .vs-icon { color: var(--link-color) }
-a:hover, button.bare:hover .vs-icon { color: var(--link-color-hl) }
+/* button.bare .vs-icon, */
+a { color: var(--link-color, var(--text-color-dark-strong, currentColor)) }
 
-button.bare.selected .vs-icon,
+/* button.bare:hover .vs-icon, */
 a.selected,
-button.bare:hover .vs-icon, a:hover {
-	color: var(--link-color-hl)
-}
+a:hover { color: var(--link-color-hl, var(--text-color-dark-strong, currentColor)) }
+
+/* button.bare.selected .vs-icon,
+button.bare:hover .vs-icon,  */
+
+
 
 body[night-mode] textarea {
 	background: field;
@@ -391,24 +396,25 @@ body[night-mode] textarea {
 }
 
 button.underline {
-	color: var(--primary-inactive);
+	/* color: var(--primary-inactive); */
 }
+/*! should use explicit .primary when selected */
 button.underline.selected {
-	color: var(--primary);
+	/* color: var(--btn-bg-color); */
 }
 button.underline:hover {
-	color: var(--primary-hl);
+	/* color: var(--primary-hl); */
 }
 
 nav.v-menu a {
 	color: var(--link-color);
 	text-decoration-color: currentColor;
-	/* color: hsla(150deg, 90%, 70%, .78); */
-	/* text-decoration-color: hsla(150deg, 90%, 70%, .6); */
+	/* color: hsl(var(--hue), 90%, 70%, .78); */
+	/* text-decoration-color: hsl(var(--hue), 90%, 70%, .6); */
 
 }
 nav.v-menu a.selected {
-	/* color: hsla(150deg, 90%, 70%, .95); */
+	/* color: hsl(var(--hue), 90%, 70%, .95); */
 	/* text-decoration-color: currentColor; */
 	color: var(--link-color-hl);
 }
@@ -420,9 +426,9 @@ body[night-mode] button.underline {
 	font-weight: 400;
 }
 
-nav.v-menu a:hover {
+/* nav.v-menu a:hover {
 	color: var(--link-color-hl);
-}
+} */
 
 main:not(.no-fade-in) {
 	/** auto fade-in page when its rendered */
@@ -461,5 +467,6 @@ button.underline {
 svg.icon { /** inserted with useSVG('name') */
 	fill: currentColor;
 	stroke: none;
-	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, 0.22));
+	/* filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, 0.22)); */
 }
+

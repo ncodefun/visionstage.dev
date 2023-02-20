@@ -10,10 +10,10 @@ body {
 	--link-color-hl: hsl(var(--hue), 100%, 63%);
 }
 */
-body {
+/* body {
   --hue: 256deg;
-	--primary: hsl(var(--hue), 93%, 79%);
-	--primary-hl: hsl(var(--hue), 100%, 83%);
+	--primary: hsl(var(--hue), 93%, 69%);
+	--primary-hl: hsl(var(--hue), 100%, 73%);
 	--link-color: hsl(var(--hue), 93%, 79%);
 	--link-color-hl: hsl(var(--hue), 100%, 83%);
 }
@@ -21,12 +21,17 @@ body[night-mode] {
   --hue: 256deg;
 	--primary: hsl(var(--hue), 100%, 78%);
 	--primary-hl: hsl(var(--hue), 100%, 75%);
-
 	--link-color: hsl(var(--hue), 100%, 78%);
 	--link-color-hl: hsl(var(--hue), 100%, 75%);
-
+} */
+button.primary {
+  /* --btn-text-color: #111e;
+  --btn-text-color-hl: #111; */
+  /* --btn-border-color: hsl(217, 100%, 62%);
+	--btn-border-color-hl: hsl(217, 100%, 66%);
+	--btn-border-color-darker: hsl(217, 80%, 42%);
+	--btn-border-color-lighter: hsl(217, 100%, 72%); */
 }
-
 button > img {
   height: 2.25rem;
   width: auto;

@@ -67,7 +67,7 @@ vision-stage.has-margins {
 	z-index: 3;
 	width: 100%;
 	left: 0;
-	font-size: var(--alt-scaling-fs) !important;
+	/* font-size: var(--alt-scaling-fs) !important; */
 	/* in px, not em; Match the alt scaling of header/footer, without the possible super-scaling of these pseudo-elements' parent (#app-content), which may have another font-size than 1rem. */
 }
 .scroll.shadow::before { /* top:  */
@@ -265,8 +265,8 @@ hr.split {
 .fixed.left, .abs.left { left:0 }
 .fixed.right, .abs.right { right:0 }
 .pink { background-color: rgba(255, 192, 203, 0.267) }
-
-
+.m-1 { margin: 1rem }
+.m-t-auto { margin-top: auto }
 [flow],
 [flow~='row'],
 [flow~='row-rev'],
@@ -329,8 +329,8 @@ hr.split {
 .grow,
 [flow~='grow'] { flex-grow: 1 }
 [flow~='inline'] { display: inline-flex }
-[self~='center'] { align-self: center }
-[flow~='col'] [self~='bottom'] { margin-top: auto !important }
+/* [self~='center'] { align-self: center } */
+/* [flow~='col'] [self~='bottom'] { margin-top: auto !important } */
 
 [flow~='gaps'], .gaps { gap: 1em }
 [flow~='gaps-small'], .gaps-small { gap: .5em }
@@ -378,7 +378,7 @@ span.vs-icon svg {
 	display: inline-block;
 	fill: currentColor;
 	stroke: none;
-	filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, .25));
+	/* filter: drop-shadow(0 .12rem .06rem rgba(0, 0, 0, .25)); */
 }
 
 /* josefin-sans-300 - latin */
@@ -542,11 +542,7 @@ nav.v-menu span.link {
 #app[orientation='portrait'] #app-header.lang-center {
 	grid-template-columns: 1fr 1.5fr 1fr;
 }
-/* make everything inside header a bit smaller
-	#app-header normally has .alt-scaling – will still scale down less than content when viewport gets narrower */
-#app[orientation='portrait'] #app-header > * {
-  font-size: .9em;
-}
+
 #app[orientation='portrait'] #app-header.lang-center h1.mini {
 	line-height: 1;
 	margin: 0 !important;
@@ -593,6 +589,7 @@ input[type='password'] + button {
 	border-top-left-radius: 0;
 	border-bottom-left-radius: 0;
 	border-left-color: #00000008;
+	box-shadow: none !important;
 }
 
 button, input, .button {

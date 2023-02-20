@@ -29,3 +29,4 @@ I hope you find the same joy using it as the joy I had and still have developing
 
 *Currently, I'm in the process of documenting Vision Stage properly, making examples and (forever) cleaning and refining styles.*
 
+- [Get started](docs/get-started.md)

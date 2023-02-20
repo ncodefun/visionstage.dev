@@ -10,12 +10,7 @@ button, input, a.button {
 	font-weight: 460;
 }*/
 
-:root {
-	/* --hue: 150deg; */
-	--primary: hsl(150deg, 90%, 62%);
-	--primary-hl: hsl(150deg, 90%, 62%);
-	/* color: var(--text-color-light); */
-}
+
 
 #app[aspect-range*='portrait'] main {
 	padding-bottom: 2rem;

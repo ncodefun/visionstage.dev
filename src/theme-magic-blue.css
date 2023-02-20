@@ -5,9 +5,12 @@
 
 	--link-color: hsl(150, 90%, 70%);
 	--link-color-hl: hsl(150, 90%, 62%);
-
 	--primary: hsl(150deg, 90%, 62%);
 	--primary-hl: hsl(150, 90%, 70%);
+}
+button.primary {
+	--btn-text-color: var(--text-color-dark);
+	--btn-text-color-hl: var(--text-color-dark);
 }
 vs-modal {
 	--modal-bg: url(/_assets/images/textures/brushed-alum.png) hsl(240deg 100% 50%);
@@ -43,11 +46,10 @@ body[night-mode='2'] {
 body[night-mode] {
 	--scrollbar-handle-color: hsl(252, 25%, 44%);
 	--hue: 276deg;
-	--primary: hsl(276, 93%, 79%);
-	--primary-hl: hsl(276, 100%, 83%);
-
-	--link-color: hsl(276, 100%, 88%);
-	--link-color-hl: hsl(276, 100%, 85%);
+	--primary: hsl(var(--hue), 93%, 85%);
+	--primary-hl: hsl(var(--hue), 100%, 88%);
+	--link-color: hsl(var(--hue), 100%, 85%);
+	--link-color-hl: hsl(var(--hue), 100%, 88%);
 }
 
 body[night-mode] vision-stage,

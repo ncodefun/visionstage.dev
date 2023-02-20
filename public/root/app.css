@@ -1,3 +1,10 @@
+/* make everything inside header a bit smaller
+	#app-header normally has .alt-scaling – will still scale down less than content when viewport gets narrower */
+#app[orientation='portrait'] #app-header > * {
+  font-size: .9em;
+}
+
+
 main#home {
 	font-size: 1.15em;
 	/* position: relative; */

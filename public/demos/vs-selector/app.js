@@ -40,7 +40,7 @@ const DEMO_COLORS = [
 
 // log('pink', 'STATE_DEMO3_OPTIONS:', STATE_DEMO3_OPTIONS)
 
-const THEMES = ['', 'cyan', 'yellow-green', 'yellow', 'green']
+const THEMES = ['', 'purple', 'yellow-green', 'orange', 'yellow', 'green']
 
 const STEPPER_DEMO_OPTS = [
 	{label:['Oneeeeeeeeeeee','Un'], value: 'one'}, ['two','deux'], 'three', 'four', 'five'
@@ -78,7 +78,7 @@ class App extends VS {
 
 			<span flow='row right gaps'>
 
-				<button id='theme-toggle' class='square bare'
+				<button is='vs-button' id='theme-toggle' class='square bare'
 					@pointerdown=${ e => {
 						this.theme = cycleValueWithin( this.theme, THEMES)
 					}}>
@@ -92,17 +92,21 @@ class App extends VS {
 					>☀️
 				</vs-selector> -->
 
-				<button id='dark-controls-toggle' class='square bare'
+				<button is='vs-button' id='dark-controls-toggle'
+					class='square bare'
 					@pointerdown=${ e => this.dark_components = !this.dark_components }>
 					<span class='icon sun ${ this.dark_components ? 'dark':'' }'>☀️</span>
 				</button>
 
-				<button id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
+				<button is='vs-button' id='night-mode-toggle'
+					class='square bare'
+					aria-label=${ this.$night_mode }
 					@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
 					<span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
 				</button>
 
-				<button id='fullscreen-toggle' class='square bare large'
+				<button is='vs-button' id='fullscreen-toggle'
+					class='square bare large'
 					aria-label=${ this.$fullscreen }
 					@click=${ async e => { fs.isEnabled && fs.toggle(); await sleep(100); this.render() }}
 					>
@@ -115,6 +119,7 @@ class App extends VS {
 		${ appContent.call(this) }
 		${ appFooter.call(this, 'nav') }
 	`
+
 	home = () => html`
 		<main id='home'
 			class='text-center'
@@ -292,6 +297,7 @@ class App extends VS {
 
 		</main>
 	`
+
 	about = () => html`
 		<main id='about' flow='col top full' class='scroll shadow text-justify'>
 
@@ -311,7 +317,7 @@ VS.config = {
 }
 
 VS.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait (limit only for extreme case)
+	portrait_alt:	.55,		// default=0 -> .alt-scaling remains scaled relative to stage height.
 	portrait: 		.7,		// min horizontal space in portrait
 	portrait_max: 	1,			// max horizontal space in portrait
 	// threshold: 		1.2,
@@ -352,7 +358,8 @@ VS.properties = {
 	},
 	theme: {
 		value: '',
-		attribute: ['highlight', 'auto'] // auto: remove attr if falsy value
+		attribute: ['highlight', 'auto'], // auto: remove attr if falsy value
+		storable: true,
 	},
 	demo_type: DEMO_TYPES[1].value,
 	state_demo1: { value: true, storable:true },

@@ -11,8 +11,8 @@ vs-selector:not([type='underline']) .button-group {
 }
 /** default blue btn is like dark... */
 
-#app:not([highlight]) button.primary {
-	box-shadow: 0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 30%);
+#app:not([highlight]) button.primary {/* for blue: darker */
+	/* box-shadow: 0 0.25rem 0.6rem -0.123rem rgb(0 0 0 / 30%); */
 }
 
 .dark-components vs-selector[folds],
@@ -196,29 +196,40 @@ body[night-mode='1'] vs-selector button.selected .led {
 }
 
 /*/ led Glow /*/
-vs-selector button.selected .led {
+/* blue */
+/* vs-selector button.selected .led {
 	background:
 		radial-gradient(at 56% 35%, #fffa, transparent 70%),
 		radial-gradient(closest-side, hsl(222, 100%, 50%), hsl(217, 100%, 54%)
-
 		);
-			/* hsl(217, 100%, 60%),
-			hsl(217, 100%, 52%) */
-	--glow-color: hsl(217, 100%, 74%); /** 166 */
+	--glow-color: hsl(217, 100%, 74%);
 	box-shadow:
 		0 0 2px #00f7,
 		0 0 .12em var(--glow-color),
 		0 0 .35em var(--glow-color),
 		0 0 .6em var(--glow-color),
 		0 0 .75em var(--glow-color);
-}
+} */
 
 .dark-components vs-selector button .led {
 	filter:  brightness(.85) contrast(1.2) saturate(.8);
 }
 .dark-components vs-selector button.selected .led {
 	filter: contrast(1.1) brightness(1.1) saturate(1.2);
-	/* mix-blend-mode: none; */
+	background:
+		radial-gradient(at 56% 35%, #fffa, transparent 70%),
+		radial-gradient(closest-side, hsl(var(--hue), 100%, 50%), hsl(var(--hue), 100%, 54%));
+	--glow-color: hsl(var(--hue) 100% 57%);
+	box-shadow:
+		0 0 2px #0009,
+		0 0 .12em var(--glow-color),
+		0 0 .35em var(--glow-color),
+		0 0 .6em var(--glow-color),
+		0 0 .75em var(--glow-color);
+}
+/* blue */
+/* .dark-components vs-selector button.selected .led {
+	filter: contrast(1.1) brightness(1.1) saturate(1.2);
 	background:
 		radial-gradient(at 56% 35%, #fffa, transparent 70%),
 		radial-gradient(closest-side, hsl(222, 100%, 50%), hsl(217, 100%, 54%));
@@ -229,6 +240,42 @@ vs-selector button.selected .led {
 		0 0 .35em var(--glow-color),
 		0 0 .6em var(--glow-color),
 		0 0 .75em var(--glow-color);
+} */
+
+/* #app[highlight]  */
+vs-selector button.selected .led {
+	background:
+		radial-gradient(at 56% 35%, #fffa, transparent 90%),
+		radial-gradient(closest-side,
+			hsl( var(--hue), 100%, 50%),
+			hsl( var(--hue), 100%, 32%)
+		);
+	--glow-color: hsla(var(--hue), 100%, 70%, 0.6);
+	box-shadow:
+		0 0 2px #fff3,
+		0 0 .12em var(--glow-color),
+		0 0 .35em var(--glow-color),
+		0 0 .6em var(--glow-color),
+		0 0 .75em var(--glow-color);
+}
+
+/* #app[highlight] */
+vs-selector button span.led-bar {
+	background: var(--primary-inactive, red);
+}
+/* #app[highlight]  */
+vs-selector button.selected span.led-bar {
+	background: var(--primary-hl, red);
+	filter:
+		drop-shadow(0 0 .18rem hsla(var(--hue), 100%, 70%, 0.75))
+		drop-shadow(0 0 .35rem hsla(var(--hue), 100%, 70%, 0.75));
+}
+/** a bit less intense for bare underline */
+/* #app[highlight]  */
+vs-selector button.bare.selected span.led-bar {
+	filter:
+		drop-shadow(0 0 .18rem hsla(var(--hue), 100%, 70%, 0.5))
+		drop-shadow(0 0 .35rem hsla(var(--hue), 100%, 70%, 0.5));
 }
 
 /* body[night-mode='1'].dark-components vs-selector button .led {
@@ -261,7 +308,8 @@ vs-selector button span.led-bar {
 	width: 2rem;
 	height: .16em;
 	border-radius: 1rem;
-	background: var(--primary-hl);
+	/* uses .primary */
+	background: var(--btn-bg-color-hl);
 	border: 1px solid #0001;
 	order: 2;
 	margin-bottom: .12rem;
@@ -291,7 +339,7 @@ body[night-mode] vs-selector button.bare.underline.selected span.led-bar {
 }
 
 vs-selector button:not(.selected) span.led-bar {
-	background: var(--primary-inactive);
+	/* background: var(--primary-inactive); */
 }
 :is(.dark-components vs-selector, vs-selector.dark) button:not(.selected):not(.bare) span.led-bar {
 	filter: brightness(.75);
