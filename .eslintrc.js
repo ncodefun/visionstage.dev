@@ -13,6 +13,7 @@ module.exports = {
     "rules": {
         "no-irregular-whitespace": "off",
         "no-unused-vars": "off",
-        "no-mixed-spaces-and-tabs": "off"
+        "no-mixed-spaces-and-tabs": "off",
+        "no-self-assign": "off"
     }
 }
