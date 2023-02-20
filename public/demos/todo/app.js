@@ -15,7 +15,7 @@ class App extends VS {
 	}
 
 	async testModal(){
-		const answer = await this.modal.setup(["Hello","What's your name?"], ['OK'], true)
+		const answer = await this.modal.setup(["Hello","What's your name?"], [['OK','primary']], true)
 		log('info', 'answer:', answer)
 	}
 
@@ -26,7 +26,7 @@ class App extends VS {
 	`
 
 	home = () => html`
-		<main id='home' flow='col top grow' class='scroll shadow'>
+		<main id='home' flow='col top grow'>
 			<p>${this.params?.map(p=>html`<div>Param: ${p[0]}</div>`)}</p>
 			<h1>${ this.$todo }</h1>
 			<form
@@ -59,12 +59,12 @@ class App extends VS {
 						class='checkbox bare icon'
 						@click=${ e => { todo.done = !todo.done ; this.render() } }
 						>
-						${ icon(`checkbox-${ strIf( 'un', !todo.done) }checked`) }
+						${ icon(`checkbox-${ strIf('un', !todo.done) }checked`) }
 					</button>
 
 					<button
 						class='todo-item bare ${ strIf( 'done', todo.done) }'
-						@click=${ e => this.prop('todo').toggleSelect( todo) }
+						@click=${ e => this.prop('todo').toggleSelect(todo) }
 						>
 						${ todo.title }
 					</button>
@@ -139,14 +139,25 @@ class App extends VS {
 				<!-- show pattern where data is mutated elsewhere... -->
 			</section>
 
-			<button self='bottom'
-				@pointerdown=${ this.testModal }>Toggle modal</button>
+			<footer class='m-t-auto'>
+				<button style='margin: 2rem 0 0'
+					@click=${ this.testModal }>
+					Toggle modal
+				</button>
+			</footer>
 
 			<!-- <button id='test-update-btn'>Test update SW</button> -->
 		</main>
 	`
 
-	two = () => html`<main><h1>Page two</h1></main>`
+	two = () => html`
+		<main id='two' flow='col top grow'>
+			<h1>Page two</h1>
+			<p>
+				Here's a <a href='#'>link home</a>
+			</p>
+		</main>
+	`
 
 	async onCacheUpdated(){
 		log('ok', 'update ready!')
@@ -206,7 +217,11 @@ VS.strings = {
 VS.properties = {
 	todos: {
 		value: [],
-		storable: true
+		storable: true,
+		force_render: true,
+		/// Force render → we use prop() methods for deep mods that
+		/// gonna re-assing array to itself to trigger watcher, render etc.
+		/// but normally we prevent those if val is identical…
 	},
 	todo: {
 		value: null,
