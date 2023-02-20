@@ -166,6 +166,7 @@ export default class Selector extends Component {
 			let simple_class = classes(
 				'simple-toggle', this.type,
 				this.selected && 'selected',
+
 				this.selected && sel_color,
 				this.classList.contains('bare') && 'bare',
 				...this._btn_class, this.btn_class
@@ -183,7 +184,7 @@ export default class Selector extends Component {
 						icon(`checkbox-${ this.selected ? '':'un'}checked`, 'checkbox icon') :
 					this.type==='led-round' ? html`<span class='led icon' flow></span>` :
 					this.type==='led-square' ? html`<span class='led square icon' flow></span>` :
-					this.type==='led-bar' ? html`<span class='led-bar icon'></span>` :
+					this.type==='led-bar' ? html`<span class='led-bar icon ${this.selected ? 'primary' : 'primary-inactive'}'></span>` :
 					this.type==='switch' ? html`<span class='switch icon' flow></span>` :
 					''
 				}
@@ -294,13 +295,13 @@ export default class Selector extends Component {
 								this.type==='led-square' ?
 									html`<span class='led square icon' flow></span>` :
 								this.type==='led-bar' ?
-									html`<span class='led-bar icon'></span>` :
+									html`<span class='led-bar icon ${selected ? 'primary' : 'primary-inactive'}'></span>` :
 								this.type==='switch' ?
 									html`<span class='switch icon' flow></span>` :
 								this.type==='radio' ?
 									html`<span class='radio icon'>${selected ? '◉' : '◎' }</span>` :
 								this.type==='underline' ?
-									html`<span class='led-bar underline icon'></span>` :
+									html`<span class='led-bar underline icon ${selected ? 'primary' : 'primary-inactive'}'></span>` :
 								''
 							}
 							<span flow='col' class='text'>
@@ -386,50 +387,61 @@ export default class Selector extends Component {
 	}
 
 	onKeyDown( e){
-		//log('check', 'key:', e.key, 'keycode:', e.keyCode, 'code:', e.code)
-		let from_menu = e.currentTarget.classList.contains('menu')
-		if( e.code === 'Space'){
-			if( from_menu)
+		// log('check', 'key:', e.key, 'keycode:', e.keyCode, 'code:', e.code)
+		// If a menu item is focused; otherwize it's the header
+		if (e.code === 'Escape'){
+			if (this.folds && !this.folded)
+				this.folded = true
+			return
+		}
+
+		if (e.target.classList.contains('disabled'))
+			return
+
+		const from_menu = e.currentTarget.classList.contains('menu')
+
+		if (e.code === 'Space'){ // Spacebar can toggle item or menu
+			if (from_menu)
 				this.onClickItem(e)
 			else
 				this.toggle()
 		}
-		else if( e.code === 'Enter'){
-			if( from_menu)
+		else if (e.code === 'Enter'){ // Enter should only toggle item?
+			if (from_menu)
 				this.onClickItem(e)
+			else
+				this.toggle()
 		}
 	}
 
 	onClickItem(e){
 		// clicked toggle
-		if( this.folded){
+		if (this.folded){
 			this.folded = false
 			return
 		}
-		else if( this.folds && !this.multi){ // clicked item && folds => fold / close menu
+		else if (this.folds && !this.multi){ // clicked item && folds => fold / close menu
 			this.folded = true
 		}
 
 		const i = e.target.index
 
-		if( this.multi){
+		if (this.multi){
 			// remove selection if was selected
-			let selected_val = this.val( this.opts[i])
-			//this.last_selected = selected_val
-			if( this.selected.includes( selected_val)){
-				this.selected.splice( this.selected.indexOf( selected_val), 1)
+			let selected_val = this.val( this.opts[i] )
+			if (this.selected.includes( selected_val )){
+				this.selected.splice( this.selected.indexOf( selected_val ), 1 )
 				this.last_op = ['removed', selected_val]
 			}
 			else {
-				this.selected.push( selected_val)
+				this.selected.push( selected_val )
 				this.last_op = ['added', selected_val]
 			}
 		}
 		else {
-			this.selected = this.val( this.opts[i])
+			this.selected = this.val( this.opts[i] )
 		}
 		this.dispatchChange()
-		// this.render()
 	}
 }
 
