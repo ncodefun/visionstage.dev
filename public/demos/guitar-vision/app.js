@@ -6,19 +6,23 @@
 import { VisionStage as VS, html, define, log }
 	from '/vision-stage/vision-stage.min.js'
 
-import { tempClass }
+import { tempClass, labelOptionsMapper }
 	from '/vision-stage/utils.js'
 
 import { appHeader, appContent, appFooter }
 	from '/vision-stage/templates.js'
 
-
+// Bare strings is supported instead of standard obj: { label: ''|[], value: * }
+// to use localized labels without creating option objects,
+// use labelOptionsMapper (will map the first locale string to the value).
 const POSITIONS = ['C', 'A', 'G', 'E', 'D']
 const KEYS = ['C','G','D','A','E']
 const INVERSIONS = ['none','1st','2nd','3rd']
 const CHORDS = ['I','II','III','IV','V','VI','VII']
-const PLAY_MODES = ['normal','reverse','alternate']
-const SCALES = ['diatonic','harmonic minor']
+const SCALES = [['diatonic','diatonique'],['harmonic minor','mineure harmonique']]
+.map( labelOptionsMapper )
+const PLAY_MODES = [['normal','normale'],['reverse','inverse'],['alternate','alternée']]
+.map( labelOptionsMapper )
 
 class App extends VS {
 
@@ -35,7 +39,6 @@ class App extends VS {
 	`
 
 	home = () => html`
-		<div id='test' class='abs'>TEST</div>
 		<main id='home' class='grow text-center'
 			flow='row baseline divide wrap gaps-small'>
 
@@ -54,7 +57,7 @@ class App extends VS {
 			<div></div>
 
 			<span flow='col'>
-				<label>Key</label>
+				<label>${ this.$key }</label>
 				<vs-selector folds
 					.options=${ KEYS }
 					.selected=${ this.key }
@@ -72,7 +75,7 @@ class App extends VS {
 			</span>
 
 			<span flow='col'>
-				<label>Scale</label>
+				<label>${ this.$scale }</label>
 				<vs-selector folds
 					.options=${ SCALES }
 					.selected=${ this.scale }
@@ -83,7 +86,7 @@ class App extends VS {
 			<div></div>
 
 			<span flow='col'>
-				<label>Chord</label>
+				<label>${ this.$chord }</label>
 				<vs-selector direction='horizontal'
 					.options=${ CHORDS }
 					.selected=${ this.chord }
@@ -92,7 +95,7 @@ class App extends VS {
 			</span>
 
 			<span flow='col'>
-				<label>Inversion Focus</label>
+				<label>${ this.$inversion }</label>
 				<vs-selector direction='horizontal'
 					.options=${ INVERSIONS }
 					.selected=${ this.inversion }
@@ -105,7 +108,7 @@ class App extends VS {
 			<div flow='row bottom gaps wrap' style='padding: 0 2rem'>
 
 				<div flow='col'>
-					<label>Sequence</label>
+					<label>${ this.$sequence }</label>
 					<vs-selector id='play-mode-ctrl'
 						direction='horizontal'
 						.options=${ PLAY_MODES }
@@ -121,7 +124,7 @@ class App extends VS {
 				</button>
 
 				<div flow='col'>
-					<label>Beats per Chord</label>
+					<label>${ this.$beats }</label>
 					<div>
 						<vs-number-input min='1' max='8' min-size='1'
 							.value=${ this.beats_per_chord }
@@ -250,16 +253,20 @@ VS.languages = ['en', 'fr']
 
 VS.pages = {
 	'': 		["Home", "Accueil"],
-	about: ['About', 'À propos'], // -> /#About | /#À propos
-	// '/vision-stage': 	['Vision Stage', 'Vision Stage'],
-	// '/todo': ['Todo', 'Todo'],
-	// '/test': ['Components', 'Composantes'],
-	// '/triads': ['Guitar', 'Guitare']
+	about: ['About', 'À propos'],
 }
 
 VS.strings = {
 	home: 			["Home", "Accueil"],
 	fullscreen: 	["Fullscreen", "Plein écran"],
+	key:				["Key", "Clé"],
+	scale:			["Scale", "Gamme"],
+	chord:			["Chord", "Accord"],
+	inversion:		["Inversion Focus", "Focus sur l'inversion"],
+	sequence:		["Sequence", "Séquence"],
+	beats:			["Beats per chord", "Beats par accord"],
+
+
 }
 
 VS.properties = {
