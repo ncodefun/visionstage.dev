@@ -48,7 +48,7 @@
 	background: hsl(250deg 42% 61%);
 	border: .12rem solid hsla(0, 0%, 0%, 0.25);
 	color: hsl(0, 0%, 100%);
-	top: 2.75rem;
+	top: 2.75em;
 	min-width: 12em;
 	padding: .5em 1em .5em;
 	border-radius: .5em;

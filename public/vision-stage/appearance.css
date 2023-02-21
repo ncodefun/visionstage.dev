@@ -5,7 +5,7 @@
 
 :root {
 	--hue: 150deg;
-	--text-color-dark: #282828;
+	--text-color-dark: #000C;
 	--text-color-light: #eee;
 	--text-color-dark-strong: #000;
 	--text-color-light-strong: #fff;
@@ -52,27 +52,68 @@
 }
 
 button {
-	color: inherit;
+	color: var(--btn-text-color, red);
+	/** For white on white */
 	box-shadow:
 		0 0.25rem 0.6rem -0.123rem hsl(0deg 0% 0% / 25%);
 }
+/** For dark on white */
+.dark-components button:not(.primary):not(.bare):not(.bare-part) {
+	box-shadow: 0 0.25rem 0.6rem -0.123rem hsl(0deg 0% 0% / 50%);
+}
+/** For dark on dark */
+body[night-mode]
+.dark-components button:not(.primary):not(.bare):not(.bare-part) {
+	box-shadow:
+		0 0.25rem 0.6rem -0.123rem hsl(0deg 0% 0% / 12%);
+}
+
+button:hover {
+	color: var(--btn-text-color-hl, red);
+}
+button.bare {
+	color: var(--text-color-dark, orange);
+}
+button.bare:hover {
+	color: var(--text-color-dark-strong, orange);
+}
+body[night-mode] button.bare {
+	color: var(--text-color-light, orange);
+}
+body[night-mode] button.bare:hover {
+	color: var(--text-color-light-strong, orange);
+}
+
 
 button.dark,
-.dark-components button:not(.primary) {
+.dark-components {
 	--btn-bg-color: 					hsl(0deg 0% 15%);
 	--btn-bg-color-hl: 				hsl(0deg 0% 19%);
 	--btn-text-color: 				hsl(0deg 0% 100% / 93%);
 	--btn-text-color-hl: 			hsl(0deg 0% 100%);
+}
+
+button.dark,
+.dark-components button:not(.primary):not(.bare):not(.bare-part) {
 	--btn-border-color: 				hsl(0deg 0% 0% / 25%);
 	--btn-border-color-hl: 			hsl(0deg 0% 0% / 50%);
 	--btn-border-color-darker: 	hsl(var(--hue) 11% 11%);
 	--btn-border-color-lighter: 	hsl(var(--hue) 0% 19%);
 	--btn-outline-color: 			hsl(var(--hue) 90% 62% / 50%);
+	font-weight: 300;
 }
 
-button.dark, .dark-components button:not(.primary):not(.bare) {
+
+textarea.dark,
+input[type='text'].dark,
+.dark-components :is(input[type='text'], textarea) {
 	font-weight: 300;
-	box-shadow: 0 0.25rem 0.6rem -0.123rem hsl(0deg 0% 0% / 50%);
+	--inp-text-color: #eee;
+	--inp-text-color-hl: #fff;
+	--inp-bg-color: #3a3a3a;
+	--inp-bg-color-hl: #333;
+	--inp-border-color: #555;
+	--inp-border-color-hl: #555;
 }
 
 body {
@@ -134,14 +175,25 @@ body[night-mode] #veil {
   background: url(/_assets/images/textures/brushed-alum-black.png) hsl(0, 0%, 13%);
   filter: contrast(0.8) brightness(0.7);
 }
+
 #app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(150deg 13% 17%);
+	--link-color: hsl(150, 90%, 70%);
+	--link-color-hl: hsl(150, 90%, 62%);
+}
+#app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(161deg 54% 25%);
+	background: hsl(164deg 21% 24%);
+}
+
+/* #app[orientation='portrait'] nav.v-menu {
 	background-color: hsl(217 13% 17%);
 }
 #app[orientation='portrait'] nav.v-menu a {
 	border: 1px solid hsl(var(--hue) 15% 30%);
 	background: hsl(var(--hue) 65% 85%);
-}
-#app[orientation='portrait'] nav.v-menu a:hover {
+} */
+/* #app[orientation='portrait'] nav.v-menu a:hover {
 	background: hsl(216, 100%, 90%);
 }
 body[night-mode] #app[orientation='portrait'] nav.v-menu a {
@@ -149,7 +201,7 @@ body[night-mode] #app[orientation='portrait'] nav.v-menu a {
 }
 body[night-mode] #app[orientation='portrait'] nav.v-menu a:hover {
 	background: hsl(216, 17%, 17%);
-}
+} */
 .icon.moon:not(.night){
 	filter: brightness(0.6);
 }
@@ -294,9 +346,12 @@ button:not(.bare) {
 	background-color: var(--btn-bg-color);
 	border: .12rem solid var(--btn-border-color);
 }
+button:hover,
+body:not(.using-mouse) button:not(.bare):focus {
+	color: var(--btn-text-color-hl, red);
+}
 button:not(.bare):hover,
 body:not(.using-mouse) button:not(.bare):focus {
-	color: var(--btn-text-color-hl);
 	background-color: var(--btn-bg-color-hl, var(--btn-bg-color));
 	border-color: var(--btn-border-color-hl);
 }
@@ -352,7 +407,7 @@ body:not(.using-mouse) button.bare:focus {
 	--inp-text-color-hl: var(--text-color-dark, blue);
 	--inp-bg-color: #f7f7f7;
 	--inp-bg-color-hl: #fff;
-	--inp-border-color: #ffffff80;
+	--inp-border-color: #fff;
 	--inp-border-color-hl: #fff;
 	--inp-outline-color: hsl(217, 90%, 62%);
 }
@@ -372,7 +427,7 @@ input:focus, textarea:focus {
 input:focus, textarea:focus {
 	outline-width: 2px;
 	outline-style: solid;
-	outline-offset: -3px;
+	outline-offset: -2px;
 	outline-color: var(--inp-outline-color);
 }
 
@@ -390,10 +445,10 @@ button.bare:hover .vs-icon,  */
 
 
 
-body[night-mode] textarea {
+/* body[night-mode] textarea {
 	background: field;
 	color: fieldText;
-}
+} */
 
 button.underline {
 	/* color: var(--primary-inactive); */

@@ -1,4 +1,4 @@
-@import './appearance.css';
+@import '/vision-stage/appearance.css';
 
 :root {
 	--app-header-height: calc(var(--alt-scaling-fs-em) * 3.5);
@@ -581,6 +581,8 @@ input[type='text']::placeholder,
 input[type='email']::placeholder,
 input[type='password']::placeholder {
 	font-style: italic;
+	color: var(--inp-text-color);
+	opacity: .6;
 }
 vs-text-input + button,
 input[type='text'] + button,
@@ -599,6 +601,7 @@ button, input, .button {
 	text-align: inherit;
 	line-height: 1.25;
 }
+
 textarea {
 	font-size: inherit;
 }
@@ -619,8 +622,10 @@ a.button {
 }
 button, a.button {
 	font-size: 1em;
+	min-height: 1.5rem;
+	text-align: center;
 	border-radius: .42rem;
-	padding: 0 1ch;
+	padding: .25rem 1ch;
 	user-select: none;
 	display: inline-flex;
 	justify-content: center;
@@ -661,7 +666,7 @@ button.red.remove {
 	padding: .3rem 0;
 }
 
-button.bare {
+button.bare, button.bare-part {
 	background: none;
 	border: none;
 	box-shadow: none;

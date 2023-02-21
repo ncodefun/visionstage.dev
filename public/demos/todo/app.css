@@ -46,6 +46,7 @@ li	{
 	border-radius: .25rem;
 	margin-bottom: .2rem;
 	cursor: default;
+	box-shadow: 0 .2rem .4rem #0003;
 }
 li.selected {
 	/* background: #fff2; */
@@ -54,7 +55,7 @@ li.selected {
 li.selected {
 	/* background: #fff2; */
 }
-button.bare.checkbox {
+button.bare-part.checkbox {
 	padding-top: .08rem;
 	--icon-height: 1.25em;
 }
@@ -62,8 +63,8 @@ button.bare.checkbox {
 	/* line-height: 1.5; */
 	margin-top: 0.18rem;
 }
-button.bare.todo-item {
-	margin: 0 1.5ch 0 0;
+button.bare-part.todo-item {
+	/* margin: 0 1.5ch 0 0; */
 	flex-grow: 1;
 	line-height: 1;
 	/* color: #fffc; */
@@ -83,7 +84,6 @@ label {
 }
 textarea {
 	font-family: inherit;
-	background: #fffd;
 	padding: 1ch;
 	font-size: .85em;
 }

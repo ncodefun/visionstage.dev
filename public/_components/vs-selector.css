@@ -100,7 +100,7 @@ vs-selector button span.text {
 	flex: 1 0 0;
 	white-space: nowrap;
 	margin: 0 auto;
-	max-width: 7rem;
+	/* max-width: 7rem; */
 }
 vs-selector.small-caps button.led-bar span.text {
 	/* margin: .1rem auto -.1rem; */

@@ -1,7 +1,7 @@
 :root {
 	--hue: 150deg;
-	--text-color-dark: hsl(150, 20%, 17%);
-	--text-color-light: hsl(150, 56%, 88%);
+	--text-color-light: hsl(250deg 100% 89%);
+	--text-color-light-strong: hsl(250, 100%, 93%);
 
 	--link-color: hsl(150, 90%, 70%);
 	--link-color-hl: hsl(150, 90%, 62%);
@@ -30,7 +30,8 @@ body {
 	--scrolls-shadow-color: hsl(256deg 82% 35% / 85%);
 	--scrolls-header-background: #0001;
 	--scrolls-footer-background: hsl(256deg 62% 40% / 33%);
-	color: hsl(250deg 100% 89%);
+
+	color: var(--text-color-light);
 	background: hsl(194, 18%, 52%)
 }
 body[night-mode='1'] {
@@ -68,8 +69,16 @@ vision-stage {
 			hsla(0, 0%, 75%, .08) 14rem,
 			hsla(0, 0%, 69%, .05));
 }
-vision-stage[orientation='portrait'] {
-	/* --floor: 24rem; */
+
+body[night-mode] #app[orientation='portrait'] nav.v-menu {
+	background-color: hsl(278, 13%, 17%);
+	--link-color: hsl(var(--hue), 100%, 85%);
+	--link-color-hl: hsl(var(--hue), 100%, 88%);
+
+}
+body[night-mode] #app[orientation='portrait'] nav.v-menu a {
+	border: 1px solid hsl(270deg 25% 41%);
+	background: hsl(265deg 19% 22%);
 }
 
 /* body[night-mode]  */
@@ -161,20 +170,7 @@ a + .vs-icon {
 	opacity: .75;
 }
 
-#app[orientation='portrait'] nav.v-menu {
-	background-color: hsl(150deg 13% 17%);
-}
-#app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(161deg 54% 25%);
-	background: hsl(164deg 21% 24%);
-}
-body[night-mode] #app[orientation='portrait'] nav.v-menu {
-	background-color: hsl(278, 13%, 17%);
-}
-body[night-mode] #app[orientation='portrait'] nav.v-menu a {
-	border: 1px solid hsl(270deg 25% 41%);
-	background: hsl(265deg 19% 22%);
-}
+
 
 /** .content-has-scrollbar is toggled automatically in app.js */
 
@@ -204,6 +200,13 @@ body[night-mode] .scroll.shadow::after,
 .scroll.shadow::before,
 .scroll.shadow::after {
 	mix-blend-mode: darken;
+}
+
+button.bare {
+	color: var(--text-color-light, orange);
+}
+button.bare:hover {
+	color: var(--text-color-light-strong, orange);
 }
 
 ::placeholder {
