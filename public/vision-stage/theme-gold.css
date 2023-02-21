@@ -36,29 +36,6 @@ body[night-mode] #app {
 	background-color: hsl(40, 10%, 11%);
 }
 
-/* #app, body[night-mode] #app {
-
-} */
-/* body[night-mode] {
-	--hue: 45deg;
-	--primary: hsl(45, 93%, 79%);
-	--primary-hl: hsl(45, 100%, 83%);
-	--link-color: hsla(45, 100%, 82%, 1);
-	--link-color-hl: hsl(45, 100%, 85%);
-} */
-
-.icon.moon:not(.night) {
-  /* undo v-s default for purple theme */
-  filter: none;
-}
-
-#night-mode-toggle {
-  filter: contrast(0.15) sepia(2) hue-rotate(7deg) contrast(2) brightness(1.07) saturate(.9);
-}
-body[night-mode] #night-mode-toggle {
-  filter: contrast(.7) sepia(2) hue-rotate(0deg) saturate(1.75) brightness(1.07);
-}
-
 ::placeholder {
   color: hsl(var(--hue, 150deg), 21%, 53%);
 }
@@ -92,19 +69,12 @@ body[night-mode] vs-modal .content {
   background: hsl(50deg 7% 42%);
 }
 #app vs-modal {
-	/* --modal-bg: url(/_assets/images/textures/brushed-alum.png) #b3ab8f; */
 	--modal-bg: url(
 	/_assets/images/textures/brushed-alum.png) hsl(47deg 15% 59%);
-	/* --modal-bg-filter: contrast(1.4) brightness(0.7);
-	--modal-bg-blend-mode: overlay; */
 	--modal-dark-bg: url(/_assets/images/textures/brushed-alum-black.png) #45423d;
 	--modal-dark-bg-filter:
 		saturate(3.5) contrast(0.7) brightness(0.64);
-	/* --modal-dark-bg-filter:
-		saturate(3) contrast(0.8) brightness(0.7); */
-
 	--modal-dark-bg-blend-mode: overlay;
-
 }
 
 /* .vs-box */

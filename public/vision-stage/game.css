@@ -125,7 +125,6 @@ body:not(.using-mouse) #title nav a:focus-visible svg.fanion {
 }
 
 #app-header h1 {
-	color: hsl(250, 73%, 84%);
 	margin: 0;
 	font: 2rem/1 'Luckiest Guy';
 	transition: transform .4s ease;
@@ -133,16 +132,6 @@ body:not(.using-mouse) #title nav a:focus-visible svg.fanion {
 #app.show-settings #app-header h1 {
 	transform: translateY(.07em);
 }
-body[night-mode] #app-header h1 {
-	color: hsl(250, 73%, 80%);
-}
-/* Make sides equal width so title is perfect center */
-/* #app-header > span:first-child {
-  flex: 0 0 10rem;
-}
-#app-header > span:last-child {
-  flex: 0 0 10rem;
-} */
 
 #app-header {
 	display: grid;
