@@ -82,6 +82,13 @@ export const ComponentMixin = (base) => class extends base {
 	 * @type {function}
 	 */
 	onRendered;
+  	/**
+	 * Callback; runs when component is mounted (activated).
+	 * @type {function}
+	 */
+	onConnected;
+
+
 
 	constructor(){
 		// Note: this (Component ctor) runs *after* VisionStage (app) ctor
@@ -667,11 +674,18 @@ export class VisionStage extends Component {
 	 * @type {function}
 	 */
 	onResized;
-
 	/**
 	 * callback;
 	 */
 	onCacheUpdated;
+	/**
+	 * callback;
+	 */
+	onPageChanged;
+	/**
+	 * callback;
+	 */
+	onLanguageChanged;
 
 	constructor(){
 		super()
@@ -729,6 +743,8 @@ export class VisionStage extends Component {
 
 	connectedCallback(){
 		Component.load('vs-button.js')
+		Component.load('vs-input.js')
+
 		this.onConnected && this.onConnected()
 		this.updateDocTitle()
 		if (ctor(this).sounds)
@@ -805,8 +821,8 @@ export class VisionStage extends Component {
 	}
 
 	#onHashChanged(){
+		// log('red', 'on hash changed; set page')
 		this.#setPageFromHash()
-
 	}
 
 	#setPageFromHash(){ // sets this.page name (coresp to [page] attribute)
@@ -1537,7 +1553,7 @@ VisionStage._properties = {
 			// log('err', 'this.lang_index:', this.lang_index)
 			// update hash and doc title
 
-			if( this.pages && this.page){
+			if (this.pages && this.page){
 				// update hash / page title for current lang
 				let {path} = this.getPage()
 				let new_page = path.split('/')[0]
@@ -1548,21 +1564,20 @@ VisionStage._properties = {
 			}
 			// log('info', 'lang, country:', lang, country)
 		},
-		//init_watcher: true // causes render (SET lang), maybe too soon, keep manual
+		// init_watcher: true // causes render (SET lang), maybe too soon, keep manual
 		// -> instead just re-trigger after this is rendered (this.lang = this.lang)
 	},
 	night_mode: {
 		value: 0,
-		sync_to_url_param: true, // if url param is passed, will override stored value
+		// if url param is passed, will override stored value
+		sync_to_url_param: true,
 		storable: '/', // shared accross all apps
-		//attribute: ['night-mode', 'auto'], // auto -> remove if falsy, otherwise use value
 		init_watcher: true,
 		watcher( val){
 			if (val)
 				document.body.setAttribute('night-mode', val)
 			else
 				document.body.removeAttribute('night-mode')
-			document.body.style.setProperty('color-scheme', val ? 'dark' : 'light')
 		}
 	},
 	show_menu: {
@@ -1585,12 +1600,13 @@ VisionStage._properties = {
 		value: null,
 		attribute: 'page',
 		watcher( val, prev){
-
+			// log('check', 'set page:', val)
 			// remove trailing #
-			if( !val && location.href.endsWith('#') && window.self === window.top)
+			if (!val && location.href.endsWith('#') && window.self === window.top)
 				history.replaceState( null, '', location.pathname)
 
-			if (this.params && this.sync_props_to_params){ // skip if no props are syncable
+			// skip if no props are syncable
+			if (this.params && this.sync_props_to_params){
 				for (let [p,val] of this.params){
 					if (p in this){
 						this[p] = val
