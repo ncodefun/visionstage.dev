@@ -145,4 +145,4 @@ Modal.properties = {
 	},
 }
 
-define( 'vs-modal', Modal, ['vs-input.js'])
+define('vs-modal', Modal)

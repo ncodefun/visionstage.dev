@@ -48,9 +48,10 @@ export default class Selector extends Component {
 		this.color = this.getAttribute('color') || ''
 
 		this.type = this.type || this.getAttribute('type')
-			if( !this.type) this.type = ''
-			else if( this.type==='led') this.type = 'led-round'
-		if( this.type.includes('stepper')){
+			if (!this.type) this.type = ''
+			else if (this.type==='led') this.type = 'led-round'
+
+		if (this.type.includes('stepper')){
 			this.step = parseFloat( this.getAttribute('step')||1)
 			let wrp = this.getAttribute('wrap')
 			this.wrap = wrp==='false' ? false : true // default true
@@ -59,31 +60,31 @@ export default class Selector extends Component {
 
 		// we could just use flow='inherit' but css needs to be explicit for styles selectors
 		this.folds = this.hasAttribute('folds')
-			if( this.folds){
+			if (this.folds){
 				this.folded = true
 				app.foldable_components.add( this)
 			}
 
 		this.sel_color = this.getAttribute('selected-color') || ''
 
-		if( this.selected===true || this.selected===false){
+		if (this.selected===true || this.selected===false){
 			this.is_toggle = true
 		}
-		else if( !this.options){ // -> must be bool / simple-toggle
+		else if (!this.options){ // -> must be bool / simple-toggle
 			this.selected = null
 			this.is_toggle = true
 		}
 
 		// AFTER .is_toggle is set
 		this.direction = this.getAttribute('direction')||'vertical'
-			if( !this.hasAttribute('direction') && !this.is_toggle)
+			if (!this.hasAttribute('direction') && !this.is_toggle)
 				this.setAttribute('direction', this.direction)
-			else if( this.direction === 'row')
+			else if (this.direction === 'row')
 				this.direction = 'horizontal'
-			else if( this.direction === 'col')
+			else if (this.direction === 'col')
 				this.direction = 'vertical'
 			//log('err', 'this.type:', this.type)
-			if( this.type!=='grid'){
+			if (this.type!=='grid'){
 				this.flow = this.direction==='horizontal' ? 'inline row' : 'inline col stretch'
 				this.setAttribute('flow', this.flow)
 			}
@@ -112,7 +113,7 @@ export default class Selector extends Component {
 		// so the fold header keep the same width even when menu is folded
 		//
 		await nextFrame() // leave time for fonts to also render...
-		if( this.type.includes('stepper')){
+		if (this.type.includes('stepper')){
 			let btn = this.q('button')||this
 			let font = getFontProps( btn)
 			// Only labels for current lang…
@@ -197,8 +198,8 @@ export default class Selector extends Component {
 			</button>`
 		}
 
-		let sel_index = this.opts && !Array.isArray( this.selected) &&
-			this.opts.findIndex( o => this.val(o) === this.selected)
+		let sel_index = this.opts && !Array.isArray( this.selected ) &&
+			this.opts.findIndex( o => this.val(o) === this.selected )
 
 		if( sel_index < 0){
 			log('err', 'no sel_index:', this.selected, this.opts)
@@ -206,7 +207,7 @@ export default class Selector extends Component {
 		}
 
 		if( this.type && this.type.includes('stepper')){
-			let o = this.opts[ sel_index]
+			let o = this.opts[sel_index]
 
 			let simple_class = classes(
 				'simple-toggle', 'stepper', this.type,
@@ -315,21 +316,21 @@ export default class Selector extends Component {
 		]
 	}
 
-	val( o){
+	val( o ){
 		return typeof o === 'string' ? o : o.value !== undefined ? o.value : this.getLocale( o.label)
 	}
 
-	opt( type, index){
-		let o = this.opts[ index]
-		if( o === undefined){
+	opt( type, index ){
+		const o = this.opts[index]
+		if (o === undefined){
 			log('err', 'opt undefined:', type, index)
 			return ''
 		}
-		switch( type){
+		switch (type){
 			case 'label':
 				return typeof o === 'string' ? o :
 				o.label !== undefined ? this.getLocale(o.label) :
-				o.icon ? icon( o.icon) :
+				o.icon ? icon( o.icon ) :
 				this.getLocale(this.opts[0].label) || '?'
 			case 'details':
 				return this.getLocale(o.details)

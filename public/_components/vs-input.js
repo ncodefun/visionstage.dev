@@ -23,7 +23,6 @@ class VSInput extends ComponentMixin(HTMLInputElement) {
 	}
 
 	onFocus(){
-		log('red', 'focus', )
 		app.block_resize = true
 	}
 
