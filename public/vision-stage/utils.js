@@ -34,7 +34,7 @@ export const labelAsClassMapper = o =>
 	typeof o === 'string' ? {label:o, class:o} : {...o, class:o.label}
 
 export const labelOptionsMapper = o =>
-	typeof o === 'string' ? {label: o, value: o} :
+	typeof o === 'string' ? { label: o, value: o } :
 	Array.isArray(o) ? {label: o, value: o[0]} :
 	o;
 export const labelValueOptionsMapper = o =>
