@@ -77,19 +77,6 @@ let app, after_resize_timeout, aspect_ratios, active_sw, redundant
 export const ComponentMixin = (base) => class extends base {
   /* class fields & methods to extend superClass with */
 
-  	/**
-	 * Callback; runs after component is rendered.
-	 * @type {function}
-	 */
-	onRendered;
-  	/**
-	 * Callback; runs when component is mounted (activated).
-	 * @type {function}
-	 */
-	onConnected;
-
-
-
 	constructor(){
 		// Note: this (Component ctor) runs *after* VisionStage (app) ctor
 		super()
@@ -577,8 +564,6 @@ export const ComponentMixin = (base) => class extends base {
  */
 export class Component extends ComponentMixin(HTMLElement) {
 
-	// We may move these next 2 methods to the ComponentMixin if they're ever needed…
-
 	/**
 	 * Returns an array from an attribute value consisting of
 	 * space or comma (w/ possible spaces around) separated strings.
@@ -673,19 +658,19 @@ export class VisionStage extends Component {
 	 * Callback; runs after app is resized.
 	 * @type {function}
 	 */
-	onResized;
+	// onResized;
 	/**
 	 * callback;
 	 */
-	onCacheUpdated;
+	// onCacheUpdated;
 	/**
 	 * callback;
 	 */
-	onPageChanged;
+	// onPageChanged;
 	/**
 	 * callback;
 	 */
-	onLanguageChanged;
+	// onLanguageChanged;
 
 	constructor(){
 		super()
