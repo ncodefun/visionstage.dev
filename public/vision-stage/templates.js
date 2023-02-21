@@ -4,11 +4,11 @@ import { q, sleep, strIf, cycleValueWithin } from '/vision-stage/utils.js'
 const fs = window.screenfull // embeded / global
 const config = VS.config
 
-export function appHeader(type='lang-left', left_part){
-	return type==='lang-center' ? html`
+export function appHeader(options){
+	return options?.lang_center ? html`
 	<header id='app-header' class='alt-scaling lang-center'>
 
-		<span>${ left_part || '' }</span>
+		<span>${ options?.left_part || '' }</span>
 
 		<span flow='row gaps' id='lang-bar'>
 			<span class='equal-deco'> = </span>
@@ -23,7 +23,7 @@ export function appHeader(type='lang-left', left_part){
 			`)}
 		</span>
 
-		${ rightSettings.call(this) }
+		${ rightSettings.call(this, options?.extra_settings) }
 
 	</header>`
 	:
@@ -41,15 +41,20 @@ export function appHeader(type='lang-left', left_part){
 			</vs-selector>
 		</span>
 
-		${ rightSettings.call(this) }
+		${ rightSettings.call(this, options?.extra_settings) }
 	</header>`
 }
 
-function rightSettings(){ return html`
+function rightSettings( extra_settings=null ){
+	return html`
 	<span flow='row right gaps'>
+
+		${ extra_settings?.() }
+
 		<button is='vs-button' id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
 			@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
-			<span class='icon moon small ${strIf('night',this.night_mode)}' shift='-1'>🌙</span>
+			${ icon('moon', 'flip-x') }
+			<!-- <span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span> -->
 		</button>
 
 		<button is='vs-button' id='fullscreen-toggle'
@@ -57,7 +62,7 @@ function rightSettings(){ return html`
 			aria-label=${ this.$fullscreen }
 			@pointerdown=${ async e => { fs.isEnabled && fs.toggle() ; await sleep(100) ; this.render() } }
 			>
-			${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, 'large') }
+			${ icon(`fullscreen-${ fs.isFullscreen ? 'exit':'enter' }`, 'x-large') }
 		</button>
 	</span>`
 }

@@ -11,7 +11,10 @@ class App extends VS {
 	onConnected = () => this.render()
 
 	template = () => html`
-		${ appHeader.call(this, 'lang-center', minibrand)}
+		${ appHeader.call(this, {
+			lang_center: true,
+			left_part: minibrand
+		})}
 		${ appContent.call(this, { class: 'typo-gridd scroll shadow' }) }
 		${ appFooter.call(this, 'nav') }
 	`
@@ -156,15 +159,14 @@ VS.config = {
 }
 
 VS.aspects = {
-	// portrait_min: 	.37,	// max vertical space in portrait
-	portrait_alt: .5,			//
-	portrait: 		.66,		// min horizontal space in portrait
-	//portrait_max: 	.66,		// max horizontal space in portrait
-	landscape: 		4/3,		// min horizontal space in landscape
-	landscape_max: 1.85,		// max horizontal space in landscape
+	portrait_alt: .5,
+	portrait: 		.66,
+	//portrait_max: 	.66,
+	landscape: 		4/3,
+	landscape_max: 1.85,
 	threshold: 		1.2,
-	cross_margin: '1.23%', 	// margins opposite to "black bars" to detach the stage visually
-	height: 40,					// rem - base vertical space
+	cross_margin: '1.23%',
+	height: 40,
 }
 
 VS.sounds = {
