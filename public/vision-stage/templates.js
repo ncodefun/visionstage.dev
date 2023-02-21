@@ -53,7 +53,7 @@ function rightSettings( extra_settings=null ){
 
 		<button is='vs-button' id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
 			@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
-			${ icon('moon', 'flip-x') }
+			${ icon('moon', `flip-x ${ strIf('night',this.night_mode===0) }`) }
 			<!-- <span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span> -->
 		</button>
 
@@ -194,7 +194,7 @@ export function gameHeader(){ return html`
 				title=${ this.$night_mode }
 				@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }
 				>
-				<span class='shift-icon icon moon ${this.night_mode===0?'':'night'}' shift='-1'>🌙</span>
+				${ icon('moon', `flip-x ${ strIf('night',this.night_mode===0) }`) }
 			</button>
 
 			<button is='vs-button'
