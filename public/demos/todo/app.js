@@ -1,26 +1,37 @@
-import { VisionStage as VS, html, define, log, icon, maybe, clearStores }
+import { VisionStage as VS, html, define, log, icon }
 	from '/vision-stage/vision-stage.min.js'
 
-import { strIf, nextFrame, q }
+import { strIf, nextFrame, sleep, q }
 	from '/vision-stage/utils.js'
 
 import { appHeader, appContent, appFooter }
 	 from '/vision-stage/templates.js'
 
+
 class App extends VS {
 
 	onConnected = () => {
-		// clearStores()
+		// clearStores() // import from vs
 		this.render()
 	}
 
 	async testModal(){
-		const answer = await this.modal.setup(["Hello","What's your name?"], [['OK','primary']], true)
+		const answer = await this.modal.setup(
+			["Hello","What's your name?"], [['OK','primary']], true)
 		log('info', 'answer:', answer)
 	}
 
+	extra_settings = () => html`
+		<button is='vs-button' id='dark-controls-toggle'
+			class='square bare'
+			@pointerdown=${ e => this.dark_components = !this.dark_components }
+			>
+			<span class='icon sun ${ this.dark_components ? 'dark':'' }'>☀️</span>
+		</button>
+	`
+
 	template = () => html`
-		${ appHeader.call(this) }
+		${ appHeader.call(this, {extra_settings:this.extra_settings}) }
 		${ appContent.call(this) }
 		${ appFooter.call(this, 'nav') }
 	`
@@ -41,36 +52,60 @@ class App extends VS {
 					}
 				}}
 				>
-				<input is='vs-input' type='text' id='todo-input' placeholder='new todo'>
+				<input is='vs-input' type='text' id='todo-input' placeholder=${this.$new_todo}>
 				<button class='primary small'>${ icon('plus', 'small') }</button>
 			</form>
 
-			<ul class='scroll'>${ this.todos
+			<ul class='scroll'
+				@keyup=${ async e => {
+					// if we toggle .done with space or enter,
+					// items will be reordered,
+					// but lit-html reuse elements and only update
+					// the content instead of removing / inserting;
+					// so the focus will remain on the element
+					// which doesn't match the item anymore…
+					// Solution: capture the activeElement's item
+					// and reassign focus to element matching item
+					if (/Space|Enter/.test(e.code)){
+						this.focused_item = e.target.parentElement.item
+						await sleep(0)// nextFrame is not enough, this needs two!…
+						this.qAll('#home li')
+							.find( el => el.item === this.focused_item)
+							.querySelector('button:first-of-type')
+							.focus()
+					}
+				}}>
+				${
+				this.todos
 				.sort( (a,b) =>
-					a.done&&!b.done ? 1 : b.done&&!a.done ? -1 : // put done todos last
-					a.created - b.created // then, sort by creation time
+					// put done todos last
+					a.done&&!b.done ? 1 : b.done&&!a.done ? -1 :
+					// then, sort by creation time
+					// (possibly altered for manual reordering)
+					a.created - b.created
 				)
 				.map( (todo,i) => html`
 				<li
 					flow='row space-between'
 					class=${ strIf('selected primary', todo===this.todo) }
+					.item=${ todo }
 					>
 					<button
-						class='checkbox bare icon'
+						class='checkbox bare-part icon'
 						@click=${ e => { todo.done = !todo.done ; this.render() } }
 						>
 						${ icon(`checkbox-${ strIf('un', !todo.done) }checked`) }
 					</button>
 
 					<button
-						class='todo-item bare ${ strIf( 'done', todo.done) }'
+						class='todo-item bare-part ${ strIf( 'done', todo.done) }'
 						@click=${ e => this.prop('todo').toggleSelect(todo) }
 						>
 						${ todo.title }
 					</button>
 
 					<button
-						class='remove small round bare'
+						class='remove small round bare-part'
 						@click=${ e => { this.prop('todos').remove(i) ; this.todo = null }}
 						>
 						✖
@@ -81,17 +116,19 @@ class App extends VS {
 			<section class=${ strIf('hide', !this.todo) }>
 				<div
 					flow='row gaps'
-					?='Reorder todo by shifting .created time above or below prev or next.'
-					?='Uses *valMod()* for a one liner; gets a next or prev todo and if exists, mod it.'
 					>
+					<!--/// Reorder todo by shifting .created time above or below prev or next. -->
+					<!--/// Uses *validateAndCompute()* for a one liner; gets a next or prev todo and if exists, mod it. -->
+
 					<button id='shift-up'
-						?disabled=${ maybe(this.todo).done }
+						?disabled=${ this.todo?.done }
 						class='small'
 						@click=${ e => this.todo.created =
+							// if possible, set it to prev.created - 1
 							this.validateAndCompute(
-								this.todos[ this.todos.indexOf( this.todo) - 1],
+								this.todos[ this.todos.indexOf(this.todo) - 1 ],
 								prev => !!prev, // validator
-								prev => prev.created - 1 // new value
+								prev => prev.created - 1 // compute return value
 							)
 							|| this.todo.created }
 						>
@@ -99,9 +136,10 @@ class App extends VS {
 					</button>
 
 					<button id='shift-down'
-						?disabled=${ maybe(this.todo).done }
+						?disabled=${ this.todo?.done }
 						class='small'
 						@click=${ e => this.todo.created =
+							// if possible, set it to next.created + 1
 							this.validateAndCompute(
 								this.todos[ this.todos.indexOf( this.todo) + 1], // get a possible next
 								next => !!next && !next.done, // validate: if next exist and not .done (are kept below)
@@ -142,7 +180,7 @@ class App extends VS {
 			<footer class='m-t-auto'>
 				<button style='margin: 2rem 0 0'
 					@click=${ this.testModal }>
-					Toggle modal
+					Test modal
 				</button>
 			</footer>
 
@@ -176,7 +214,7 @@ const newTodo = title => ({
 
 VS.config = {
 	sw: '/demos/todo/sw.js',
-	update_check_min: 1,
+	update_check_min: 30,
 }
 
 VS.aspects = {
@@ -211,7 +249,9 @@ VS.strings = {
 	more_infos: 		["More informations", "Plus d'informations"],
 	move_up: 			["Move up", "Déplacer<br>vers le haut"],
 	move_down: 			["Move down", "Déplacer<br>vers le bas"],
-	todo: 				["To do", "Tâches"]
+	todo: 				["To do", "Tâches"],
+	new_todo: 			["New todo", "Nouvelle tâches"],
+
 }
 
 VS.properties = {
@@ -234,18 +274,11 @@ VS.properties = {
 			}
 		}
 	},
-	show_veil: {
+	dark_components: {
 		value: false,
-		//getter: () => this.show_menu || this.show_settings
+		class: 'dark-components',
+		storable: true
 	},
-
 }
 
 define('vision-stage', App, ['vs-selector', 'vs-modal'])
-// vs-modal already loads 'vs-input'
-
-// {
-// 	update_check_min: 30,
-// 	font_size_decimals: 0,
-// 	night_modes: [0,1],
-// }
