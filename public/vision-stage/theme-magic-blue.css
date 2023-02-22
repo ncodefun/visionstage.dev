@@ -8,6 +8,11 @@
 	--primary: hsl(150deg, 90%, 62%);
 	--primary-hl: hsl(150, 90%, 70%);
 }
+body, body[night-mode] {
+	--text-color: var(--text-color-light);
+	--text-color-faded: var(--text-color-light-faded);
+	--text-color-strong: var(--text-color-light-strong);
+}
 button.primary {
 	--btn-text-color: var(--text-color-dark);
 	--btn-text-color-hl: var(--text-color-dark);

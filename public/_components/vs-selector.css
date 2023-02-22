@@ -292,7 +292,7 @@ vs-selector button .led.square {
 	border-radius: 0;
 }
 vs-selector button.underline {
-	text-decoration: none; /* reset default from vision-stage.css  */
+	text-decoration: none !important; /* reset default from vision-stage.css  */
 }
 vs-selector button.underline,
 vs-selector button.led-bar {
