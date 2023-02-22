@@ -198,10 +198,9 @@ class App extends VS {
 	`
 
 	async onCacheUpdated(){
-		log('ok', 'update ready!')
+		// log('ok', 'update ready!')
 		const answer = await this.modal?.setup(['An update is ready.','Refresh?'], ['Later', 'Yes'])
-		if( answer===1)
-			location.reload()
+		if( answer===1) location.reload()
 	}
 }
 
