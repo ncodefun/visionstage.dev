@@ -270,7 +270,10 @@ export const ComponentMixin = (base) => class extends base {
 								// Update hash
 								let page = this.getPage()?.path?.split('/')[0] || '' // remove possible params
 								let hash = page + '/' +
-									this.params.map( p => p.map(seg=>seg.toString()).join('=')).join('/')
+									this.params.map( p =>
+										p[1] ? p.map(seg=>seg?.toString()).join('=') :
+										p[0]
+									).join('/')
 								location.hash = hash
 							}
 						}
