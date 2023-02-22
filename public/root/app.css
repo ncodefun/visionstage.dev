@@ -266,9 +266,11 @@ ul li em {
 
 figure {
 	/* max-width: 37rem; */
+	margin: 0;
 }
 figure img {
-	/* width: 100%; */
+	max-width: 100%;
+	height: auto;
 	/* aspect-ratio: 1274 / 2122; */
 }
 h3 {
