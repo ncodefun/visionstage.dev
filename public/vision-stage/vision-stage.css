@@ -521,7 +521,10 @@ nav { user-select: none }
 }
 
 /** vertical menu */
-
+#app-footer {
+	/*! crutial; weird shit happens without this… clicking anchor links on portrait makes the whole app shift up by the height of footer! */
+	contain:layout;
+}
 #app[orientation='portrait'] nav.v-menu {
 	pointer-events: none;
 	flex-direction: column;
@@ -533,7 +536,6 @@ nav { user-select: none }
 	padding: 1rem 2.5rem;
 	text-align: center;
 	box-shadow: 0 .4rem 1rem #0004;
-	/* transition: all .3s ease; */
 	transition: transform .5s cubic-bezier(.68, -.28, .82, .11);
 	/* inverse: 1-C, 1-D, 1-A, 1-B -> A:0.18, B:0.89, C:0.32, D:1.28 =
 		 1-.32, 1-1.28, 1-.18 , 1-.89 => .68, -.28, .82, .11  */
