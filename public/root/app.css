@@ -3,6 +3,9 @@
 #app[orientation='portrait'] #app-header > * {
   font-size: .9em;
 }
+#app[orientation='portrait'] #presentation {
+	text-align: left;;
+}
 
 
 main#home {
@@ -34,26 +37,38 @@ h1 {
 h1.mini {
 	font-size: 1.5em;
 	text-align: left;
-	color: hsl(230deg 100% 82% / 64%);
-	-webkit-text-stroke: #fff8 .5px;
+	/* color: hsl(230deg 100% 82% / 64%);
+	-webkit-text-stroke: #fff8 .5px; */
+	color: inherit;
+	-webkit-text-stroke: 0;
 	text-shadow: none;
 	padding-top: .1rem;
 	margin-left: .25rem !important;
+	transition: opacity .23s ease;
 }
+#app.h1-visible h1.mini {
+	opacity: 0;
+}
+
 h2 {
+	/* position: sticky; */
+	/* top: -2px; */
+	/* top: 0; */
 	line-height: 1;
 	font-weight: 400;
 	font-size: 1.7rem;
 	margin: 1rem 0 .5rem;
-	padding: 0 1ch;
+	padding: 1.75rem 1ch 0;
+	/* background: hsl(255deg 72% 37%); */
 }
+
 h3 {
 	font-size: 1.3rem;
 	line-height: 1.75rem;
 	margin: 1.4rem 0 0;
 }
 h2:first-of-type {
-	margin-top: 4rem;
+	/* margin-top: 4rem; */
 }
 h1 + h2 {
 	margin: 3.3rem 0 .2rem;
@@ -121,8 +136,8 @@ main#home p {
 }
 
 
-.intro a { font-weight: 400 }
-body[night-mode] .intro {
+/* .intro a { font-weight: 400 } */
+body[night-mode] .intro > *:not(#tagline) {
 	color: hsl(250deg 100% 92%);
 }
 .intro p:first-of-type {
@@ -249,9 +264,26 @@ ul li em {
 	padding-left: 1em;
 }
 
-strong > em {
+figure {
+	/* max-width: 37rem; */
+}
+figure img {
+	/* width: 100%; */
+	/* aspect-ratio: 1274 / 2122; */
+}
+h3 {
+	padding-top: 1.75rem;
+	margin: 0 0 1.75rem;
+}
+h3 + p { margin-top: 0 }
+/* h3 + p ~ p { margin-bottom: 0 } */
+
+main#start {
+	padding-bottom: 4rem;
+}
+/* strong > em {
 	color: hsl(251, 100%, 95%);
 }
 body[night-mode] strong > em {
 	color: hsl(250deg 100% 95%) !important;
-}
+} */
