@@ -86,7 +86,7 @@ export function appContent(options){ return html`
 	</section>
 `}
 
-export function appFooter(type='nav'){
+export function appFooter(type=null){
 	// type === string | HTMLTemplateResult
 	return type==='nav' ? html`
 	<footer id='app-footer' flow='row' class='alt-scaling rel'>
