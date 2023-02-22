@@ -10,6 +10,25 @@ class App extends VS {
 
 	onConnected = () => this.render()
 
+	onRendered(){
+		if (!this.observer_initialized){
+			const h1 = this.q('#presentation h1')
+			if (!h1) return
+			const observer = new IntersectionObserver(
+				([first_entry]) => {
+					this.h1_visible = first_entry.intersectionRatio > .75
+					log('pink', 'intersect:', first_entry.intersectionRatio)
+				},
+				{
+					root: this.q('#app-content'),
+					threshold: [.75]
+				}
+			)
+			observer.observe(h1)
+			this.observer_initialized = true
+		}
+	}
+
 	template = () => html`
 		${ appHeader.call(this, {
 			lang_center: true,
@@ -42,7 +61,7 @@ class App extends VS {
 
 				<h2><em>✦ Zéro friction ⇢ Pure focus ! ✦</em></h2>
 				<p>
-					Vision stage, c'est une librairie minimaliste et intuitive pour bâtir des composantes & des applis Web moderne, utilisant des <i>templates</i> lit-html et des propriétés réactives – tout ça en pure JS/HTML. Pas de <i>build step<i> requit.
+					Vision stage, c'est une librairie minimaliste et intuitive pour bâtir des composantes & des applis Web moderne, utilisant des <i>templates</i> lit-html et des propriétés réactives – tout ça en pure JS/HTML. Pas de <q>build step</q> requis.
 				<p>
 					<a href='#Présentation'>Présentation</a>
 				</p>
@@ -53,29 +72,30 @@ class App extends VS {
 
 	presentation = () => html`
 		<main id='presentation' flow='col top grow' class='text-justify'>
+
+			<h1>Vision <small>✦</small> Stage</h1>
+			<h2>KISS ❤</h2>
+
 			<div lang='en'>
-				<h1>Vision <small>✦</small> Stage</h1>
-				<h2>KISS ❤</h2>
 				<p>
 					Vision Stage provides – I beleive – the best developer experience out there… Its simplicity frees you from wasteful diversions with the concerns, confusion and frustrations of working with non-standard syntax, concepts and workflow / tooling that other, complex libraries and frameworks force you to deal with.
 				<p>
-					Such true simplicity means you can <strong>stay in the creative flow</strong>, and <strong>focus on what matter – <em>your</em> app !</strong> In my book, <strong>that</strong> is truly agile, and future-proof development…
+					Such true simplicity means you can stay in the creative flow, and <strong>focus on what matters – <em>your</em> app !</strong> In my book, <strong><em>that</em></strong> is truly agile, and future-proof development…
 				<p>
-					Forget about ultra-optimizing everything; simplicity is already, by nature, lightweight and fast. Quite fast enough in fact, compared to so many small and medium apps using way overkill frameworks…
+					Forget about ultra-optimizing everything; simplicity is already, by nature, lightweight and fast. Quite fast enough in fact, compared to so many small and medium apps using frameworks that are way overkill for their requirements…
 				<p>
-					I hope you find the same joy working to build your ideas with Vision Stage as the joy I had and still have developing it ! ✌
+					I hope you find the same joy working to realize your ideas with Vision Stage as the joy I had and still have developing it ! ✌
 			</div>
 
 			<div lang='fr'>
-				<h2>KISS ❤</h2>
 				<p>
-					Vision Stage procure – je le crois – la meilleure expérience développeur ici-bas… Sa simplicité nous libère des pertes de temps en diversions avec les préoccupations, la confusion et les frustrations à travailler avec une syntaxe, des concepts et un workflow / outillage non-standard, que les autres librairie et frameworks complexes nous forces à utiliser.
+					Vision Stage procure – je le crois – la meilleure expérience développeur ici-bas… Sa simplicité nous libère des pertes de temps en diversions avec les préoccupations, la confusion et les frustrations à travailler avec une syntaxe, des concepts et un <q>workflow</q> / outillage non-standard, que les autres librairies et <q>frameworks</q> complexes nous forcent à utiliser.
 				<p>
-					Une telle simplicité veux dire qu'on peut <strong>rester dans le <i>flow</i> créatif<strong>, et <strong>focaliser sur ce qui compte – <i>son</i> appli !</strong> Pour moi, <strong>ça</strong> c'est vraiment du développement agile, et <i>future-proof</i>…
+					Une telle simplicité veux dire qu'on peut rester dans le «flow» créatif, et <strong>focaliser sur ce qui compte – <em>son</em> appli !</strong> Pour moi, <strong><em>ça</em></strong>, c'est vraiment du développement agile, et <q>future-proof</q>…
 				<p>
-					Oubliez l'ultra-optimisation de tout; la simplicité est déjà, par nature, légère et rapide. Bien assez rapide en fait, comparé à tant d'applis, petites et mediums, qui utilisent des librairies ou framework totalement <i>overkill</i>…
+					Oubliez l'ultra-optimisation de tout; la simplicité est déjà, par nature, légère et rapide. Bien assez rapide en fait, comparé à tant d'applis, petites et mediums, qui utilisent des librairies ou <q>frameworks</q> totalement <q>overkill</q> pour leur demandes…
 				<p>
-					J'espère que vous aurez autant de joie à travailler à réaliser vos idées avec Vision Stage que j'en ai eu à le concevoir ! ✌
+					J'espère que vous aurez autant de joie à réaliser vos idées avec Vision Stage que j'en ai eu à le concevoie ! ✌
 			</div>
 		</main>
 	`
@@ -143,8 +163,91 @@ class App extends VS {
 	`
 
 	start = () => html`
-		<main flow='col grow'>
-			learn
+		<main id='start' flow='col top grow' class='text-center'>
+
+			<h2 lang='en'>And if it was <em>really</em> simple ?</h2>
+			<h2 lang='fr'>Et si c'était <em>vraiment</em> simple ?</h2>
+
+			<figure>
+				<img src='./code.png' width='800' height='1332' alt='code outline'>
+			</figure>
+
+			<!-- Normal anchor links still work! use {pageTitle}/ prefix to avoid erasing the page's title -->
+			<!-- But because we use { pageTitle } which will be the same (for current lang) - and we may use same # - ending up with the exact same href in both divs with lang='en' & 'fr'; so we must render only one lang template at a time (instead of rendering both and rely on css to show/hide). -->
+			${ this.lang === 'fr' ?
+			html`
+			<div>
+				<ul class='text-left no-bullets'>
+					<li><a href='#${this.pageTitle}/#pages'>Pages virtuelles</a></li>
+					<li><a href='#${this.pageTitle}/#textes'>Textes multilingues</a></li>
+					<li><a href='#${this.pageTitle}/#props'>Propriétés réactives</a></li>
+					<li><a href='#${this.pageTitle}/#icônes'>Icônes (symboles SVG)</a></li>
+					<li><a href='#${this.pageTitle}/#sons'>Sons</a></li>
+					<li><a href='#${this.pageTitle}/#aspects'>Aspects</a></li>
+					<li><a href='#${this.pageTitle}/#config'>Config</a></li>
+
+				</ul>
+
+				<h3 id='${this.pageTitle}/#pages'>Utiliser les pages virtuels</h3>
+				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex, mollitia in ut ea placeat quo architecto ad quos earum quasi dolorum provident ratione ipsam temporibus rem. Placeat nam officia sit?</p>
+				<p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Aliquid quos, incidunt id sint reprehenderit cupiditate quibusdam illo molestias est cumque veritatis suscipit eveniet voluptate, porro eum et natus aliquam autem?</p>
+
+				<h3 id='${this.pageTitle}/#textes'>Textes multilingues</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut praesentium ratione adipisci blanditiis facere, sit excepturi a, nostrum odit itaque dolores doloribus neque placeat architecto tenetur. Sequi velit minima debitis.</p>
+
+				<h3 id='${this.pageTitle}/#props'>Propriétés réactives</h3>
+				<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit omnis facere corrupti deserunt officiis laudantium pariatur ipsum voluptatem magnam molestiae, earum voluptas eos reiciendis accusamus optio perspiciatis laboriosam! Ex, culpa.</p>
+
+				<h3 id='${this.pageTitle}/#icônes'>Icônes (symboles SVG)</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+				<h3 id='${this.pageTitle}/#sons'>Sons</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+				<h3 id='${this.pageTitle}/#aspects'>Aspects</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+				<h3 id='${this.pageTitle}/#config'>Config</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+			</div>`
+
+			: html`
+			<div>
+				<ul class='text-left no-bullets'>
+					<li><a href='#${this.pageTitle}/#pages'>Virtual Pages</a></li>
+					<li><a href='#${this.pageTitle}/#strings'>Locale strings</a></li>
+					<li><a href='#${this.pageTitle}/#props'>Reactive props</a></li>
+					<li><a href='#${this.pageTitle}/#icons'>SVG Icons</a></li>
+					<li><a href='#${this.pageTitle}/#sounds'>Sounds</a></li>
+					<li><a href='#${this.pageTitle}/#aspects'>Aspects</a></li>
+					<li><a href='#${this.pageTitle}/#config'>Config</a></li>
+				</ul>
+
+				<h3 id='${this.pageTitle}/#pages'>Virtual pages</h3>
+				<p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex, mollitia in ut ea placeat quo architecto ad quos earum quasi dolorum provident ratione ipsam temporibus rem. Placeat nam officia sit?</p>
+
+				<h3 id='${this.pageTitle}/#strings'>Locale strings</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ut praesentium ratione adipisci blanditiis facere, sit excepturi a, nostrum odit itaque dolores doloribus neque placeat architecto tenetur. Sequi velit minima debitis.</p>
+
+				<h3 id='${this.pageTitle}/#props'>Reactive properties</h3>
+				<p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Suscipit omnis facere corrupti deserunt officiis laudantium pariatur ipsum voluptatem magnam molestiae, earum voluptas eos reiciendis accusamus optio perspiciatis laboriosam! Ex, culpa.</p>
+
+				<h3 id='${this.pageTitle}/#icons'>Use Icons (svg symbols)</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+				<h3 id='${this.pageTitle}/#sounds'>Sounds</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+				<h3 id='${this.pageTitle}/#aspects'>Aspects</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+				<h3 id='${this.pageTitle}/#config'>Config</h3>
+				<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laboriosam fugit sed est consectetur doloremque laborum magni neque asperiores cum, voluptatem, excepturi, numquam assumenda autem nulla eaque itaque? Adipisci, corrupti.</p>
+
+			</div>`
+			}
+
 		</main>
 	`
 
@@ -182,7 +285,7 @@ VS.pages = {
 	presentation: 		["Presentation", "Présentation"],
 	stage:				["The Stage", "Le Stage"],
 	demos:				["Demos", "Démos"],
-	start:				["Start!", "Commencer!"],
+	start:				["Start", "Commencer"],
 	'https://github.com/ncodefun/visionstage.dev' : ["Github"],
 }
 
@@ -194,12 +297,19 @@ VS.strings = {
 }
 
 VS.properties = {
-	pres_index: {
-		value: 0,
+	// pres_index: {
+	// 	value: 0,
+	// 	watcher( val){
+	// 		log('check', 'pres index:', val)
+	// 	},
+	// },
+	h1_visible: {
+		value: true,
+		class: 'h1-visible',
 		watcher( val){
-			log('check', 'pres index:', val)
-		},
-	},
+			log('pink', 'h1 visible?:', val)
+		}
+	}
 }
 
 define( 'vision-stage', App)
