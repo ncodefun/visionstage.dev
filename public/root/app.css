@@ -12,18 +12,7 @@ main#home {
 	font-size: 1.15em;
 	/* position: relative; */
 }
-/** make grid lines for typographic alignment */
-.typo-grid main::after {
-	pointer-events: none;
-	content: '';
-	display: block;
-	position: absolute;
-	width: 100%;
-	height: 100%;
-	--step: 1.75rem;
-	background: repeating-linear-gradient(to bottom, transparent 1px var(--step), #4446 var(--step) calc(var(--step) + 1px));
-	mix-blend-mode: color-dodge;
-}
+
 h1 {
 	font-size: 3rem;
 	line-height: 1;
@@ -264,15 +253,7 @@ ul li em {
 	padding-left: 1em;
 }
 
-figure {
-	/* max-width: 37rem; */
-	margin: 0;
-}
-figure img {
-	max-width: 100%;
-	height: auto;
-	/* aspect-ratio: 1274 / 2122; */
-}
+
 h3 {
 	padding-top: 1.75rem;
 	margin: 0 0 1.75rem;
