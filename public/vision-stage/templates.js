@@ -54,7 +54,6 @@ function rightSettings( extra_settings=null ){
 		<button is='vs-button' id='night-mode-toggle' class='square bare' aria-label=${ this.$night_mode }
 			@pointerdown=${ e => this.night_mode = cycleValueWithin(this.night_mode, config.night_modes) }>
 			${ icon('moon', `flip-x ${ strIf('night',this.night_mode===0) }`) }
-			<!-- <span class='icon moon ${strIf('night',this.night_mode)}' shift='-1'>🌙</span> -->
 		</button>
 
 		<button is='vs-button' id='fullscreen-toggle'
