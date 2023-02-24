@@ -1,0 +1,40 @@
+/* fira-code-300 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 300;
+  src: url('/_assets/fonts/fira-code-v21-latin-300.woff2')
+}
+/* fira-code-regular - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/fira-code-v21-latin-regular.woff2')
+}
+/* fira-code-500 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/_assets/fonts/fira-code-v21-latin-500.woff2')
+}
+/* fira-code-600 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/_assets/fonts/fira-code-v21-latin-600.woff2')
+}
+/* fira-code-700 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/_assets/fonts/fira-code-v21-latin-700.woff2')
+}
