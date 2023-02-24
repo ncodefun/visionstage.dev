@@ -15,6 +15,8 @@
 	--text-color-strong: var(--text-color-dark-strong);
 	--text-color-faded: var(--text-color-dark-faded);
 
+
+
 	--scrollbar-bg-color: #0001;
 	--scrollbar-handle-color: #FFF8;
 	--scrolls-shadow-color: #9999;
@@ -28,9 +30,14 @@
 	--btn-border-color: 				hsl(0deg 0% 100% / 50%);
 	--btn-border-color-hl: 			hsl(0deg 0% 100% / 60%);
 }
+body {
+	--link-color: var(--text-color);
+	--link-color-hl: var(--text-color-strong);
+}
 body[night-mode] {
 	--text-color: var(--text-color-light);
 	--text-color-faded: var(--text-color-light-faded);
+
 }
 /** define at this level so they use a possibly overriden --hue within #app[highlight='xyz'] */
 #app {
