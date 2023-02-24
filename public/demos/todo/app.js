@@ -257,7 +257,7 @@ VS.properties = {
 	todos: {
 		value: [],
 		storable: true,
-		force_render: true,
+		//force_render: true, // Now auto if val is obj/arr
 		/// Force render → we use prop() methods for deep mods that
 		/// gonna re-assing array to itself to trigger watcher, render etc.
 		/// but normally we prevent those if val is identical…
