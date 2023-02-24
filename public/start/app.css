@@ -1,0 +1,227 @@
+/* fira-code-300 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Fira Code';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/_assets/fonts/fira-code/fira-code-v21-latin-regular.woff2')
+}
+:root {
+	--scrolls-over-shadow-top-color: #CCC;
+	--scrolls-over-shadow-bottom-color: #CCC;
+}
+:root, .alt-scaling {
+	--app-footer-height: 0em;
+
+}
+main {
+	text-align: left;
+	margin: 0 auto;
+	padding: .65rem 1rem 3rem;
+	max-width: 44rem;
+}
+body[night-mode] main {
+	font-weight: 300;
+}
+main, main * {
+	line-height: 1.75rem;
+}
+main p {
+	padding: 0;
+	margin: 1.75rem 0;
+}
+h1,h2,h3,h4,code.block {
+	margin: 0;
+}
+#app-header-simple {
+	/* position: sticky;
+	top: 0;
+	display: inline-flex; */
+	height: 2.75em;
+	padding-inline: .5em .75em;
+	margin-bottom: .75rem;
+	margin-left: auto;
+	background: url(/_assets/images/textures/paper-opaque-8bit.png) #fff2;
+	background-blend-mode: overlay;
+	box-shadow: 0 0 .8rem #0003;
+	border-radius: 0 0 0 .5rem;
+}
+
+body[night-mode]
+:is(#nav-menu-toggle, #app-header-simple) {
+	background: url(/_assets/images/textures/paper-opaque-8bit.png) #2f2f2f;
+	background-blend-mode: multiply;
+	border-bottom: 2px solid #222;
+	border-radius: 0 0 0 .75rem;
+}
+body[night-mode] #app-header-simple {
+	border-left: 2px solid #222;
+}
+body[night-mode] #nav-menu-toggle {
+	border-right: 2px solid #222;
+}
+
+#nav-menu-toggle {
+	height: 2.75rem;
+	background: url(/_assets/images/textures/paper-opaque-8bit.png) #fff2;
+	background-blend-mode: overlay;
+	box-shadow: 0 0 .8rem #0003;
+	border-bottom-right-radius: .5rem !important;
+}
+#app[orientation='landscape'] #nav-menu-toggle {
+	display: none;
+}
+#app-content {
+	scroll-padding-top: 2rem;
+	/* scroll-snap-type: y mandatory; */
+}
+
+#app-content > aside {
+	flex: 0 0 12rem;
+	width: 12rem;
+}
+#app-content > main {
+	margin-inline: 1.5rem;
+}
+#app[orientation='portrait'] #app-content > aside {
+	position: absolute;
+}
+#app[orientation='portrait'] #nav-bar {
+	left: 0;
+	top: 2.75rem;
+}
+#app[orientation='portrait'] #app-content > main {
+	margin-inline: 0;
+}
+/*
+#app[orientation='portrait'] #app-content  {
+	flex-direction: column;
+	justify-content: flex-start;
+} */
+#nav-bar {
+	/* position: sticky;
+	top: 0; */
+	top: 1rem;
+	left: -.5rem; /* compensate for scroll padding compensation... */
+	margin-block: auto;
+	padding: 2rem 1.5rem 2rem 1rem;
+	background: #222;
+	border-radius: 0 1rem 1rem 0;
+	--text-color: var(--text-color-light);
+	--link-color: var(--text-color-light);
+	--link-color-hl: var(--text-color-light-strong);
+	transition: opacity .2s ease;
+	will-change: opacity, visibility;
+}
+#app[orientation='portrait']:not(.show-nav) #nav-bar {
+	visibility: hidden;
+	opacity: 0;
+	transition: opacity .2s ease, visibility .2s;
+}
+
+
+#nav-bar ul {
+	margin: 0;
+	padding: 0;
+}
+#nav-bar ul li {
+	min-height: 1.75rem;
+	padding-top: .25rem;
+	border-radius: .4rem;
+}
+#nav-bar ul li:hover {
+	background: #fff1;
+}
+#nav-bar ul li a {
+	display: block;
+	height: 100%;
+	padding-inline: 1ch;
+	/* white-space: nowrap; */
+	/* line-height: .8; */
+}
+
+
+main h1 {
+	line-height: 2.25rem;
+	font-size: 2.5rem;
+	margin: 1.15rem 0 1.85rem;
+	text-align: center;
+}
+
+h2 {
+	font-size: 1.5rem;
+	font-weight: 400;
+	margin: 3.4rem 0 1.9rem;
+	text-align: center;
+	/* scroll-margin-top: 3rem; */
+}
+/* h1,h2,h3,h4,p {
+	scroll-snap-align: start;
+	scroll-snap-stop:always;
+} */
+h3 {
+	font-weight: 400;
+	font-size: 1.25rem;
+	color: #000d;
+	background: hsl(130deg 56% 81%);
+	padding: .5ch 1ch .2ch;
+	font-size: 1.15rem;
+	border-radius: .36rem .36rem 0 0;
+	border-top: 2px solid #fff4;
+	border-bottom: 2px solid #0002;
+	margin: 3rem 0 1.55rem;
+
+}
+h4 {
+	line-height: 1.5rem;
+	font-size: 1.15rem;
+	font-weight: 400;
+	margin: 1.55rem 0 .15rem;
+	display: table;
+	background: #87e6dc;
+	color: #000e;
+	padding-inline: 0.75ch;
+	padding-top: 0.15rem;
+	border-radius: 0.3rem 1rem 1rem 0;
+}
+h3 + h4 {
+	margin-top: -.1rem;
+	margin-bottom: 2rem;
+}
+code + h4 {
+	margin-top: 2.6rem;
+}
+code {
+	font-size: .8em;
+}
+code.block {
+	margin: .7rem 0 .85rem;
+}
+
+h2 + code.block {
+	margin-top: -1.05rem;
+}
+p + code.block {
+	margin-top: -1rem;
+}
+code.block + code.block {
+	margin-top: 1.5rem;
+}
+code.block + p {
+	margin-top: 2.5rem;
+}
+code.block + h2 {
+	margin-top: 2.4rem;
+}
+h3 + p {
+	margin-top: 0;
+}
+h3 + code.block {
+	margin-top: 2.35rem;
+}
+code.block + h3 {
+	margin-top: 3.8rem;
+}
+h2 + h3 {
+	margin-top: 3.1rem;
+}
